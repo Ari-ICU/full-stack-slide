@@ -366,6 +366,7 @@ const CodePanel = ({
   const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState(initialOutput);
   const [copied, setCopied] = useState(false);
+  const [running, setRunning] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const hlRef = useRef<HTMLDivElement>(null);
   const lines = code.split('\n');
@@ -401,6 +402,19 @@ const CodePanel = ({
           ))}
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={async () => {
+            setTab('terminal');
+            setRunning(true);
+            await new Promise(r => setTimeout(r, 800));
+            setRunning(false);
+          }}
+            disabled={running}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+              running ? 'bg-zinc-800 text-zinc-500' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+            }`}>
+            <Play className={`w-3 h-3 ${running ? 'animate-pulse' : ''}`} />
+            {running ? 'Running...' : 'Run'}
+          </button>
           <button onClick={() => { setCode(initialCode); setOutput(initialOutput); }}
             className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/5 transition-all">
             <RotateCcw className="w-3.5 h-3.5" />

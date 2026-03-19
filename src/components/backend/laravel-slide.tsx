@@ -519,7 +519,7 @@ const HighlightedCode = ({ code }: { code: string }) => {
     if (/^\s*{{--/.test(line))
       return <span style={{ color: '#6b7280', fontStyle: 'italic' }}>{line}</span>;
 
-    const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\$[a-zA-Z_]\w*|\b\d+(?:\.\d+)?\b|\b[a-zA-Z_]\w*\b)/g);
+    const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|$[a-zA-Z_]\w*|\b\d+(?:\.\d+)?\b|\b[a-zA-Z_]\w*\b)/g);
     return parts.map((p, i) => {
       if (!p) return null;
       if (p.startsWith('$')) return <span key={i} style={{ color: '#fbbf24' }}>{p}</span>;
@@ -551,6 +551,7 @@ const CodePanel = ({
   const [code, setCode] = useState(initialCode);
   const [output, setOutput] = useState(initialOutput);
   const [copied, setCopied] = useState(false);
+  const [running, setRunning] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const hlRef = useRef<HTMLDivElement>(null);
   const lines = code.split('\n');
@@ -586,6 +587,19 @@ const CodePanel = ({
           ))}
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={async () => {
+            setTab('terminal');
+            setRunning(true);
+            await new Promise(r => setTimeout(r, 800));
+            setRunning(false);
+          }}
+            disabled={running}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
+              running ? 'bg-zinc-800 text-zinc-500' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+            }`}>
+            <Play className={`w-3 h-3 ${running ? 'animate-pulse' : ''}`} />
+            {running ? 'Running...' : 'Run'}
+          </button>
           <button onClick={() => { setCode(initialCode); setOutput(initialOutput); }}
             className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/5 transition-all">
             <RotateCcw className="w-3.5 h-3.5" />
@@ -690,7 +704,7 @@ export default function LaravelSlide() {
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.set('slide', (current + 1).toString());
-    router.replace(`?\${params.toString()}`, { scroll: false });
+    router.replace(`?${params.toString()}`, { scroll: false });
   }, [current]);
 
   const goTo = useCallback((idx: number, d: number) => {
@@ -744,8 +758,8 @@ export default function LaravelSlide() {
         {CHAPTERS.map((ch, i) => {
           const isActive = ch.id === (activeSlides.length > 0 ? chapterParam : 'setup');
           return (
-            <button key={ch.id} onClick={() => router.push(`?chapter=\${ch.id}`)}
-              className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border \${
+            <button key={ch.id} onClick={() => router.push(`?chapter=${ch.id}`)}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all border ${
                 isActive
                   ? 'text-black border-transparent'
                   : 'bg-transparent border-white/8 text-zinc-500 hover:text-zinc-300 hover:border-white/20'
@@ -758,7 +772,7 @@ export default function LaravelSlide() {
         <div className="ml-auto flex items-center gap-3 flex-none pl-4">
           <div className="w-32 h-0.5 bg-white/8 rounded-full overflow-hidden">
             <div className="h-full rounded-full transition-all duration-500"
-              style={{ width: `\${progress}%`, background: chapterInfo.color }} />
+              style={{ width: `${progress}%`, background: chapterInfo.color }} />
           </div>
           <span className="text-[10px] font-mono text-zinc-600">
             {current + 1}<span className="text-zinc-800">/{displaySlides.length}</span>
@@ -771,7 +785,7 @@ export default function LaravelSlide() {
 
         {/* LEFT — Concept cards */}
         <AnimatePresence mode="wait" custom={dir}>
-          <motion.div key={`left-\${current}`} custom={dir} variants={variants}
+          <motion.div key={`left-${current}`} custom={dir} variants={variants}
             initial="enter" animate="center" exit="exit"
             transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
             className="flex-none lg:w-[45%] flex flex-col p-6 lg:p-10 xl:p-14 lg:border-r border-white/6 overflow-y-auto gap-6">
@@ -779,13 +793,13 @@ export default function LaravelSlide() {
             {/* Title block */}
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-none border border-white/10"
-                style={{ background: `\${slide.accent}18` }}>
+                style={{ background: `${slide.accent}18` }}>
                 <Icon className="w-6 h-6" style={{ color: slide.accent }} />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[9px] font-black uppercase tracking-[0.25em] px-2 py-0.5 rounded-full border"
-                    style={{ color: chapterInfo.color, borderColor: `\${chapterInfo.color}40`, background: `\${chapterInfo.color}12` }}>
+                    style={{ color: chapterInfo.color, borderColor: `${chapterInfo.color}40`, background: `${chapterInfo.color}12` }}>
                     {chapterInfo.label}
                   </span>
                   <span className="text-[9px] font-mono text-zinc-700">{slide.id}</span>
@@ -804,7 +818,7 @@ export default function LaravelSlide() {
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.06 + i * 0.06 }}
                   className="rounded-xl border p-4 flex flex-col gap-1.5"
-                  style={{ borderColor: `\${slide.accent}20`, background: `\${slide.accent}06` }}>
+                  style={{ borderColor: `${slide.accent}20`, background: `${slide.accent}06` }}>
                   <span className="text-xs font-black uppercase tracking-widest" style={{ color: slide.accent }}>
                     {c.label}
                   </span>
@@ -824,7 +838,7 @@ export default function LaravelSlide() {
             <div className="space-y-3">
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}
                 className="rounded-xl border p-4 flex gap-3"
-                style={{ background: `\${slide.accent}08`, borderColor: `\${slide.accent}25` }}>
+                style={{ background: `${slide.accent}08`, borderColor: `${slide.accent}25` }}>
                 <Play className="w-4 h-4 flex-none mt-0.5" style={{ color: slide.accent }} />
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: slide.accent }}>Lab Exercise</p>
@@ -855,7 +869,7 @@ export default function LaravelSlide() {
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button onClick={() => setShowNotes(!showNotes)}
-                className={`p-3 rounded-xl border transition-all \${
+                className={`p-3 rounded-xl border transition-all ${
                   showNotes ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-white/5 border-white/8 text-zinc-500 hover:text-white'
                 }`}>
                 <StickyNote className="w-4 h-4" />
@@ -878,7 +892,7 @@ export default function LaravelSlide() {
           </div>
 
           <AnimatePresence mode="wait">
-            <motion.div key={`code-\${current}`}
+            <motion.div key={`code-${current}`}
               initial={{ opacity: 0, scale: 0.99, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.99, y: -8 }}
