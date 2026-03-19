@@ -1,4 +1,4 @@
-import ReactLessonSlides from '@/components/lessons/react-slide';
+import ReactLessonSlides from '@/components/full-stack/lessons/react-slide';
 import { ArrowLeft, Atom } from "lucide-react";
 import Link from "next/link";
 
@@ -21,11 +21,11 @@ export default function ReactLessonPage() {
       <nav className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link
-            href="/"
+            href="/courses/full-stack"
             className="group flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-white/50 hover:text-white hover:bg-white/10 transition-all text-sm font-medium"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-            Dashboard
+            Back to Roadmap
           </Link>
 
           <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-black/30 backdrop-blur-sm">
