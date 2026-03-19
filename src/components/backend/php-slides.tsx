@@ -1196,28 +1196,28 @@ export default function PHPLessonContent() {
       <div className="relative z-[60] flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black/60 backdrop-blur-2xl custom-header">
         <div className="flex items-center gap-4">
           <Link href="/courses/backend" 
-            className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 mr-2 shadow-lg">
+            className="group flex items-center gap-3 px-4 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-xl">
             <ArrowLeft className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-white transition-colors hidden md:block">Exit</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden md:block">Exit</span>
           </Link>
 
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="group flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/12 hover:border-white/30 transition-all active:scale-95 shadow-2xl">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 ${isMenuOpen ? 'bg-white text-black rotate-0' : 'bg-black/40 text-zinc-400 group-hover:text-white'}`}>
+            className="group flex items-center gap-4 px-5 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/12 hover:border-white/30 transition-all active:scale-95 shadow-2xl">
+            <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300 ${isMenuOpen ? 'bg-white text-black rotate-0' : 'bg-black/40 text-zinc-400 group-hover:text-white'}`}>
               <AnimatePresence mode="wait">
                 {isMenuOpen ? (
                   <motion.div key="x" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: 90 }}>
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5" />
                   </motion.div>
                 ) : (
                   <motion.div key="menu" initial={{ scale: 0, rotate: 90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: -90 }}>
-                    <Menu className="w-4 h-4" />
+                    <Menu className="w-3.5 h-3.5" />
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
             <div className="flex flex-col items-start leading-tight">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Course Roadmap</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Curriculum Map</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-white tracking-tight">{chapterInfo.label}</span>
                 <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 transition-transform duration-500 ${isMenuOpen ? 'rotate-180 text-white' : ''}`} />
@@ -1226,7 +1226,7 @@ export default function PHPLessonContent() {
           </button>
         </div>
 
-        <div className="hidden sm:flex items-center gap-6">
+        <div className="hidden sm:flex items-center gap-8">
           <div className="flex flex-col items-end gap-1.5 min-w-[140px]">
             <div className="flex items-center gap-2 text-[10px] font-mono">
               <span className="text-zinc-500 uppercase tracking-widest font-black">Chapter Mastery</span>
@@ -1238,12 +1238,12 @@ export default function PHPLessonContent() {
                 style={{ background: chapterInfo.color }} />
             </div>
           </div>
-          <div className="h-8 w-px bg-white/10 mx-2" />
+          <div className="h-10 w-px bg-white/10" />
           <div className="flex items-center gap-3">
-            <button onClick={prev} className="p-2.5 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5">
+            <button onClick={prev} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center min-w-[45px]">
                <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5">Slide</span>
                <span className="text-sm font-mono text-zinc-500 flex items-center gap-1 leading-none">
                  <span className="text-white font-bold">{current + 1}</span>
@@ -1251,7 +1251,7 @@ export default function PHPLessonContent() {
                  <span>{displaySlides.length}</span>
                </span>
             </div>
-            <button onClick={next} className="p-2.5 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5">
+            <button onClick={next} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
