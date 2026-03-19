@@ -1193,17 +1193,17 @@ export default function PHPLessonContent() {
         style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(168,85,247,0.04) 0%, transparent 60%)' }} />
 
       {/* ── CHAPTER NAV BAR (CONSISTENT WITH LARAVEL) ── */}
-      <div className="relative z-[60] flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black/60 backdrop-blur-2xl custom-header">
-        <div className="flex items-center gap-4">
+      <div className="relative z-[60] flex items-center justify-between px-4 sm:px-6 py-4 border-b border-white/5 bg-black/60 backdrop-blur-2xl custom-header">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link href="/courses/backend" 
-            className="group flex items-center gap-3 px-4 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-xl">
+            className="group flex items-center gap-3 px-3 sm:px-4 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-xl">
             <ArrowLeft className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden md:block">Exit</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden lg:block">Exit</span>
           </Link>
 
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="group flex items-center gap-4 px-5 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/12 hover:border-white/30 transition-all active:scale-95 shadow-2xl">
-            <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300 ${isMenuOpen ? 'bg-white text-black rotate-0' : 'bg-black/40 text-zinc-400 group-hover:text-white'}`}>
+            className="group flex items-center gap-3 sm:gap-4 px-4 sm:px-5 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/12 hover:border-white/30 transition-all active:scale-95 shadow-2xl overflow-hidden max-w-[150px] sm:max-w-none">
+            <div className={`w-7 h-7 rounded-lg flex-none flex items-center justify-center transition-all duration-300 ${isMenuOpen ? 'bg-white text-black rotate-0' : 'bg-black/40 text-zinc-400 group-hover:text-white'}`}>
               <AnimatePresence mode="wait">
                 {isMenuOpen ? (
                   <motion.div key="x" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: 90 }}>
@@ -1216,35 +1216,35 @@ export default function PHPLessonContent() {
                 )}
               </AnimatePresence>
             </div>
-            <div className="flex flex-col items-start leading-tight">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">Curriculum Map</span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-white tracking-tight">{chapterInfo.label}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 transition-transform duration-500 ${isMenuOpen ? 'rotate-180 text-white' : ''}`} />
+            <div className="flex flex-col items-start leading-tight overflow-hidden">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 hidden sm:block">Curriculum Map</span>
+              <div className="flex items-center gap-2 overflow-hidden">
+                <span className="text-sm font-bold text-white tracking-tight truncate">{chapterInfo.label}</span>
+                <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 flex-none transition-transform duration-500 ${isMenuOpen ? 'rotate-180 text-white' : ''}`} />
               </div>
             </div>
           </button>
         </div>
 
-        <div className="hidden sm:flex items-center gap-8">
-          <div className="flex flex-col items-end gap-1.5 min-w-[140px]">
+        <div className="flex items-center gap-3 sm:gap-8 transition-all">
+          <div className="hidden sm:flex flex-col items-end gap-1.5 min-w-[100px] md:min-w-[140px]">
             <div className="flex items-center gap-2 text-[10px] font-mono">
-              <span className="text-zinc-500 uppercase tracking-widest font-black">Chapter Mastery</span>
+              <span className="text-zinc-500 uppercase tracking-widest font-black hidden lg:block">Chapter Mastery</span>
               <span className="text-white font-black bg-white/10 px-1.5 py-0.5 rounded-md">{Math.round(progress)}%</span>
             </div>
-            <div className="w-44 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
+            <div className="w-24 md:w-44 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
               <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }}
                 className="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
                 style={{ background: chapterInfo.color }} />
             </div>
           </div>
-          <div className="h-10 w-px bg-white/10" />
-          <div className="flex items-center gap-3">
+          <div className="h-10 w-px bg-white/10 hidden sm:block" />
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <button onClick={prev} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <div className="flex flex-col items-center min-w-[45px]">
-               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5">Slide</span>
+            <div className="flex flex-col items-center min-w-[40px] sm:min-w-[45px]">
+               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5 hidden xs:block">Slide</span>
                <span className="text-sm font-mono text-zinc-500 flex items-center gap-1 leading-none">
                  <span className="text-white font-bold">{current + 1}</span>
                  <span className="text-zinc-800">/</span>
@@ -1258,86 +1258,89 @@ export default function PHPLessonContent() {
         </div>
       </div>
 
-      {/* ── CHAPTER OVERLAY MENU ── */}
+      {/* ── CHAPTER OVERLAY MENU (FULLY RESPONSIVE) ── */}
       <AnimatePresence mode="wait">
         {isMenuOpen && (
-          <>
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 lg:p-10 pointer-events-none">
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 z-[50] bg-black/95 backdrop-blur-md"
+              className="absolute inset-0 bg-black/95 backdrop-blur-md pointer-events-auto"
             />
             <motion.div
-              initial={{ y: -30, opacity: 0, scale: 0.98 }}
+              initial={{ y: 30, opacity: 0, scale: 0.98 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: -30, opacity: 0, scale: 0.98 }}
+              exit={{ y: 30, opacity: 0, scale: 0.98 }}
               transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-              className="fixed top-24 left-6 right-6 z-[55] max-w-5xl mx-auto bg-[#0d1117] border border-white/10 rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] p-12 backdrop-blur-3xl overflow-hidden"
+              className="relative w-full max-w-5xl max-h-full bg-[#0d1117] border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] flex flex-col pointer-events-auto overflow-hidden"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {CHAPTERS.map((ch, i) => {
-                  const isActive = ch.id === chapterParam;
-                  return (
-                    <button key={ch.id} 
-                      onClick={() => {
-                        router.push(`?chapter=${ch.id}`);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`group relative flex items-center gap-5 p-5 rounded-2xl transition-all duration-300 border ${
-                        isActive 
-                          ? 'bg-white/5 border-white/20 shadow-xl' 
-                          : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/10 hover:-translate-y-1'
-                      }`}>
-                      
-                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 overflow-hidden ${
-                         isActive ? 'scale-110 shadow-2xl' : 'opacity-60 filter group-hover:opacity-100 group-hover:scale-105'
-                      }`}
-                      style={{ 
-                        background: isActive ? ch.color : `${ch.color}25`, 
-                        color: isActive ? '#000' : ch.color,
-                        border: isActive ? 'none' : `1.5px solid ${ch.color}40`
-                      }}>
-                        {String(i + 1).padStart(2, '0')}
-                      </div>
-
-                      <div className="flex flex-col items-start leading-snug">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
-                            style={{ color: ch.color }}>
-                            Part {i + 1}
-                          </span>
-                          {isActive && (
-                            <span className="text-[8px] font-black px-1.5 py-0.5 rounded bg-white text-black uppercase tracking-tighter">Current</span>
-                          )}
+              <div className="flex-1 overflow-y-auto px-6 py-8 sm:p-12 scrollbar-none">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {CHAPTERS.map((ch, i) => {
+                    const isActive = ch.id === chapterParam;
+                    return (
+                      <button key={ch.id} 
+                        onClick={() => {
+                          router.push(`?chapter=${ch.id}`);
+                          setIsMenuOpen(false);
+                        }}
+                        className={`group relative flex items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl transition-all duration-300 border ${
+                          isActive 
+                            ? 'bg-white/5 border-white/20 shadow-xl' 
+                            : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/10 hover:-translate-y-1'
+                        }`}>
+                        
+                        <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 overflow-hidden flex-none ${
+                           isActive ? 'scale-110 shadow-2xl' : 'opacity-60 filter group-hover:opacity-100 group-hover:scale-105'
+                        }`}
+                        style={{ 
+                          background: isActive ? ch.color : `${ch.color}25`, 
+                          color: isActive ? '#000' : ch.color,
+                          border: isActive ? 'none' : `1.5px solid ${ch.color}40`
+                        }}>
+                          {String(i + 1).padStart(2, '0')}
                         </div>
-                        <span className={`text-[15px] font-bold tracking-tight transition-all ${isActive ? 'text-white' : 'text-zinc-200 group-hover:text-white'}`}>
-                          {ch.label.split(' · ')[1] || ch.label}
-                        </span>
-                      </div>
 
-                      {isActive && (
-                        <div className="ml-auto w-2.5 h-2.5 rounded-full animate-pulse shadow-[0_0_12px]" style={{ background: ch.color, boxShadow: `0 0 12px ${ch.color}` }} />
-                      )}
-                    </button>
-                  );
-                })}
+                        <div className="flex flex-col items-start leading-snug overflow-hidden text-left">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
+                              style={{ color: ch.color }}>
+                              Part {i + 1}
+                            </span>
+                            {isActive && (
+                              <span className="text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded bg-white text-black uppercase tracking-tighter">Current</span>
+                            )}
+                          </div>
+                          <span className={`text-sm sm:text-[15px] font-bold tracking-tight transition-all truncate w-full ${isActive ? 'text-white' : 'text-zinc-200 group-hover:text-white'}`}>
+                            {ch.label.split(' · ')[1] || ch.label}
+                          </span>
+                        </div>
+
+                        {isActive && (
+                          <div className="ml-auto w-2.5 h-2.5 rounded-full animate-pulse flex-none" style={{ background: ch.color, boxShadow: `0 0 12px ${ch.color}` }} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between">
+
+              <div className="flex-none p-6 sm:px-12 sm:py-8 bg-black/20 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-5">
                    <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.25em] text-zinc-400">
                       Module Navigation
                    </div>
-                   <div className="flex items-center gap-2 text-zinc-600 text-[10px] font-bold">
+                   <div className="hidden lg:flex items-center gap-2 text-zinc-600 text-[10px] font-bold">
                       <span className="w-1 h-1 rounded-full bg-zinc-700" />
                       Select a chapter to jump directly to those slides
                    </div>
                 </div>
-                <div className="text-[10px] font-mono text-zinc-500 bg-white/5 px-3 py-1 rounded-lg border border-white/5">
+                <div className="text-[9px] sm:text-[10px] font-mono text-zinc-500 bg-white/5 px-3 py-1 rounded-lg border border-white/5">
                    FULLSTACK ACADEMY • PHP FUNDAMENTALS
                 </div>
               </div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
 
