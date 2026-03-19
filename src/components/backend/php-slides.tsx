@@ -699,16 +699,27 @@ export default function PHPLessonContent() {
   }, [isAnimating]);
 
   const next = () => goTo((current + 1) % displaySlides.length, 1);
-  const prev = () => goTo((current - 1 + slides.length) % displaySlides.length, -1);
+  const prev = () => goTo((current - 1 + displaySlides.length) % displaySlides.length, -1);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft') prev();
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        next();
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prev();
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [current, isAnimating]);
+  }, [current, isAnimating, displaySlides.length]);
 
   const variants = {
     enter: (d: number) => ({ y: d * 30, opacity: 0, scale: 0.98 }),
@@ -849,7 +860,7 @@ export default function PHPLessonContent() {
               <button onClick={next}
                 className="flex-1 py-3 px-5 rounded-xl font-black text-xs active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
                 style={{ background: slide.accent, color: '#000' }}>
-                {current === slides.length - 1 ? 'Restart' : 'Next'}
+                {current === displaySlides.length - 1 ? 'Restart' : 'Next'}
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button onClick={() => setShowNotes(!showNotes)}
