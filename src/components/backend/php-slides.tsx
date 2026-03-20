@@ -2387,18 +2387,18 @@ export default function PHPSlides() {
     }
   }, [chapterParam, slideParam, displayPages.length]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (current === 0) params.delete('slide');
-    else params.set('slide', String(current + 1));
-    router.replace(`?${params.toString()}`, { scroll: false });
-  }, [current, router, searchParams]);
-
   const goTo = useCallback((idx: number, d: number) => {
     if (isAnimating) return;
     setDir(d); setIsAnimating(true);
+    
+    // Update URL manually during interaction
+    const params = new URLSearchParams(searchParams.toString());
+    if (idx === 0) params.delete('slide');
+    else params.set('slide', String(idx + 1));
+    router.push(`?${params.toString()}`, { scroll: false });
+
     setTimeout(() => { setCurrent(idx); setIsAnimating(false); }, 250);
-  }, [isAnimating]);
+  }, [isAnimating, router, searchParams]);
 
   const next = useCallback(() => {
     if (current < displayPages.length - 1) goTo(current + 1, 1);

@@ -18,11 +18,13 @@ import {
 interface Slide {
   id: string;
   chapter: string;
+  section?: string;
   title: string;
   subtitle: string;
   accent: string;
   bg: string;
   concepts: { label: string; desc: string }[];
+  variables?: { label: string; desc: string }[];
   tip: string;
   lab: string;
   result: string;
@@ -33,9 +35,7 @@ interface Slide {
   icon: React.ElementType;
 }
 
-interface DisplayPage extends Slide {
-  subType: 'concept' | 'lab';
-}
+type DisplayPage = Slide & { subType: 'concept' | 'variables' | 'lab' };
 
 /* ─── CHAPTERS ───────────────────────────────────────────────────── */
 const CHAPTERS = [
@@ -67,6 +67,7 @@ const slides: Slide[] = [
   /* ── CH 01: SETTING UP LARAVEL ── */
   {
     id: 'L01-S1', chapter: 'setup',
+    section: '1. CLI & Server',
     title: 'Setting Up Laravel', subtitle: 'ការដំឡើងគម្រោង Web Application',
     accent: '#f43f5e',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(244,63,94,0.15) 0%, transparent 55%)',
@@ -75,6 +76,10 @@ const slides: Slide[] = [
       { label: 'Laravel Installer', desc: '"composer global require laravel/installer" ─ បន្ទាប់ប្រើ "laravel new" command ។' },
       { label: 'php artisan serve', desc: 'Built-in dev server ─ run web app លើ http://127.0.0.1:8000 ដោយមិនចាំបាច់ Apache/Nginx ។' },
       { label: 'Project Folder', desc: 'app/, routes/, resources/views/, database/, public/ ─ រចនាសម្ព័ន្ធស្ដង់ដារ web project ។' },
+    ],
+    variables: [
+      { label: 'Composer', desc: 'The dependency manager for PHP, similar to npm for Node.js.' },
+      { label: 'php artisan', desc: 'Laravel\'s command-line interface providing helpful commands for development.' }
     ],
     tip: 'public/ folder ជា web root ─ browser ចូលដំបូងទីនេះ ─ index.php bootstrap ចូល Laravel ទាំងមូល ។',
     lab: 'ដំឡើង Laravel Installer ហើយបង្កើត web app ថ្មី "my-blog" ─ open browser http://localhost:8000 ។',
@@ -100,6 +105,7 @@ php artisan key:generate`,
   },
   {
     id: 'L01-S2', chapter: 'setup',
+    section: '2. Architecture',
     title: 'Project Structure', subtitle: 'ការស្គាល់ Folder នីមួយៗ',
     accent: '#f43f5e',
     bg: 'radial-gradient(ellipse at 80% 30%, rgba(244,63,94,0.12) 0%, transparent 55%)',
@@ -108,6 +114,10 @@ php artisan key:generate`,
       { label: 'resources/views/', desc: 'Blade HTML templates ─ ទំព័រ web ដែល user ឃើញ ─ mix PHP + HTML ។' },
       { label: 'routes/web.php', desc: 'Web routes ─ URL ទៅ Controller mapping ─ ចំណុចប្រទាក់ HTTP ទាំងអស់ ។' },
       { label: 'public/', desc: 'Web root ─ CSS, JS, images ─ accessible ដោយ browser ─ index.php entry point ។' },
+    ],
+    variables: [
+      { label: 'app/', desc: 'The core directory of your application, containing models and controllers.' },
+      { label: 'resources/', desc: 'Contains your views as well as your raw, un-compiled assets (CSS/JS).' }
     ],
     tip: 'storage/app/public/ ─ upload files ទីនេះ ─ run "php artisan storage:link" ដើម្បី web-accessible ។',
     lab: 'ស្វែងរក resources/views/welcome.blade.php ─ កែ title ─ refresh browser ─ ឃើញការប្ដូរ ។',
@@ -1805,61 +1815,62 @@ export default function LaravelSlide() {
   const searchParams = useSearchParams();
   const chapterParam = searchParams.get('chapter') || 'setup';
 
-  const activeSlides = useMemo(() =>
-    slides.filter(s => s.chapter === chapterParam),
-    [chapterParam]
-  );
-
   const displayPages = useMemo(() => {
-    const pages: DisplayPage[] = [];
-    activeSlides.forEach(s => {
-      pages.push({ ...s, subType: 'concept' });
-      pages.push({ ...s, subType: 'lab' });
+    const filtered = slides.filter(s => s.chapter === chapterParam);
+    const result: DisplayPage[] = [];
+    filtered.forEach(s => {
+      result.push({ ...s, subType: 'concept' });
+      if (s.variables && s.variables.length > 0) {
+        result.push({ ...s, subType: 'variables' });
+      }
+      result.push({ ...s, subType: 'lab' });
     });
-    return pages.length > 0 ? pages : [{ ...slides[0], subType: 'concept' } as DisplayPage];
-  }, [activeSlides]);
+    return result.length > 0 ? result : [{ ...slides[0], subType: 'concept' }];
+  }, [chapterParam]);
 
   const slideParam = searchParams.get('slide');
-  const initialSlide = useMemo(() => {
-    if (!slideParam) return 0;
-    const val = parseInt(slideParam) - 1;
-    return Math.max(0, Math.min(val, displayPages.length - 1));
-  }, [slideParam, displayPages.length]);
+  const initialSlide = slideParam ? Math.max(0, Math.min(parseInt(slideParam) - 1, displayPages.length - 1)) : 0;
 
   const [current, setCurrent] = useState(initialSlide);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [dir, setDir] = useState(1);
-  const [showNotes, setShowNotes] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
   const [notes, setNotes] = useState<Record<string, string>>({});
+  const [dir, setDir] = useState(1);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const s = slideParam ? parseInt(slideParam) - 1 : 0;
+    if (s !== current) {
+      setCurrent(Math.max(0, Math.min(s, displayPages.length - 1)));
+    }
+  }, [chapterParam, slideParam, displayPages.length]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const newSlideStr = current === 0 ? null : String(current + 1);
+    
+    if (params.get('slide') !== newSlideStr) {
+      if (newSlideStr === null) params.delete('slide');
+      else params.set('slide', newSlideStr);
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [current, router, searchParams]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('laravel_notes_v3');
+    if (saved) setNotes(JSON.parse(saved));
+  }, []);
 
   const slide = displayPages[current];
   const Icon = slide.icon;
   const progress = ((current + 1) / displayPages.length) * 100;
   const chapterInfo = CHAPTERS.find(c => c.id === slide.chapter)!;
 
-  useEffect(() => {
-    const saved = localStorage.getItem('laravel_slide_notes');
-    if (saved) setNotes(JSON.parse(saved));
-  }, []);
-
   const saveNote = (val: string) => {
     const next = { ...notes, [slide.id]: val };
     setNotes(next);
-    localStorage.setItem('laravel_slide_notes', JSON.stringify(next));
+    localStorage.setItem('laravel_notes_v3', JSON.stringify(next));
   };
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    const newSlideVal = (current + 1).toString();
-    const currentSlideParam = params.get('slide');
-    if (current === 0) {
-      if (currentSlideParam) { params.delete('slide'); router.replace(`?${params.toString()}`, { scroll: false }); }
-    } else if (currentSlideParam !== newSlideVal) {
-      params.set('slide', newSlideVal);
-      router.replace(`?${params.toString()}`, { scroll: false });
-    }
-  }, [current, router, searchParams]);
 
   const goTo = useCallback((idx: number, d: number) => {
     if (isAnimating) return;
@@ -1867,8 +1878,22 @@ export default function LaravelSlide() {
     setTimeout(() => { setCurrent(idx); setIsAnimating(false); }, 280);
   }, [isAnimating]);
 
-  const next = useCallback(() => goTo((current + 1) % displayPages.length, 1), [current, displayPages.length, goTo]);
-  const prev = useCallback(() => goTo((current - 1 + displayPages.length) % displayPages.length, -1), [current, displayPages.length, goTo]);
+  const next = useCallback(() => {
+    if (current < displayPages.length - 1) { goTo(current + 1, 1); return; }
+    const ci = CHAPTERS.findIndex(c => c.id === chapterParam);
+    if (ci < CHAPTERS.length - 1) { setDir(1); router.push(`?chapter=${CHAPTERS[ci + 1].id}`); }
+  }, [current, displayPages.length, chapterParam, goTo, router]);
+
+  const prev = useCallback(() => {
+    if (current > 0) { goTo(current - 1, -1); return; }
+    const ci = CHAPTERS.findIndex(c => c.id === chapterParam);
+    if (ci > 0) {
+      setDir(-1);
+      const prevCh = CHAPTERS[ci - 1];
+      const prevSlidesCnt = slides.filter(s => s.chapter === prevCh.id).length * 2; // Approximate count
+      router.push(`?chapter=${prevCh.id}&slide=${prevSlidesCnt}`);
+    }
+  }, [current, chapterParam, goTo, router]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

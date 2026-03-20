@@ -19,10 +19,15 @@ import {
 interface Concept { label: string; desc: string }
 interface Slide {
   id: string; chapter: string; title: string; subtitle: string;
+  section?: string;
   icon: React.ElementType; accent: string;
-  concepts: Concept[]; tip: string; lab: string; result: string;
+  concepts: Concept[];
+  variables?: Concept[];
+  tip: string; lab: string; result: string;
   code: string; filename: string; terminal: string; terminalOutput: string;
 }
+
+type DisplayPage = Slide & { subType: 'concept' | 'variables' | 'lab' };
 
 const CHAPTERS = [
   { id: 'foundations', label: 'គ្រឹះ Git',         num: '01', color: '#4ade80' },
@@ -39,11 +44,16 @@ const CHAPTERS = [
 const GIT_SLIDES: Slide[] = [
   {
     id: 'intro', chapter: 'foundations',
+    section: '1. Basic Git',
     title: 'Version Control', subtitle: 'ការស្វែងយល់ពី Version Control System',
     icon: GitBranch, accent: '#4ade80',
     concepts: [
       { label: 'VCS គឺជាអ្វី?', desc: 'Version Control System ជាប្រព័ន្ធដែលកត់ត្រារាល់ការផ្លាស់ប្ដូរ (change) ចំពោះ file តាមពេលវេលា ។ ឱ្យអ្នកអាច revert ទៅ version ណាមួយក្នុងអតីតកាល, compare changes, ឬ collaborate ជាមួយ team ។' },
       { label: 'Snapshot Model', desc: 'Git ខុសពី VCS ផ្សេង — វា snapshot ប្រព័ន្ធ file ទាំងមូលគ្រប់ commit ។ File ដែលមិនផ្លាស់ប្ដូរ Git គ្រាន់ link ទៅ snapshot មុន ដើម្បី efficient ។' }
+    ],
+    variables: [
+      { label: '.git/', desc: 'The hidden folder where Git stores all repository metadata and history.' },
+      { label: 'Initial', desc: 'The very first commit in history, often called the "Root Commit".' }
     ],
     tip: 'Git ត្រូវបានសរសេរដោយ Linus Torvalds ក្នុង ១០ ថ្ងៃ ក្នុងឆ្នាំ ២០០៥ ដើម្បីគ្រប់គ្រង source code របស់ Linux kernel ។',
     lab: 'Initialize repository ថ្មីមួយ ហើយ inspect state ដំបូងរបស់វា ។',
@@ -54,11 +64,16 @@ const GIT_SLIDES: Slide[] = [
   },
   {
     id: 'config', chapter: 'foundations',
+    section: '1. Basic Git',
     title: 'Config & Identity', subtitle: 'ការ Setup Global Configuration',
     icon: Lock, accent: '#4ade80',
     concepts: [
       { label: 'Identitiy', desc: 'Git attach ឈ្មោះ និង email ទៅ commit ។ Setup ម្ដង global — apply ទៅ repository ទាំងអស់ក្នុង machine ។' },
       { label: 'Config Layers', desc: 'Git មាន ៣ levels: system, global (~/.gitconfig), និង local (.git/config) ។' }
+    ],
+    variables: [
+      { label: '--global', desc: 'Flag indicating the setting applies to all repositories for the current OS user.' },
+      { label: 'user.name', desc: 'The public display name attached to every code change you commit.' }
     ],
     tip: 'Email ត្រូវ match ជាមួយ GitHub account ដើម្បី contribution graph track បានត្រូវ ។',
     lab: 'Set global user.name និង user.email ហើយ verify ជាមួយ git config --list ។',
@@ -69,11 +84,16 @@ const GIT_SLIDES: Slide[] = [
   },
   {
     id: 'staging', chapter: 'foundations',
+    section: '2. Life-cycle',
     title: 'Three States', subtitle: 'Working Directory · Staging Area · Repository',
     icon: Layers, accent: '#4ade80',
     concepts: [
       { label: 'Working Directory', desc: 'កន្លែង edit file ។ Git ដឹង file ត្រូវ modify ប៉ុន្ដែ មិន track change ដោយ auto ។' },
       { label: 'Staging Area', desc: 'Draft commit ។ git add ដាក់ snapshot នៃ change ចូល index ។ git commit យក index ទៅ permanent history ។' }
+    ],
+    variables: [
+      { label: 'Index', desc: 'Another technical name for the Staging Area; the binary snapshot ready for commit.' },
+      { label: 'SHA-1 Hash', desc: 'The unique 40-character ID Git generates for every snapshot logic.' }
     ],
     tip: 'Staging area ជា superpower — ឱ្យអ្នក craft atomic commit — stage file ដែល related ជាមួយ ។',
     lab: 'Create file → git add → git commit → inspect log ។',
@@ -357,12 +377,15 @@ export default function GitSlides() {
 
   const displayPages = useMemo(() => {
     const filtered = GIT_SLIDES.filter(s => s.chapter === chapterParam);
-    const result: (Slide & { subType: 'concept' | 'lab' })[] = [];
+    const result: DisplayPage[] = [];
     filtered.forEach(s => {
       result.push({ ...s, subType: 'concept' });
+      if (s.variables && s.variables.length > 0) {
+        result.push({ ...s, subType: 'variables' });
+      }
       result.push({ ...s, subType: 'lab' });
     });
-    return result;
+    return result.length > 0 ? result : [{ ...GIT_SLIDES[0], subType: 'concept' }];
   }, [chapterParam]);
 
   const slideParam = searchParams.get('slide');
@@ -375,7 +398,23 @@ export default function GitSlides() {
   const [dir, setDir] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  useEffect(() => { setCurrent(initialSlide); }, [initialSlide, chapterParam]);
+  useEffect(() => {
+    const s = slideParam ? parseInt(slideParam) - 1 : 0;
+    if (s !== current) {
+      setCurrent(Math.max(0, Math.min(s, displayPages.length - 1)));
+    }
+  }, [chapterParam, slideParam, displayPages.length]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const newSlideStr = current === 0 ? null : String(current + 1);
+    
+    if (params.get('slide') !== newSlideStr) {
+      if (newSlideStr === null) params.delete('slide');
+      else params.set('slide', newSlideStr);
+      router.replace(`?${params.toString()}`, { scroll: false });
+    }
+  }, [current, router, searchParams]);
   useEffect(() => {
     try {
       const saved = localStorage.getItem('git_notes_v3');
@@ -504,6 +543,9 @@ export default function GitSlides() {
                     <span style={{ fontSize: 10, fontWeight: 800, color: ch.color, background: `${ch.color}15`, padding: '3px 8px', borderRadius: 4, textTransform: 'uppercase' }}>{ch.label}</span>
                     <span style={{ fontSize: 10, fontWeight: 700, color: '#4b5563' }}>{slide.id}</span>
                   </div>
+                  {slide.section && (
+                    <div style={{ fontSize: 9, fontWeight: 900, color: slide.accent, background: `${slide.accent}14`, padding: '4px 10px', borderRadius: 6, display: 'inline-block', marginBottom: 12, letterSpacing: '0.1em', textTransform: 'uppercase', border: `1px solid ${slide.accent}20` }}>{slide.section}</div>
+                  )}
                   <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
                     <div style={{ width: 48, height: 48, borderRadius: 12, background: `${slide.accent}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: slide.accent }}><Icon size={24}/></div>
                     <div>
@@ -522,6 +564,16 @@ export default function GitSlides() {
                           <div style={{ fontSize: 10, fontWeight: 800, color: slide.accent, textTransform: 'uppercase' }}>{c.label}</div>
                         </div>
                         <p style={{ fontSize: 16, color: '#fff', lineHeight: 1.6 }}>{c.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : slide.subType === 'variables' ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <div style={{ fontSize: 10, fontWeight: 900, color: '#4b5563', marginBottom: 8, letterSpacing: '0.1em' }}>REPOSITORY DICTIONARY</div>
+                    {slide.variables?.map((v, i) => (
+                      <div key={i} style={{ padding: 16, background: 'rgba(255,255,255,0.03)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ color: slide.accent, fontWeight: 800, fontSize: 14, fontFamily: 'monospace', marginBottom: 4 }}>{v.label}</div>
+                        <div style={{ fontSize: 13, color: '#94a3b8' }}>{v.desc}</div>
                       </div>
                     ))}
                   </div>
