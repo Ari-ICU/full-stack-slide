@@ -113,6 +113,21 @@ const GIT_SLIDES: Slide[] = [
     terminalOutput: `--- a/app.js\n+++ b/app.js\n-console.log("Old");\n+console.log("New");`
   },
   {
+    id: 'history', chapter: 'foundations',
+    title: 'History Review', subtitle: 'បច្ចេកទេសក្នុង​ការមើល Log',
+    icon: BookOpen, accent: '#4ade80',
+    concepts: [
+      { label: 'git log', desc: 'បង្ហាញ list នៃ commits ក្នុង branch បច្ចុប្បន្ន ។ រួមមាន hash, author, date, និង message ។' },
+      { label: 'Compact View', desc: '--oneline បង្ហាញក្នុង ១ ជួរ ។ --graph បង្ហាញ branch structure ជា visual ។' }
+    ],
+    tip: 'Git log ជា source of truth របស់ project ។ ប្រើ "git log -p" ដើម្បីមើល patch របស់ commit នីមួយៗ ។',
+    lab: 'ប្រើ options ផ្សេងៗរបស់ git log ដើម្បី explore project history ។',
+    result: 'ឃើញ graph និង timeline នៃ commits ច្បាស់លាស់ ។',
+    code: `git log --oneline --graph --all --decorate\ngit log -p -3`,
+    filename: 'log.sh', terminal: 'git log --oneline --graph',
+    terminalOutput: `* a3f9c12 (HEAD -> main) feat: add initial project files\n* 7e2b102 chore: initial commit`
+  },
+  {
     id: 'branch-intro', chapter: 'branching',
     title: 'Branch Model', subtitle: 'ការអភិវឌ្ឍ Parallel ជាមួយ Branch',
     icon: Share2, accent: '#38bdf8',
@@ -126,6 +141,21 @@ const GIT_SLIDES: Slide[] = [
     code: `git switch -c feature/auth\ngit branch`,
     filename: 'branch.sh', terminal: 'git branch',
     terminalOutput: `* feature/auth\n  main`
+  },
+  {
+    id: 'moving-changes', chapter: 'branching',
+    title: 'Switch & Restore', subtitle: 'Modern Commands ជំនួស checkout',
+    icon: RefreshCw, accent: '#38bdf8',
+    concepts: [
+      { label: 'git switch', desc: 'Command dedicated សម្រាប់ change branch ។ ច្បាស់ជាង git checkout ដែល overloaded ។' },
+      { label: 'git restore', desc: 'Discard changes ក្នុង working directory ឬ unstage file ។ ជំនួស git checkout -- <file> ។' }
+    ],
+    tip: 'Git 2.23 (2019) ណែនាំ switch + restore ដើម្បី split checkout functionality ។',
+    lab: 'Restore file ដែល accidentally modified ហើយ switch ត្រឡប់ main ។',
+    result: 'File ត្រឡប់ content committed ។ git status clean ។',
+    code: `git restore profile.php\ngit restore --staged README.md\ngit switch main`,
+    filename: 'restore.sh', terminal: 'git switch main',
+    terminalOutput: `Switched to branch 'main'`
   },
   {
     id: 'merge-basics', chapter: 'merging',
@@ -143,6 +173,21 @@ const GIT_SLIDES: Slide[] = [
     terminalOutput: `Updating a3f9c12..e7b4d91\nFast-forward`
   },
   {
+    id: 'conflict', chapter: 'merging',
+    title: 'Conflict Resolution', subtitle: 'ការដោះស្រាយ Merge Conflict',
+    icon: Shield, accent: '#fb923c',
+    concepts: [
+      { label: 'Markers', desc: 'Git inject markers ទៅ conflicted file: <<<<<<<, =======, >>>>>>> ។' },
+      { label: 'Resolution', desc: 'Edit file → delete markers → git add <file> → git merge --continue ។' }
+    ],
+    tip: 'Conflict គ្មានអ្វីខ្លាចទេ — Git សួរ "version ណាត្រូវ?" ។ Small frequent merges = conflicts តិច ។',
+    lab: 'Trigger conflict ដោយ edit line តែមួយ ក្នុង ២ branches → merge → resolve ។',
+    result: 'Repo state clean ។ git log show resolved merge commit ។',
+    code: `git status\ngit add styles.css\ngit merge --continue`,
+    filename: 'conflict.sh', terminal: 'git merge feature/ui',
+    terminalOutput: `CONFLICT (content): Merge conflict in styles.css\nAutomatic merge failed; fix conflicts.`
+  },
+  {
     id: 'remote-intro', chapter: 'remotes',
     title: 'Remotes & Push', subtitle: 'Sync ជាមួយ GitHub / GitLab',
     icon: Globe, accent: '#e879f9',
@@ -156,6 +201,21 @@ const GIT_SLIDES: Slide[] = [
     code: `git remote add origin https://github.com/user/repo.git\ngit push -u origin main`,
     filename: 'remote.sh', terminal: 'git remote -v',
     terminalOutput: `origin  https://github.com/dara/repo.git (fetch)\norigin  https://github.com/dara/repo.git (push)`
+  },
+  {
+    id: 'prs', chapter: 'remotes',
+    title: 'PR Workflow', subtitle: 'Professional Code Review Process',
+    icon: GitPullRequest, accent: '#e879f9',
+    concepts: [
+      { label: 'Pull Request', desc: 'PR ជា formal request ឱ្យ teammates review code មុន merge ។' },
+      { label: 'Code Review', desc: 'Review ≠ personal attack — review = technical feedback ។' }
+    ],
+    tip: 'PR < ៤០០ lines ទទួល review ២០x លឿន ។ "One PR = One concern" ។',
+    lab: 'Pull latest main → merge ចូល feature → push feature branch ។',
+    result: 'Feature branch updated ។ Ready to open PR ។',
+    code: `git pull origin main\ngit switch feature/dashboard\ngit merge main\ngit push origin feature/dashboard`,
+    filename: 'pr.sh', terminal: 'git pull origin main',
+    terminalOutput: `From github.com/dara/git-demo\n* branch main -> FETCH_HEAD`
   },
   {
     id: 'stash', chapter: 'mastery',
