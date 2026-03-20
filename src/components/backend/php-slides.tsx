@@ -24,7 +24,8 @@ interface Slide {
   tagColor: string;
   accent: string;
   bg: string;
-  content: string[];
+  concepts: { label: string; desc: string }[];
+  tip: string;
   lab: string;
   result: string;
   syntax: string;
@@ -56,12 +57,13 @@ const slides: Slide[] = [
     chapter: 'intro', id: 'PH1-S1', tag: 'Week 1', tagColor: '#10b981',
     title: 'តើអ្វីទៅជា PHP?', subtitle: 'ស្វែងយល់ពី Server-Side', accent: '#10b981',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(16,185,129,0.15) 0%, transparent 55%)',
-    content: [
-      'PHP មកពីពាក្យពេញថា "Hypertext Preprocessor"។',
-      'វាជាភាសា Server-side scripting language ដែលដំណើរការនៅលើ Server (មិនមែនលើ Browser ទេ)។',
-      'របៀបដែលវាដើរ៖ Client បញ្ជា -> Server ដំណើរការ PHP -> បញ្ជូនលទ្ធផលជា HTML ឱ្យ Browser បង្ហាញ។',
-      'សំណុំឧបករណ៍ (Stacks)៖ LAMP (Linux, Apache, MySQL, PHP) ឬ WAMP (សម្រាប់ Windows)។'
+    concepts: [
+      { label: 'Hypertext Preprocessor', desc: 'PHP គឺជាភាសាស្គ្រីបសម្រាប់វេបសាយដែលពេញនិយមបំផុត។' },
+      { label: 'Server-Side Power', desc: 'វាជាភាសាស្គ្រីបដែលដំណើរការនៅលើ Server (មិនមែនលើ Browser ទេ)។' },
+      { label: 'Client-Server Flow', desc: 'Client ស្នើសុំ -> Server ដំណើរការ PHP -> បញ្ជូន HTML ទៅ Browser។' },
+      { label: 'Popular Stacks', desc: 'LAMP (Linux, Apache, MySQL, PHP) ឬ XAMPP សម្រាប់ Local Development។' }
     ],
+    tip: 'កូដ PHP ដំណើរការនៅពីក្រោយឆាក (Server) ដូច្នេះអ្នកប្រើប្រាស់មិនអាចមើលឃើញកូដដើមបានទេ។',
     syntax: '<?php\n  // PHP code goes here\n?>',
     lab: 'តើការដំណើរការកូដលើ Client-side និង Server-side ខុសគ្នាត្រង់ណាខ្លះ?',
     result: 'យល់ថាកូដ PHP ពិតប្រាកដ គឺសិស្ស ឬអ្នកប្រើ Browser មើលមិនឃើញឡើយ។',
@@ -77,12 +79,13 @@ Step 4: Result sent as HTML to Chrome/Safari`,
     chapter: 'intro', id: 'PH1-S2', tag: 'Week 1', tagColor: '#10b981',
     title: 'ការរៀបចំកម្មវិធី', subtitle: 'XAMPP & Laragon', accent: '#10b981',
     bg: 'radial-gradient(ellipse at 80% 30%, rgba(16,185,129,0.12) 0%, transparent 55%)',
-    content: [
-      'XAMPP៖ ជាកម្មវិធីដំឡើងម្តងបានទាំង Apache, MySQL និង PHP (ប្រើបានគ្រប់ OS)។',
-      'Laragon៖ ជាជម្រើសមួយទៀតដែលសាមញ្ញ និងលឿនសម្រាប់អ្នកប្រើ Windows។',
-      'Htdocs៖ ជា Folder សម្រាប់ដាក់រាល់ File PHP ទាំងអស់ដើម្បីឱ្យ Server ដំណើរការបាន។',
-      'Localhost៖ របៀបចូលមើល Project របស់អ្នកតាមរយៈ Browser (http://localhost/project-name)។'
+    concepts: [
+      { label: 'XAMPP Dashboard', desc: 'កម្មវិធីដំឡើងម្តងបានទាំង Apache, MySQL និង PHP (ប្រើបានគ្រប់ OS)។' },
+      { label: 'Laragon (Win)', desc: 'ជម្រើសដ៏សាមញ្ញ និងលឿនបំផុតសម្រាប់អ្នកប្រើប្រាស់ Windows។' },
+      { label: 'htdocs Directory', desc: 'Folder សម្រាប់ដាក់រាល់ File PHP ទាំងអស់របស់អ្នកដើម្បីឱ្យ Server ស្គាល់។' },
+      { label: 'Localhost URL', desc: 'របៀបចូលមើល Project របស់អ្នកតាមរយៈ Browser (http://localhost/path)។' }
     ],
+    tip: 'កុំភ្លេច "Start" Apache ក្នុង XAMPP Control Panel មុនពេលបើក File PHP ក្នុង Browser។',
     syntax: 'Project Root: C:/xampp/htdocs/my-app/index.php',
     lab: 'ដំឡើង XAMPP រួចបង្កើត File "index.php" មួយក្នុង Folder htdocs។',
     result: 'សេវាកម្ម Apache ចាប់ផ្ដើមដំណើរការ (រូបតំណាងពណ៌បៃតង)។',
@@ -98,12 +101,13 @@ Step 4: Result sent as HTML to Chrome/Safari`,
     chapter: 'intro', id: 'PH1-S3', tag: 'Week 1', tagColor: '#10b981',
     title: 'Syntax មូលដ្ឋាន', subtitle: 'ចាប់ផ្ដើមជាមួយ PHP', accent: '#10b981',
     bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.1) 0%, transparent 60%)',
-    content: [
-      'Tag បើក៖ រាល់ Script របស់ PHP ត្រូវតែស្ថិតក្នុង Tag <?php',
-      'Tag បិទ៖ បិទដោយ ?> (មិនចាំបាច់បិទទេ បើក្នុង File មានតែកូដ PHP សុទ្ធ)។',
-      'ពាក្យបញ្ជា "echo"៖ សម្រាប់បង្ហាញអត្ថបទ ឬ HTML ទៅកាន់អេក្រង់។',
-      'សញ្ញា Semicolon៖ រាល់ការបញ្ចប់កូដមួយជួរ ត្រូវតែមានសញ្ញា (;) ជាដាច់ខាត។'
+    concepts: [
+      { label: 'PHP Open Tag', desc: 'រាល់ Script របស់ PHP ត្រូវតែចាប់ផ្ដើមដោយ Tag <?php ជានិច្ច។' },
+      { label: 'Closing Tag', desc: 'បិទដោយ ?> (មិនចាំបាច់ទេ បើក្នុង File មានតែកូដ PHP សុទ្ធ)។' },
+      { label: 'The echo Command', desc: 'ពាក្យបញ្ជាសម្រាប់បង្ហាញអត្ថបទ ឬ HTML ទៅកាន់អេក្រង់ផ្ទាល់។' },
+      { label: 'Semicolon Rules', desc: 'រាល់កូដមួយជួរ ត្រូវតែបញ្ចប់ដោយសញ្ញា (;) ជាដាច់ខាត។' }
     ],
+    tip: 'បើ File របស់អ្នកមានតែកូដ PHP (គ្មាន HTML) យកល្អកុំដាក់ Tag បិទ ?> ដើម្បីចៀសវាងកំហុស។',
     syntax: '<?php\n  echo "Hello";\n?>',
     lab: 'សរសេរកូដបង្ហាញឈ្មោះរបស់អ្នក ដោយប្រើ echo ក្នុង Tag <strong>។',
     result: 'ឈ្មោះរបស់អ្នកបង្ហាញជាអក្សរក្រាស់នៅលើ Browser។',
@@ -118,12 +122,13 @@ echo "<strong>Welcome to PHP Learning</strong>";`,
     chapter: 'intro', id: 'PH1-S4', tag: 'Week 2', tagColor: '#10b981',
     title: 'Variable និង Data Types', subtitle: 'ការរក្សាទុកទិន្នន័យ', accent: '#10b981',
     bg: 'radial-gradient(ellipse at 30% 70%, rgba(16,185,129,0.1) 0%, transparent 60%)',
-    content: [
-      'ការបង្កើត Variable៖ ត្រូវចាប់ផ្ដើមដោយសញ្ញា $ ($name, $age)។',
-      'Loose Typing៖ PHP មិនបង្ខំឱ្យយើងកំណត់ប្រភេទទិន្នន័យ (ដូចជា String ឬ Int) ជាមុនទេ។',
-      'ប្រភេទដែលប្រើច្រើន៖ String (អក្សរ), Integer (លេខ), Float (ទសភាគ), Boolean (ពិត/មិនពិត)។',
-      'Case Sensitive៖ $name និង $Name គឺខុសគ្នា (ជា Variable ពីរផ្សេងគ្នា)។'
+    concepts: [
+      { label: 'Variable Creation', desc: 'ត្រូវចាប់ផ្ដើមដោយសញ្ញា $ ($name, $age) ជានិច្ច។' },
+      { label: 'Loose Typing', desc: 'PHP មិនបង្ខំឱ្យយើងកំណត់ប្រភេទទិន្នន័យ (ដូចជា String/Int) មុនឡើយ។' },
+      { label: 'Data Types', desc: 'ប្រភេទដែលប្រើច្រើន៖ String, Integer, Float, និង Boolean។' },
+      { label: 'Naming Case', desc: 'Case Sensitive៖ $name និង $Name គឺជា Variable ពីរផ្សេងគ្នា។' }
     ],
+    tip: 'ឈ្មោះ Variable មិនអាចចាប់ផ្ដើមដោយលេខបានទេ ប៉ុន្តែអាចប្រើសញ្ញា _ (underscore) បាន។',
     syntax: '$variable_name = value;',
     lab: 'បង្កើត Variable សម្រាប់ឈ្មោះ និងអាយុ រួចប្រើ echo បង្ហាញជាប្រយោគមួយ។',
     result: 'ព័ត៌មានរបស់អ្នកនឹងបង្ហាញមកតាមអ្វីដែលបានកំណត់ក្នុង Variable។',
@@ -143,12 +148,13 @@ echo "Student: " . ($isStudent ? 'Yes' : 'No');`,
     chapter: 'intro', id: 'PH1-S5', tag: 'Week 2', tagColor: '#10b981',
     title: 'Operators', subtitle: 'ការគណនា និង Logic', accent: '#10b981',
     bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 70%)',
-    content: [
-      'Arithmetic៖ ការគណនាគណិតវិទ្យា (+, -, *, /) និងសំណល់ (%)។',
-      'Comparison៖ ការប្រៀបធៀប == (ស្មើ), != (មិនស្មើ), > (ធំជាង), < (តូចជាង)។',
-      'Logical៖ បន្សំលក្ខខណ្ឌ && (AND), || (OR), ! (NOT)។',
-      'ការភ្ជាប់អក្សរ៖ ប្រើសញ្ញាចុច (.) ដើម្បីយកអក្សរមកបន្តគ្នា ($first . $last)។'
+    concepts: [
+      { label: 'Arithmetic Ops', desc: 'ការគណនាគណិតវិទ្យា (+, -, *, /) និងការរកសំណល់ (%)។' },
+      { label: 'Comparison Ops', desc: 'ការប្រៀបធៀប == (ស្មើ), != (មិនស្មើ), > (ធំជាង), < (តូចជាង)។' },
+      { label: 'Logical Ops', desc: 'បន្សំលក្ខខណ្ឌ && (AND), || (OR), និង ! (NOT)។' },
+      { label: 'Concatenation', desc: 'ប្រើសញ្ញាចុច (.) ដើម្បីភ្ជាប់អក្សរពីរចូលគ្នា ($first . $last)។' }
     ],
+    tip: 'សញ្ញា . ក្នុង PHP ស្មើនឹងសញ្ញា + ក្នុង JavaScript សម្រាប់ការតភ្ជាប់ String។',
     syntax: '$total = $a + $b;\nif($a == $b) { ... }',
     lab: 'សាកគណនាតម្លៃទំនិញ 3 មុខបញ្ចូលគ្នា រួចបង្ហាញលទ្ធផលដែលបូករួច។',
     result: 'តម្លៃសរុបត្រូវបានគណនា និងបង្ហាញចេញមកក្រៅយ៉ាងត្រឹមត្រូវ។',
@@ -169,12 +175,13 @@ echo "Total: $" . $total;`,
     chapter: 'logic', id: 'PH2-S1', tag: 'Week 2', tagColor: '#6366f1',
     title: 'Conditional Statements', subtitle: 'ការសម្រេចចិត្ត', accent: '#6366f1',
     bg: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, transparent 100%)',
-    content: [
-      'ពាក្យបញ្ជា "if"៖ ដំណើរការកូដលុះត្រាតែលក្ខខណ្ឌមួយពិត (true)។',
-      'Else / Elseif៖ ផ្តល់ជម្រើសផ្សេងទៀតប្រសិនបើលក្ខខណ្ឌដំបូងមិនពិត (false)។',
-      'ទម្រង់ខ្លី៖ Ternary operator ($age > 18 ? "Adult" : "Minor")។',
-      'Logic Flow៖ ចាំបាច់សម្រាប់ការត្រួតពិនិត្យការ Login និងការអនុញ្ញាតចូលប្រើទំព័រ។'
+    concepts: [
+      { label: 'The "if" Logic', desc: 'ដំណើរការកូដលុះត្រាតែលក្ខខណ្ឌមួយពិត (True)។' },
+      { label: 'Else / Elseif', desc: 'ផ្តល់ជម្រើសផ្សេងទៀតប្រសិនបើលក្ខខណ្ឌដំបូងមិនពិត (False)។' },
+      { label: 'Ternary Flow', desc: 'ទម្រង់ខ្លីនៃការឆែកលក្ខខណ្ឌ ($age > 18 ? "Adult" : "Minor")។' },
+      { label: 'Security Usage', desc: 'ប្រើច្រើនក្នុងការត្រួតពិនិត្យការ Login និងសិទ្ធិចូលប្រើទំព័រ។' }
     ],
+    tip: 'ប្រើ === (triple equals) ដើម្បីឆែកទាំងតម្លៃ និងប្រភេទទិន្នន័យឱ្យបានច្បាស់លាស់។',
     syntax: 'if ($age > 18) { echo "Adult"; } else { echo "Minor"; }',
     lab: 'ត្រួតពិនិត្យអ្នកប្រើប្រាស់ថាជា "admin" ឬ "guest" រួចបង្ហាញសារស្វាគមន៍ទៅតាមនោះ។',
     result: 'សារដែលសមស្របនឹងត្រូវបានបង្ហាញផ្អែកលើ variable role។',
@@ -194,12 +201,13 @@ if ($role == "admin") {
     chapter: 'logic', id: 'PH2-S2', tag: 'Week 3', tagColor: '#6366f1',
     title: 'ការប្រើ Loop (ការងារដដែលៗ)', subtitle: 'កិច្ចការស្វ័យប្រវត្តិ', accent: '#6366f1',
     bg: 'radial-gradient(ellipse at 10% 80%, rgba(99,102,241,0.08) 0%, transparent 55%)',
-    content: [
-      'For Loop៖ ប្រើនៅពេលយើងដឹងច្បាស់ថា ចង់ឱ្យវាដើរប៉ុន្មានជុំ (Counter-based)។',
-      'While Loop៖ ឱ្យវាដើរចុះឡើង ដរាបណាលក្ខខណ្ឌនៅតែ "ពិត" (True)។',
-      'Do-While៖ ប្លែកគេបន្តិច គឺវាដំណើរការមុន ១ដង សិន ទើបឆែកលក្ខខណ្ឌតាមក្រោយ។',
-      'Counter Variable៖ ជាតួលេខសម្រាប់គ្រប់គ្រងកុំឱ្យ Loop ដើរមិនឈប់ (Infinite Loop)។'
+    concepts: [
+      { label: 'For Loop', desc: 'ប្រើនៅពេលយើងដឹងច្បាស់ថា ចង់ឱ្យកូដដើរប៉ុន្មានជុំ (Counter-based)។' },
+      { label: 'While Loop', desc: 'ឱ្យវាដើរចុះឡើង ដរាបណាលក្ខខណ្ឌនៅតែ "ពិត" (True)។' },
+      { label: 'Do-While Loop', desc: 'វាដំណើរការកូដមុន ១ដង សិន រួចទើបឆែកលក្ខខណ្ឌតាមក្រោយ។' },
+      { label: 'Infinite Guards', desc: 'ត្រូវមាន Counter ត្រឹមត្រូវដើម្បីកុំឱ្យ Loop ដើរមិនឈប់ និងគាំង Server។' }
     ],
+    tip: 'ប្រើ "break" ដើម្បីបញ្ឈប់ Loop ភ្លាមៗ ឬ "continue" ដើម្បីរំលងទៅជុំបន្ទាប់។',
     syntax: 'for ($i = 1; $i <= 5; $i++) { echo $i; }',
     lab: 'ប្រើ For Loop ដើម្បីបង្ហាញលេខរៀងពី ១ ដល់ ១០ ជាជួរដេក។',
     result: 'អ្នកនឹងឃើញលេខរៀង (1 2 3 ... 10) បង្ហាញនៅលើអេក្រង់។',
@@ -215,12 +223,13 @@ for ($i = 1; $i <= 10; $i++) {
     chapter: 'logic', id: 'PH2-S3', tag: 'Week 3', tagColor: '#6366f1',
     title: 'ការប្រើ Function', subtitle: 'កូដដែលប្រើឡើងវិញបាន', accent: '#6366f1',
     bg: 'radial-gradient(ellipse at center, rgba(99,102,241,0.04) 0%, transparent 70%)',
-    content: [
-      'ការបង្កើត (Declaration)៖ ចងក្រងកូដចូលគ្នាជាបណ្តុំ ដើម្បីយកមកប្រើបានច្រើនដង។',
-      'Arguments៖ ជាទិន្នន័យដែលយើងបោះចូលទៅក្នុង Function ដើម្បីឱ្យវាធ្វើការ។',
-      'Return Statement៖ ប្រើ "return" ដើម្បីបញ្ជូនលទ្ធផលចេញពី Function ត្រឡប់មកវិញ។',
-      'ការហៅប្រើ (Calling)៖ គ្រាន់តែហៅឈ្មោះ Function រួចដាក់សញ្ញា () ជាការស្រេច។'
+    concepts: [
+      { label: 'Declaration', desc: 'ចងក្រងកូដចូលគ្នាជាបណ្តុំ ដើម្បីប្រើឡើងវិញបានច្រើនដង។' },
+      { label: 'Arguments', desc: 'ទិន្នន័យដែលយើងបោះចូលទៅក្នុង Function ដើម្បីឱ្យវាធ្វើការងារ។' },
+      { label: 'Return Logic', desc: 'ប្រើពាក្យ "return" ដើម្បីបញ្ជូនលទ្ធផលចេញពី Function ត្រឡប់មកវិញ។' },
+      { label: 'Function Call', desc: 'គ្រាន់តែហៅឈ្មោះ Function រួចដាក់សញ្ញា () ដើម្បីឱ្យវាដំណើរការ។' }
     ],
+    tip: 'ឈ្មោះ Function គួរតែជានាមកិរិយា (ឧទាហរណ៍៖ calculateTotal) ដើម្បីឱ្យងាយយល់ខ្លឹមសារ។',
     syntax: 'function greet($name) { return "Hello " . $name; }',
     lab: 'សរសេរ Function ឈ្មោះ "addNums" ដែលទទួលលេខ ២ រួចបូកបញ្ជូនលទ្ធផលមកវិញ។',
     result: 'Function នឹងគណនាលទ្ធផល រួចបោះតម្លៃដែលបូករួចមកឱ្យយើងបង្ហាញ។',
@@ -240,12 +249,13 @@ echo greet("Ratha");`,
     chapter: 'data', id: 'PH3-S1', tag: 'Week 3', tagColor: '#06b6d4',
     title: 'Indexed Array', subtitle: 'បញ្ជីរាយនាមតាមលេខរៀង', accent: '#06b6d4',
     bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
-    content: [
-      'និយមន័យ៖ ជាការរក្សាទុកទិន្នន័យច្រើនក្នុង Variable តែមួយ ដោយប្រើលេខរៀង (Index)។',
-      'Square Brackets []៖ ជារបៀបសរសេរ Array ដែលសាមញ្ញ និងពេញនិយមបំផុតក្នុង PHP។',
-      'ការទាញយកទិន្នន័យ៖ ហៅឈ្មោះ Array រួចដាក់លេខរៀងក្នុង [] (ចាប់ផ្ដើមពីលេខ ០)។',
-      'Counting៖ ប្រើ Function count($array) ដើម្បីដឹងថាមានទិន្នន័យប៉ុន្មានក្នុង Array។'
+    concepts: [
+      { label: 'Indexing', desc: 'ការរក្សាទុកទិន្នន័យច្រើនក្នុង Variable តែមួយ ដោយប្រើលេខរៀង។' },
+      { label: 'Syntax []', desc: 'ជារបៀបសរសេរ Array ដែលសាមញ្ញ និងពេញនិយមបំផុតក្នុង PHP សម័យថ្មី។' },
+      { label: 'Accessing Data', desc: 'ហៅឈ្មោះ Array រួចដាក់លេខរៀងក្នុង [] (ចាប់ផ្ដើមពីលេខ ០ ជានិច្ច)។' },
+      { label: 'The count() Func', desc: 'ប្រើ count($array) ដើម្បីដឹងថាមានទិន្នន័យប៉ុន្មានក្នុងបញ្ជីនោះ។' }
     ],
+    tip: 'ចាំថា Index ទី ១ គឺស្ថិតនៅលេខរៀងទី ០ ($colors[0])។',
     syntax: '$colors = ["red", "blue", "green"];',
     lab: 'បង្កើត Array តំណាងឱ្យផ្លែឈើ ៣ មុខ រួចបង្ហាញឈ្មោះផ្លែឈើទី ២ មីន។',
     result: 'ឈ្មោះផ្លែឈើដែលស្ថិតក្នុង Index ទី ១ នឹងបង្ហាញលើ Terminal។',
@@ -261,12 +271,13 @@ echo "Total colors: " . count($colors);`,
     chapter: 'data', id: 'PH3-S2', tag: 'Week 4', tagColor: '#06b6d4',
     title: 'Associative Array', subtitle: 'កំណត់ Key តាមចិត្ត', accent: '#06b6d4',
     bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
-    content: [
-      'និយមន័យ៖ ប្រើឈ្មោះ (Key) ជំនួសឱ្យលេខរៀង ដើម្បីកំណត់ចំណាំទិន្នន័យ។',
-      'Arrow Syntax៖ ប្រើសញ្ញា => ដើម្បីភ្ជាប់ឈ្មោះ Key ទៅកាន់តម្លៃ (Value) របស់វា។',
-      'ការប្រើប្រាស់៖ ល្អបំផុតសម្រាប់តំណាងឱ្យព័ត៌មានលម្អិត (User, ផលិតផល, ...)។',
-      'Dynamic Access៖ $user["email"] សម្រាប់ទាញយក Email ចេញមកបង្ហាញ។'
+    concepts: [
+      { label: 'Key-Value Pair', desc: 'ប្រើឈ្មោះ (Key) ជំនួសឱ្យលេខរៀង ដើម្បីចំណាំទិន្នន័យឱ្យងាយស្រួល។' },
+      { label: 'Arrow Syntax =>', desc: 'ប្រើសញ្ញា => ដើម្បីភ្ជាប់ឈ្មោះ Key ទៅកាន់តម្លៃ (Value) របស់វា។' },
+      { label: 'Data Mapping', desc: 'ល្អបំផុតសម្រាប់តំណាងឱ្យព័ត៌មានលម្អិតដូចជា User ឬផលិតផល។' },
+      { label: 'Simple Access', desc: 'ប្រើ $user["email"] ដើម្បីទាញយកទិន្នន័យជាក់លាក់មកបង្ហាញ។' }
     ],
+    tip: 'Associative Arrays មានភាពងាយស្រួលដូចជា JSON objects ក្នុង JavaScript ដែរ។',
     syntax: '$user = ["name" => "Ratha", "age" => 21];',
     lab: 'បង្កើត Associative Array សម្រាប់ឡានមួយ (Model, Year, Color) រួចបង្ហាញពណ៌ឡាន។',
     result: 'ទិន្នន័យត្រូវបានរក្សាទុកយ៉ាងមានរបៀប ហើយងាយស្រួលទាញយកតាម Key។',
@@ -286,12 +297,13 @@ echo "User Email: " . $user["email"];`,
     chapter: 'data', id: 'PH3-S3', tag: 'Week 4', tagColor: '#06b6d4',
     title: 'Foreach Loop', subtitle: 'ការរុករកក្នុង Array', accent: '#06b6d4',
     bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
-    content: [
-      'Loop ពិសេស៖ ជា loop ដែលបង្កើតឡើងសម្រាប់ទាញទិន្នន័យពី Array មកបង្ហាញ។',
-      'ស្វ័យប្រវត្តិ៖ វានឹងដើររហូតទាល់តែអស់ទិន្នន័យក្នុង Array ដោយមិនចាំបាច់រាប់លេខរៀង។',
-      'Key/Value៖ យើងអាចទាញយកបានទាំង "ឈ្មោះ Key" និង "តម្លៃ Value" ក្នុងពេលតែមួយ។',
-      'ភាពងាយស្រួល៖ ជាវិធីដែលស្អាត និងពេញនិយមបំផុតសម្រាប់បង្ហាញបញ្ជី (List)។'
+    concepts: [
+      { label: 'Array Traversal', desc: 'ជា loop ពិសេសដែលបង្កើតឡើងសម្រាប់ទាញទិន្នន័យពី Array មកបង្ហាញ។' },
+      { label: 'Auto Iteration', desc: 'វានឹងដើររហូតទាល់តែអស់ធាតុក្នុង Array ដោយមិនចាំបាច់រាប់លេខរៀង។' },
+      { label: 'Key/Value Support', desc: 'យើងអាចទាញយកបានទាំង "ឈ្មោះ Key" និង "តម្លៃ Value" ក្នុងពេលតែមួយ។' },
+      { label: 'UI Rendering', desc: 'ជាវិធីដែលស្អាត និងពេញនិយមបំផុតសម្រាប់បង្ហាញបញ្ជី (List) លើវេបសាយ។' }
     ],
+    tip: 'ប្រើ foreach ($items as $item) ជានិច្ចនៅពេលចង់បង្ហាញទិន្នន័យពី Array ក្នុង HTML។',
     syntax: 'foreach ($array as $item) { ... }',
     lab: 'សាកប្រើ Foreach ដើម្បីបង្ហាញបញ្ជីពណ៌ទាំងអស់ដែលមានក្នុង Array។',
     result: 'ឈ្មោះពណ៌នីមួយៗនឹងបង្ហាញចេញមកក្រៅម្តងមួយៗតាមលំដាប់លំដោយ។',
@@ -309,12 +321,13 @@ foreach ($colors as $color) {
     chapter: 'data', id: 'PH3-S4', tag: 'Week 4', tagColor: '#06b6d4',
     title: 'Array Mapping', subtitle: 'ការបំប្លែងទិន្នន័យសរុប', accent: '#06b6d4',
     bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
-    content: [
-      'ការបំប្លែង (Transformation)៖ បង្កើត Array ថ្មីមួយ ចេញពីការកែប្រែរាល់ធាតុក្នុង Array ចាស់។',
-      'Closures (fn)៖ ប្រើវិធីសរសេរខ្លីៗដើម្បីធ្វើការងារលើធាតុនីមួយៗក្នុង Array។',
-      'Original Array៖ Array ដើម គឺមិនមានការផ្លាស់ប្តូរតម្លៃ ឬខូចខាតអ្វីឡើយ។',
-      'អត្ថប្រយោជន៍៖ ប្រើច្រើនសម្រាប់គណនាបញ្ចុះតម្លៃ, រៀបចំ Font អក្សរ ឬដូរទម្រង់ទិន្នន័យ។'
+    concepts: [
+      { label: 'Transformation', desc: 'បង្កើត Array ថ្មីមួយ ចេញពីការកែប្រែរាល់ធាតុក្នុង Array ចាស់។' },
+      { label: 'Functional PHP', desc: 'ប្រើ Arrow Functions (fn) ដើម្បីធ្វើការងារលើធាតុនីមួយៗបានយ៉ាងលឿន។' },
+      { label: 'Immutability', desc: 'Array ដើម គឺមិនមានការផ្លាស់ប្តូរតម្លៃ ឬរងការខូចខាតអ្វីឡើយ។' },
+      { label: 'Practical Use', desc: 'ប្រើច្រើនសម្រាប់គណនាបញ្ចុះតម្លៃ ឬប្តូរទម្រង់អក្សរក្នុងបញ្ជីធំៗ។' }
     ],
+    tip: 'array_map ជួយឱ្យកូដរបស់អ្នកមើលទៅស្អាត (Clean Code) ជាងការប្រើ Loop ធម្មតា។',
     syntax: 'array_map(fn($x) => $x * 2, $arr);',
     lab: 'ផ្តល់ Array តម្លៃទំនិញ [100, 200, 300] រួចប្រើ array_map ដើម្បីបញ្ចុះតម្លៃ ២០% ទាំងអស់។',
     result: 'អ្នកនឹងទទួលបាន Array ថ្មីដែលមានតម្លៃបញ្ចុះរួចរាល់។',
@@ -332,12 +345,13 @@ echo "New Prices: " . implode(", ", $discounted);`,
     chapter: 'forms', id: 'PH4-S1', tag: 'Week 4', tagColor: '#f59e0b',
     title: 'GET vs POST (តើគួរប្រើមួយណា?)', subtitle: 'វិធីសាស្ត្រផ្ញើទិន្នន័យ', accent: '#f59e0b',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(245,158,11,0.15) 0%, transparent 55%)',
-    content: [
-      'GET៖ ទិន្នន័យបង្ហាញលើ URL (?id=1)។ ប្រើសម្រាប់តែការស្វែងរក (Search) ឬមើលទិន្នន័យធម្មតា។',
-      'POST៖ ទិន្នន័យត្រូវបានលាក់ (មិនបង្ហាញលើ URL)។ ប្រើសម្រាប់ផ្ញើទិន្នន័យសំខាន់ៗដូចជា លេខសម្ងាត់ ជាដើម។',
-      '$_POST៖ ជាអថេរពិសេស (Superglobal) សម្រាប់ចាប់យកទិន្នន័យដែលផ្ញើមកពី Form។',
-      'សុវត្ថិភាព៖ កុំផ្ញើព័ត៌មានសម្ងាត់តាមរយៈ GET ឱ្យសោះ ព្រោះវានឹងបង្ហាញឱ្យគេឃើញទាំងអស់។'
+    concepts: [
+      { label: 'The GET Method', desc: 'ទិន្នន័យបង្ហាញលើ URL (?id=1)។ ប្រើសម្រាប់តែការស្វែងរក ឬមើលទិន្នន័យ។' },
+      { label: 'The POST Method', desc: 'ទិន្នន័យត្រូវបានលាក់ (Secure)។ ប្រើសម្រាប់ផ្ញើព័ត៌មានសំខាន់ៗ និងលេខសម្ងាត់។' },
+      { label: 'Superglobal Arrays', desc: '$_POST និង $_GET ជាអថេរពិសេសសម្រាប់ចាប់យកទិន្នន័យពី Form។' },
+      { label: 'Security Principle', desc: 'កុំផ្ញើព័ត៌មានសម្ងាត់តាមរយៈ GET ឱ្យសោះ ព្រោះវានឹងបង្ហាញឱ្យគេឃើញទាំងអស់។' }
     ],
+    tip: 'ប្រើ POST ជានិច្ចសម្រាប់រាល់ Form ដែលមានការផ្លាស់ប្តូរទិន្នន័យក្នុង Database។',
     syntax: '$name = $_POST["name"];',
     lab: 'សាកល្បងទទួលឈ្មោះពីការបញ្ជូនតាមរយៈ POST រួចបង្ហាញសារស្វាគមន៍។',
     result: 'ទិន្នន័យត្រូវបានចាប់យកយ៉ាងត្រឹមត្រូវ និងបង្ហាញលើអេក្រង់។',
@@ -356,12 +370,13 @@ echo "Submitted Name: " . $name;
     chapter: 'forms', id: 'PH4-S2', tag: 'Week 5', tagColor: '#f59e0b',
     title: 'ការធ្វើ Validation', subtitle: 'ការសម្អាតទិន្នន័យ', accent: '#f59e0b',
     bg: 'radial-gradient(ellipse at center, rgba(245,158,11,0.08) 0%, transparent 70%)',
-    content: [
-      'ច្បាប់មាស៖ កុំទុកចិត្តរាល់ទិន្នន័យដែលបញ្ចូលមកពីអ្នកប្រើប្រាស់ឱ្យសោះ (Never trust input)។',
-      'Sanitization៖ ការលុបចោលតួអក្សរដែលគ្រោះថ្នាក់ (ដូចជាការកាត់ HTML Tags ចេញ)។',
-      'Validation៖ ការឆែកមើលថាទិន្នន័យត្រឹមត្រូវតាមទម្រង់ដែលយើងចង់បាន (ឧទាហរណ៍៖ Email)។',
-      'XSS Protection៖ ប្រើ htmlspecialchars() ដើម្បីការពារការ Hack ចូលក្នុងវេបសាយ។'
+    concepts: [
+      { label: 'The Golden Rule', desc: 'កុំទុកចិត្តរាល់ទិន្នន័យដែលបញ្ចូលមកពីអ្នកប្រើប្រាស់ឱ្យសោះ (Never Trust Input)។' },
+      { label: 'Data Sanitization', desc: 'ការលុបចោលតួអក្សរដែលគ្រោះថ្នាក់ (ដូចជាការកាត់ HTML Tags ចេញ)។' },
+      { label: 'Format Validation', desc: 'ការឆែកមើលថាទិន្នន័យត្រឹមត្រូវតាមទម្រង់ (ឧទាហរណ៍៖ អ៊ីមែល ឬលេខទូរស័ព្ទ)។' },
+      { label: 'XSS Defense', desc: 'ប្រើ htmlspecialchars() ដើម្បីការពារការបញ្ចូលកូដ Hack ក្នុងវេបសាយ។' }
     ],
+    tip: 'តែងតែសម្អាតទិន្នន័យមុននឹងដាក់វាបង្ហាញត្រឡប់ទៅក្នុង HTML វិញ ដើម្បីការពារ XSS។',
     syntax: 'htmlspecialchars($input);',
     lab: 'សរសេរកូដសម្អាតអត្ថបទ (String) ដែលមានផ្ទុក HTML Tags ដ៏គ្រោះថ្នាក់។',
     result: 'Tags ទាំងនោះនឹងត្រូវបានបំប្លែងឱ្យទៅជាអត្ថបទធម្មតាវិញដោយសុវត្ថិភាព។',
@@ -381,12 +396,13 @@ echo $safeInput;
     chapter: 'db', id: 'PH5-S1', tag: 'Week 5', tagColor: '#3b82f6',
     title: 'ការភ្ជាប់ទៅកាន់ MySQL (PDO)', subtitle: 'ស្ពានចម្លងទិន្នន័យ', accent: '#3b82f6',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(59,130,246,0.15) 0%, transparent 55%)',
-    content: [
-      'PDO៖ ជាវិធីសាស្ត្រទំនើប និងមានសុវត្ថិភាពបំផុតសម្រាប់ភ្ជាប់ទៅកាន់ Database ច្រើនប្រភេទ។',
-      'Connection Parameters៖ ការកំណត់ Host, ឈ្មោះ Database, Username និង Password។',
-      'Try/Catch៖ ប្រើសម្រាប់ឆែកមើលថា តើការភ្ជាប់ទៅកាន់ Database ជោគជ័យ ឬមានបញ្ហាកូដត្រង់ណា។',
-      'Persistence៖ ការភ្ជាប់នេះនឹងបន្តរហូតទាល់តែ Script របស់ PHP ដំណើរការចប់។'
+    concepts: [
+      { label: 'PDO Interface', desc: 'វិធីសាស្ត្រទំនើប និងមានសុវត្ថិភាពបំផុតសម្រាប់ភ្ជាប់ទៅកាន់ Database ច្រើនប្រភេទ។' },
+      { label: 'DSN Configuration', desc: 'ការកំណត់ Host, ឈ្មោះ Database, Username និង Password ឱ្យបានត្រឹមត្រូវ។' },
+      { label: 'Error Handling', desc: 'ប្រើ Try/Catch ដើម្បីឆែកមើលថា តើការភ្ជាប់ជោគជ័យ ឬមានបញ្ហាកូដត្រង់ណា។' },
+      { label: 'Secure Bridge', desc: 'PDO ជួយការពារការ Hack តាមរយៈ Prepared Statements ដោយស្វ័យប្រវត្តិ។' }
     ],
+    tip: 'ប្រើ PDO ជំនួសឱ្យ mysqli ព្រោះវាអាចបត់បែនបានច្រើនជាង និងមានសុវត្ថិភាពខ្ពស់ជាង។',
     syntax: '$pdo = new PDO("mysql:host=$h;dbname=$d", $u, $p);',
     lab: 'រៀបចំ Parameters ដែលចាំបាច់សម្រាប់ការភ្ជាប់ Database នៅក្នុង Local Server។',
     result: 'យល់ដឹងពីរបៀបភ្ជាប់ និងការចាប់យក Error ក្នុងករណីភ្ជាប់មិនបាន។',
@@ -410,12 +426,13 @@ try {
     chapter: 'db', id: 'PH5-S2', tag: 'Week 6', tagColor: '#3b82f6',
     title: 'ប្រតិបត្តិការ CRUD', subtitle: 'ការគ្រប់គ្រងទិន្នន័យ', accent: '#3b82f6',
     bg: 'radial-gradient(ellipse at center, rgba(59,130,246,0.08) 0%, transparent 70%)',
-    content: [
-      'Read (SELECT)៖ ការទាញយកទិន្នន័យមកបង្ហាញលើគេហទំព័រ។',
-      'Create (INSERT)៖ ការរក្សាទុកទិន្នន័យថ្មីចូលទៅក្នុងតារាង (Table)។',
-      'Update/Delete៖ ការកែប្រែ ឬលុបទិន្នន័យ (ត្រូវប្រើ WHERE ជានិច្ចដើម្បីកុំឱ្យខូចទិន្នន័យផ្សេង)។',
-      'Prepared Statements៖ ចាំបាច់បំផុតដើម្បីការពារកុំឱ្យគេ Hack ចូល Database (SQL Injection)។'
+    concepts: [
+      { label: 'Read (SELECT)', desc: 'ការទាញយកទិន្នន័យពី Database មកបង្ហាញមានរបៀបរៀបរយលើវេបសាយ។' },
+      { label: 'Create (INSERT)', desc: 'ការរក្សាទុកទិន្នន័យថ្មីដែលអ្នកប្រើបញ្ចូល ទៅក្នុងតារាង (Table)។' },
+      { label: 'Update/Delete', desc: 'ការកែប្រែ ឬលុបទិន្នន័យ (ត្រូវប្រើ WHERE ជានិច្ចដើម្បីកុំឱ្យខូចទិន្នន័យផ្សេង)។' },
+      { label: 'Prepared Statements', desc: 'វិធីសាស្ត្រការពារ SQL Injection ដែលជាចំណុចខ្សោយបំផុតរបស់វេបសាយ។' }
     ],
+    tip: 'កុំបញ្ចូល Variable ទៅក្នុង Query ផ្ទាល់ ត្រូវប្រើសញ្ញា ? រួច execute តាមក្រោយ។',
     syntax: '$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");',
     lab: 'ពន្យល់ពីមូលហេតុដែលយើងប្រើ Prepared Statements ជំនួសឱ្យការសរសេរសំណួរផ្ទាល់។',
     result: 'យល់ដឹងពីរបៀបការពារទិន្នន័យឱ្យមានសុវត្ថិភាពខ្ពស់បំផុត។',
@@ -434,12 +451,13 @@ echo "Welcome, " . htmlspecialchars($user["name"]);
     chapter: 'auth', id: 'PH6-S1', tag: 'Week 6', tagColor: '#f43f5e',
     title: 'ការប្រើ Session', subtitle: 'ការចងចាំអ្នកប្រើប្រាស់', accent: '#f43f5e',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(244,63,94,0.15) 0%, transparent 55%)',
-    content: [
-      'HTTP Stateless： មានន័យថា Browser មិនដែលចងចាំយើងទេ។ Sessions ជួយដោះស្រាយបញ្ហានេះ។',
-      'session_start()៖ ជាពាក្យបញ្ជាដែលត្រូវហៅនៅផ្នែកខាងលើបង្អស់នៃគ្រប់ទំព័រ។',
-      '$_SESSION៖ ជាអថេរពិសេសសម្រាប់រក្សាទុកទិន្នន័យឱ្យនៅជាប់ ទោះយើងប្តូរទៅទំព័រផ្សេងក៏ដោយ។',
-      'ការបិទ Session៖ ជាទូទៅវាបាត់បង់ទៅវិញ នៅពេលយើងបិទ Browser ឬធ្វើការ Logout។'
+    concepts: [
+      { label: 'State Problem', desc: 'HTTP ជា Stateless (មិនចងចាំយើងទេ) ដូច្នេះយើងត្រូវការ Session ដើម្បីចាំ User។' },
+      { label: 'session_start()', desc: 'ជាពាក្យបញ្ជាដែលត្រូវហៅនៅផ្នែកខាងលើបង្អស់នែរាល់ទំព័រ PHP ជានិច្ច។' },
+      { label: '$_SESSION Array', desc: 'អថេរពិសេសសម្រាប់រក្សាទុកទិន្នន័យឱ្យនៅជាប់ ទោះយើងប្តូរទៅទំព័រផ្សេងក៏ដោយ។' },
+      { label: 'Session Expiry', desc: 'ទិន្នន័យនឹងបាត់បង់ទៅវិញ នៅពេលយើងបិទ Browser ឬធ្វើការ Logout។' }
     ],
+    tip: 'កុំភ្លេចហៅ session_start() មុនពេលព្យាយាមទាញយកទិន្នន័យពី $_SESSION។',
     syntax: 'session_start(); $_SESSION["user"] = "id_123";',
     lab: 'សាកល្បងចាប់ផ្ដើម Session រួចរក្សាទុកឈ្មោះក្នុង "user_name" ដើម្បីបង្ហាញនៅទំព័រផ្សេង។',
     result: 'ឈ្មោះដែលបានរក្សាទុក នឹងបង្ហាញមកវិញទោះបីជាយើង Logout រួចចូលមកវិញក៏ដោយ (បើមិនទាន់បិទ Browser)។',
@@ -457,12 +475,13 @@ echo "Session started for: " . $_SESSION["user_name"];
     chapter: 'auth', id: 'PH6-S2', tag: 'Week 7', tagColor: '#f43f5e',
     title: 'ការ Hash លេខសម្ងាត់', subtitle: 'សុវត្ថិភាពទិន្នន័យសម្ងាត់', accent: '#f43f5e',
     bg: 'radial-gradient(ellipse at center, rgba(244,63,94,0.08) 0%, transparent 70%)',
-    content: [
-      'ច្បាប់សំខាន់៖ ហាមដាច់ខាតកុំរក្សាទុក Password សុទ្ធៗ (Plain-text) ក្នុង Database។',
-      'password_hash()៖ ជា Function សម្រាប់បំប្លែង Password ឱ្យទៅជាកូដដែលមើលមិនយល់ (Hash)។',
-      'password_verify()៖ ប្រើសម្រាប់ផ្ទៀងផ្ទាត់ Password ដែល User វាយបញ្ជូល ជាមួយ Hash ដែលមានស្រាប់។',
-      'យន្តការការពារ៖ PHP ជួយគ្រប់គ្រង Salt ដោយស្វ័យប្រវត្តិដើម្បីសុវត្ថិភាពខ្ពស់បំផុត។'
+    concepts: [
+      { label: 'Plain-text Danger', desc: 'ហាមដាច់ខាតកុំរក្សាទុក Password សុទ្ធៗក្នុង Database (ព្រោះ Hacker អាចមើលឃើញ)។' },
+      { label: 'password_hash()', desc: 'បំប្លែង Password ឱ្យទៅជាកូដដែលមើលមិនយល់ (Hash) ដែលមានសុវត្ថិភាពខ្ពស់។' },
+      { label: 'password_verify()', desc: 'ប្រើសម្រាប់ផ្ទៀងផ្ទាត់ Password ដែល User វាយ បើធៀបនឹង Hash ក្នុង DB។' },
+      { label: 'Auto Salting', desc: 'PHP គ្រប់គ្រងការដាក់ Salt ដោយស្វ័យប្រវត្តិដើម្បីការពារការ Hack គ្រប់រូបភាព។' }
     ],
+    tip: 'ប្រើ PASSWORD_DEFAULT ដើម្បីឱ្យ PHP ជ្រើសរើស Algorithm ដែលល្អបំផុតដោយស្វ័យប្រវត្តិ។',
     syntax: '$hash = password_hash($pw, PASSWORD_DEFAULT);',
     lab: 'សាកល្បងបង្កើត Hash ចេញពី Password "secret123" រួចផ្ទៀងផ្ទាត់វាវិញ។',
     result: 'អ្នកនឹងឃើញថា Password ត្រូវគ្នាជាមួយ Hash បើទោះជាយើងមើលមិនយល់ពី Hash នោះក៏ដោយ។',
@@ -486,12 +505,13 @@ if (password_verify("secret123", $hash)) {
     chapter: 'files', id: 'PH7-S1', tag: 'Week 7', tagColor: '#f97316',
     title: 'ការ Upload ឯកសារ', subtitle: 'ការគ្រប់គ្រង Assets', accent: '#f97316',
     bg: 'radial-gradient(ellipse at center, rgba(249,115,22,0.08) 0%, transparent 70%)',
-    content: [
-      'enctype៖ ចាំបាច់ត្រូវដាក់ "multipart/form-data" ក្នុង HTML Form ទើប Upload ឯកសារបាន។',
-      '$_FILES៖ ជាអថេរសម្រាប់ផ្ទុកព័ត៌មានឯកសារដូចជា ឈ្មោះ, ប្រភេទ (Type), និងទំហំ (Size)។',
-      'move_uploaded_file()៖ ជាពាក្យបញ្ជាសម្រាប់ប្តូរឯកសារពីកន្លែងផ្ញើ ទៅកាន់ Folder ដែលយើងចង់ដាក់។',
-      'សុវត្ថិភាព៖ ត្រូវឆែកប្រភេទឯកសារឱ្យច្បាស់ ដើម្បីការពារគេផ្ញើកូដមេរោគមកកាន់ Server។'
+    concepts: [
+      { label: 'enctype Attribute', desc: 'ត្រូវដាក់ "multipart/form-data" ក្នុង HTML Form ទើបអាច Upload ឯកសារបាន។' },
+      { label: '$_FILES Global', desc: 'អថេរផ្ទុកព័ត៌មានឯកសារ (ឈ្មោះ, ប្រភេទ, ទំហំ, និងទីតាំងបណ្តោះអាសន្ន)។' },
+      { label: 'File Movement', desc: 'ប្រើ move_uploaded_file() ដើម្បីប្តូរឯកសារពី Temporary ទៅកាន់ Folder គោលដៅ។' },
+      { label: 'Security Audits', desc: 'ត្រូវឆែកប្រភេទឯកសារ (Extension) ដើម្បីការពារការ Upload មេរោគចូល Server។' }
     ],
+    tip: 'តែងតែប្តូរឈ្មោះឯកសារដែល Upload មកថ្មី ដើម្បីចៀសវាងការជាន់ឈ្មោះគ្នាជាមួយ File ចាស់។',
     syntax: 'move_uploaded_file($tmp, $destination);',
     lab: 'ពន្យល់ពីសារៈសំខាន់នៃ $_FILES array ក្នុងដំណើរការ Upload រូបភាព។',
     result: 'យល់ដឹងពីរបៀបគ្រប់គ្រង និងរក្សាទុកឯកសារបានយ៉ាងត្រឹមត្រូវ។',
@@ -512,12 +532,13 @@ if ($_FILES["profile"]["error"] == UPLOAD_ERR_OK) {
     chapter: 'oop', id: 'PH8-S1', tag: 'Week 8', tagColor: '#a855f7',
     title: 'Classes & Objects', subtitle: 'ស្ថាបត្យកម្មទំនើប', accent: '#a855f7',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(168,85,247,0.15) 0%, transparent 55%)',
-    content: [
-      'Class៖ ប្រៀបដូចជាប្លង់មេ (Blueprint) សម្រាប់បង្កើត Object (ឧទាហរណ៍៖ Class "User")។',
-      'Object៖ ជាតំណាងជាក់ស្តែងនៃ Class នោះ (ឧទាហរណ៍៖ $user1 = new User())។',
-      'Properties៖ គឺជា Variable ដែលមាននៅក្នុង Class សម្រាប់រក្សាទិន្នន័យ។',
-      'Methods៖ គឺជា Function ដែលមាននៅក្នុង Class សម្រាប់ធ្វើសកម្មភាពផ្សេងៗ។'
+    concepts: [
+      { label: 'The Blueprint (Class)', desc: 'Class ប្រៀបដូចជាប្លង់មេសម្រាប់បង្កើត Object (ឧទាហរណ៍៖ ប្លង់ផ្ទះ)។' },
+      { label: 'The Instance (Object)', desc: 'Object ជាការបង្កើតបានជាផ្ទះពិតប្រាកដចេញពីប្លង់មេនោះ ($user = new User)។' },
+      { label: 'Class Properties', desc: 'ជា Variable ដែលស្ថិតក្នុង Class សម្រាប់រក្សាទុកព័ត៌មានលម្អិត។' },
+      { label: 'Class Methods', desc: 'ជា Function នៅក្នុង Class សម្រាប់កំណត់សកម្មភាពដែល Object អាចធ្វើបាន។' }
     ],
+    tip: 'OOP ជួយឱ្យកូដរបស់អ្នកងាយស្រួលគ្រប់គ្រង (Manageable) ពេល Project រីកកាន់តែធំ។',
     syntax: 'class User { public $name; }',
     lab: 'បង្កើត Class ឈ្មោះ "Car" មួយដែលមាន Property ឈ្មោះ "brand" និង "model"។',
     result: 'អ្នកអាចបង្កើត Object ជាច្រើនដែលចេញពី Class តែមួយ ប៉ុន្តែមានតម្លៃផ្សេងគ្នា។',
@@ -547,12 +568,13 @@ echo $user->introduce();
     chapter: 'security', id: 'PH9-S1', tag: 'Week 9', tagColor: '#ec4899',
     title: 'SQL Injection', subtitle: 'ការគំរាមកំហែងទូទៅ', accent: '#ec4899',
     bg: 'radial-gradient(ellipse at 10% 20%, rgba(236,72,153,0.15) 0%, transparent 55%)',
-    content: [
-      'The Attack៖ ការលួចបញ្ចូលបញ្ជា SQL មិនល្អ តាមរយៈការវាយអត្ថបទក្នុងប្រអប់បញ្ចូលទិន្នន័យ។',
-      'គ្រោះថ្នាក់៖ អាចធ្វើឱ្យអ្នកលួច (Hacker) ឆ្លងកាត់ការ Login ឬលុបទិន្នន័យក្នុង DB ទាំងអស់បាន។',
-      'ដំណោះស្រាយ៖ ហាមភ្ជាប់កូដ SQL ជាមួយ Variable ផ្ទាល់ ត្រូវតែប្រើ Prepared Statements។',
-      'បច្ចេកទេសការពារ៖ ប្រើប្រព័ន្ធ PDO ដើម្បីបំបែកកូដ SQL និងទិន្នន័យឱ្យដាច់ពីគ្នា។'
+    concepts: [
+      { label: 'The Attack Vector', desc: 'ការបញ្ចូលបញ្ជា SQL មិនល្អតាមរយៈ Input ដើម្បីលួចទិន្នន័យពី Database។' },
+      { label: 'Data Breach Risk', desc: 'Hacker អាចឆ្លងកាត់ការ Login ឬលុបទិន្នន័យក្នុង Database របស់អ្នកទាំងអស់បាន។' },
+      { label: 'The Prevention', desc: 'ហាមភ្ជាប់កូដ SQL ជាមួយ Variable ផ្ទាល់ ត្រូវតែប្រើ Prepared Statements។' },
+      { label: 'Secure PDO', desc: 'ប្រើប្រព័ន្ធ PDO ដើម្បីបំបែកកូដ SQL និងទិន្នន័យឱ្យដាច់ពីគ្នាជានិច្ច។' }
     ],
+    tip: 'រាល់ទិន្នន័យដែលមកពីអ្នកប្រើប្រាស់ (URL ឬ Form) ត្រូវតែប្រើ Prepared Statements ជានិច្ច។',
     syntax: '$stmt->execute([$unsafe_variable]);',
     lab: 'សាកល្បងពន្យល់ពីភាពខុសគ្នារវាងការសរសេរ SQL បញ្ចូលគ្នាផ្ទាល់ និងការប្រើ PDO Prepare។',
     result: 'យល់ដឹងពីរបៀបការពារទិន្នន័យពីការប៉ុនប៉ង Hack ពីខាងក្រៅ។',
@@ -572,12 +594,13 @@ $stmt->execute([$category]);
     chapter: 'project', id: 'PH10-S1', tag: 'Week 10', tagColor: '#14b8a6',
     title: 'រចនាសម្ព័ន្ធ Folder', subtitle: 'ដំណាក់កាលកសាង (Build)', accent: '#14b8a6',
     bg: 'radial-gradient(ellipse at center, rgba(20,184,166,0.08) 0%, transparent 70%)',
-    content: [
-      'ការរៀបចំ Folder៖ បង្កើតរចនាសម្ព័ន្ធឱ្យមានរបៀបរៀបរយដូចជា (public/, src/, vendor/)។',
-      'Entry Point： ការដឹកនាំរាល់ Request ទាំងអស់ឱ្យមកឆ្លងកាត់ index.php តែមួយគត់។',
-      'Database Schema៖ ការបង្កើតតារាង និងទំនាក់ទំនង (Relationship) ឱ្យបានត្រឹមត្រូវសម្រាប់ Project។',
-      'គោលដៅ៖ រួមបញ្ចូលរាល់មេរៀនដែលបានរៀនទាំងអស់ ឱ្យក្លាយទៅជាវេបសាយពិតប្រាកដមួយ។'
+    concepts: [
+      { label: 'Folder Organization', desc: 'រៀបចំហ្វូឌ័រឱ្យមានសណ្តាប់ធ្នាប់តាមស្តង់ដារ (public/, src/, controller/)។' },
+      { label: 'Application Entry', desc: 'ដឹកនាំរាល់ Request ទាំងអស់ឱ្យមកឆ្លងកាត់ index.php តែមួយគត់ (Routing)។' },
+      { label: 'Relational DB', desc: 'ការបង្កើតតារាង និងទំនាក់ទំនង (Relationships) ឱ្យមានប្រសិទ្ធភាពបំផុត។' },
+      { label: 'Full Build', desc: 'រួមបញ្ចូលរាល់មេរៀនដែលបានរៀនទាំងអស់ ឱ្យក្លាយទៅជាវេបសាយពេញលេញ។' }
     ],
+    tip: 'ការរៀបចំរចនាសម្ព័ន្ធ Folder បានត្រឹមត្រូវតាំងពីដំបូង នឹងជួយសន្សំពេលវេលាអ្នកយ៉ាងច្រើន។',
     syntax: 'index.php -> controllers/PostController.php',
     lab: 'សាកល្បងគូររចនាសម្ព័ន្ធ Folder សម្រាប់ Project ចុងក្រោយរបស់អ្នក។',
     result: 'ទទួលបានរចនាសម្ព័ន្ធ File ដែលមានរបៀបរៀបរយតាមស្តង់ដារ។',
@@ -595,12 +618,13 @@ $stmt->execute([$category]);
     chapter: 'project', id: 'PH10-S2', tag: 'Week 12', tagColor: '#14b8a6',
     title: 'ការដាក់ឱ្យប្រើប្រាស់ (Deployment)', subtitle: 'ការបង្ហោះវេបសាយ (Going Live)', accent: '#14b8a6',
     bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 70%)',
-    content: [
-      'Error Logs៖ ត្រូវបិទ display_errors ក្នុងផលិតកម្ម (Production) ដើម្បីកុំឱ្យគេមើលឃើញព័ត៌មាន Server។',
-      'Security Audit៖ ពិនិត្យឡើងវិញនូវរាល់កន្លែងទទួលទិន្នន័យពី User និងកូដ SQL ឱ្យមានសុវត្ថិភាពបំផុត។',
-      'Live Server៖ បង្ហោះកូដ (Upload) និងផ្ទេរទិន្នន័យ (Migration) ទៅកាន់ Server ពិតប្រាកដ។',
-      'Optimization៖ បង្រួមរូបភាព និង CSS ឱ្យតូចដើម្បីឱ្យវេបសាយដើរបានលឿនបំផុត។'
+    concepts: [
+      { label: 'Error Silencing', desc: 'ត្រូវបិទការបង្ហាញ Error ក្នុងលក្ខណៈផលិតកម្ម (Production) សម្រាប់សុវត្ថិភាព។' },
+      { label: 'Security Audit', desc: 'ពិនិត្យឡើងវិញនូវរាល់កន្លែងទទួលទិន្នន័យ និងកូដ SQL ឱ្យមានសុវត្ថិភាពបំផុត។' },
+      { label: 'Going Live', desc: 'បង្ហោះកូដ និងផ្ទេរទិន្នន័យ (Migration) ទៅកាន់ Server ពិតប្រាកដ។' },
+      { label: 'Speed Tuning', desc: 'បង្រួមរូបភាព និង CSS ឱ្យតូចដើម្បីឱ្យវេបសាយដំណើរការលឿនបំផុត។' }
     ],
+    tip: 'ប្រើ SSL (HTTPS) ជានិច្ចសម្រាប់វេបសាយពិតប្រាកដ ដើម្បីការពារទិន្នន័យអ្នកប្រើប្រាស់។',
     syntax: 'git push production main',
     lab: 'ឆែកមើលទំព័រចុងក្រោយ បើក្នុងផលិតកម្ម (Production) ត្រូវប្រាកដថាគ្មាន Error ណាមួយបង្ហាញមកក្រៅ។',
     result: 'វេបសាយរបស់អ្នកដើរបានយ៉ាងរលូន និងមានសុវត្ថិភាពខ្ពស់។',
@@ -876,7 +900,7 @@ export default function PHPLessonContent() {
           <Link href="/courses/backend" 
             className="group flex items-center gap-3 px-3 sm:px-4 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-xl">
             <ArrowLeft className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden lg:block">Exit</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden lg:block">ចាកចេញ</span>
           </Link>
 
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -895,7 +919,7 @@ export default function PHPLessonContent() {
               </AnimatePresence>
             </div>
             <div className="flex flex-col items-start leading-tight overflow-hidden">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 hidden sm:block">Curriculum Map</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 hidden sm:block">ផែនទីមេរៀន</span>
               <div className="flex items-center gap-2 overflow-hidden">
                 <span className="text-sm font-bold text-white tracking-tight truncate">{chapterInfo.label}</span>
                 <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 flex-none transition-transform duration-500 ${isMenuOpen ? 'rotate-180 text-white' : ''}`} />
@@ -907,7 +931,7 @@ export default function PHPLessonContent() {
         <div className="flex items-center gap-3 sm:gap-8 transition-all">
           <div className="hidden sm:flex flex-col items-end gap-1.5 min-w-[100px] md:min-w-[140px]">
             <div className="flex items-center gap-2 text-[10px] font-mono">
-              <span className="text-zinc-500 uppercase tracking-widest font-black hidden lg:block">Chapter Mastery</span>
+              <span className="text-zinc-500 uppercase tracking-widest font-black hidden lg:block">ភាពស្ទាត់ជំនាញនៃជំពូក</span>
               <span className="text-white font-black bg-white/10 px-1.5 py-0.5 rounded-md">{Math.round(progress)}%</span>
             </div>
             <div className="w-24 md:w-44 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
@@ -922,7 +946,7 @@ export default function PHPLessonContent() {
               <ChevronLeft className="w-5 h-5" />
             </button>
             <div className="flex flex-col items-center min-w-[40px] sm:min-w-[45px]">
-               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5 hidden xs:block">Slide</span>
+               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5 hidden xs:block">ស្លាយ</span>
                <span className="text-sm font-mono text-zinc-500 flex items-center gap-1 leading-none">
                  <span className="text-white font-bold">{current + 1}</span>
                  <span className="text-zinc-800">/</span>
@@ -983,10 +1007,10 @@ export default function PHPLessonContent() {
                           <div className="flex items-center gap-2 mb-1">
                             <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
                               style={{ color: ch.color }}>
-                              Part {i + 1}
+                              ផ្នែកទី {i + 1}
                             </span>
                             {isActive && (
-                              <span className="text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded bg-white text-black uppercase tracking-tighter">Current</span>
+                              <span className="text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded bg-white text-black uppercase tracking-tighter">បច្ចុប្បន្ន</span>
                             )}
                           </div>
                           <span className={`text-sm sm:text-[15px] font-bold tracking-tight transition-all truncate w-full ${isActive ? 'text-white' : 'text-zinc-200 group-hover:text-white'}`}>
@@ -1022,13 +1046,17 @@ export default function PHPLessonContent() {
         )}
       </AnimatePresence>
 
+      {/* ── MAIN LAYOUT ── */}
       <main className="relative z-10 flex-1 flex flex-col lg:flex-row overflow-hidden">
+
+        {/* LEFT — Concept cards */}
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div key={`left-${current}`} custom={dir} variants={variants}
             initial="enter" animate="center" exit="exit"
             transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
             className="flex-none lg:w-[45%] flex flex-col p-6 lg:p-10 xl:p-14 lg:border-r border-white/6 overflow-y-auto gap-6">
 
+            {/* Title block */}
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-none border border-white/10"
                 style={{ background: `${slide.accent}18` }}>
@@ -1037,97 +1065,142 @@ export default function PHPLessonContent() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[9px] font-black uppercase tracking-[0.25em] px-2 py-0.5 rounded-full border"
-                    style={{ color: slide.tagColor, borderColor: `${slide.tagColor}40`, background: `${slide.tagColor}12` }}>
-                    {slide.tag}
+                    style={{ color: chapterInfo.color, borderColor: `${chapterInfo.color}40`, background: `${chapterInfo.color}12` }}>
+                    {chapterInfo.label}
                   </span>
                   <span className="text-[9px] font-mono text-zinc-700">{slide.id}</span>
                 </div>
-                <h1 className="text-3xl xl:text-4xl font-black leading-tight text-white tracking-tighter">{slide.title}</h1>
+                <h1 className="text-3xl xl:text-4xl font-black leading-tight text-white tracking-tighter">
+                  {slide.title}
+                </h1>
                 <p className="text-sm text-white/40 font-bold uppercase tracking-widest mt-1">{slide.subtitle}</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3">
-              {slide.content.map((text, i) => (
-                <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + i * 0.05 }}
-                  className="rounded-xl border p-4 flex items-center gap-4"
-                  style={{ borderColor: `${slide.accent}20`, background: `${slide.accent}05` }}>
-                  <div className="w-1.5 h-1.5 rounded-full flex-none" style={{ background: slide.accent }} />
-                  <p className="text-sm text-zinc-300 leading-relaxed font-medium">{text}</p>
+            {/* Concept cards grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {slide.concepts.map((c, i) => (
+                <motion.div key={i}
+                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.06 + i * 0.06 }}
+                  className="rounded-xl border p-4 flex flex-col gap-1.5"
+                  style={{ borderColor: `${slide.accent}20`, background: `${slide.accent}06` }}>
+                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: slide.accent }}>
+                    {c.label}
+                  </span>
+                  <p className="text-sm text-zinc-300 leading-relaxed">{c.desc}</p>
                 </motion.div>
               ))}
             </div>
 
-            <div className="space-y-4">
-              <div className="rounded-xl border p-4 flex gap-3" style={{ background: `${slide.accent}08`, borderColor: `${slide.accent}25` }}>
+            {/* Pro tip */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}
+              className="rounded-xl border border-amber-500/15 bg-amber-500/5 p-4 flex gap-3">
+              <Sparkles className="w-4 h-4 text-amber-400 flex-none mt-0.5" />
+              <p className="text-sm text-amber-200/80 leading-relaxed"><span className="font-black text-amber-400">គន្លឹះពិសេស: </span>{slide.tip}</p>
+            </motion.div>
+
+            {/* Lab + Result */}
+            <div className="space-y-3">
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}
+                className="rounded-xl border p-4 flex gap-3"
+                style={{ background: `${slide.accent}08`, borderColor: `${slide.accent}25` }}>
                 <Play className="w-4 h-4 flex-none mt-0.5" style={{ color: slide.accent }} />
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: slide.accent }}>លំហាត់អនុវត្ត</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: slide.accent }}>ការអនុវត្តជាក់ស្តែង (Lab Exercise)</p>
                   <p className="text-sm text-white font-semibold leading-relaxed">{slide.lab}</p>
                 </div>
-              </div>
-              <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4 flex gap-3">
+              </motion.div>
+              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+                className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4 flex gap-3">
                 <Check className="w-4 h-4 flex-none mt-0.5 text-emerald-400" />
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 text-emerald-400">លទ្ធផលរំពឹងទុក</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 text-emerald-400">លទ្ធផលរំពឹងទុក (Expected Result)</p>
                   <p className="text-sm text-white font-semibold leading-relaxed">{slide.result}</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
+            {/* Nav buttons */}
             <div className="flex items-center gap-3 pt-2 mt-auto">
-              <button onClick={prev} className="p-3 rounded-xl bg-white/5 border border-white/8 hover:text-white transition-all">
-                <ChevronLeft className="w-5 h-5" />
+              <button onClick={prev}
+                className="p-3 rounded-xl bg-white/5 border border-white/8 hover:bg-white/10 active:scale-95 transition-all flex items-center gap-2 group">
+                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+                <span className="text-xs font-bold hidden sm:inline text-zinc-400">ថយក្រោយ</span>
               </button>
-              <button onClick={next} className="flex-1 py-3 px-5 rounded-xl font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg"
+              <button onClick={next}
+                className="flex-1 py-3 px-5 rounded-xl font-black text-xs active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
                 style={{ background: slide.accent, color: '#000' }}>
-                {current === displaySlides.length - 1 ? 'ចាប់ផ្តើមវគ្គនេះឡើងវិញ' : 'ស្លាយបន្ទាប់'}
+                {current === displaySlides.length - 1 ? 'ចាប់ផ្តើមឡើងវិញ' : 'បន្ទាប់'}
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button onClick={() => setShowNotes(!showNotes)}
                 className={`p-3 rounded-xl border transition-all ${
                   showNotes ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-white/5 border-white/8 text-zinc-500 hover:text-white'
                 }`}>
-                <StickyNote className="w-5 h-5" />
+                <StickyNote className="w-4 h-4" />
               </button>
             </div>
           </motion.div>
         </AnimatePresence>
 
+        {/* RIGHT — Code panel */}
         <div className="flex-none lg:w-[55%] flex flex-col p-4 lg:p-8 xl:p-10 gap-4 overflow-hidden">
           <div className="flex items-center gap-2 flex-none">
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/8 bg-white/5"
               style={{ color: slide.accent }}>
-              <Terminal className="w-3.5 h-3.5" /> កន្លែងសាកល្បងកូដ
+              <Terminal className="w-3.5 h-3.5" />
+              ប្រអប់សាកល្បងកូដ PHP
             </div>
-            <div className="px-3 py-1.5 rounded-lg bg-black/40 border border-white/5 font-mono text-[10px] text-zinc-500">
-              {slide.filename || 'sandbox.php'}
+            <div className="ml-auto text-[10px] font-mono text-zinc-700 hidden sm:block">
+              ប្រើគ្រាប់ចុចព្រួញ ← → ដើម្បីរុករក
             </div>
           </div>
 
           <AnimatePresence mode="wait">
-            <motion.div key={`code-${current}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="flex-1 overflow-hidden">
-              <CodePanel code={slide.code} terminal={slide.terminal} terminalOutput={slide.terminalOutput}
-                accent={slide.accent} filename={slide.filename || 'sandbox.php'} />
+            <motion.div key={`code-${current}`}
+              initial={{ opacity: 0, scale: 0.99, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.99, y: -8 }}
+              transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+              className="flex-1 overflow-hidden">
+              <CodePanel
+                code={slide.code}
+                terminal={slide.terminal}
+                terminalOutput={slide.terminalOutput}
+                accent={slide.accent}
+                filename={slide.filename || 'sandbox.php'}
+              />
             </motion.div>
           </AnimatePresence>
         </div>
       </main>
 
+      {/* ── NOTES PANEL ── */}
       <AnimatePresence>
         {showNotes && (
-          <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 28 }}
-            className="fixed inset-y-0 right-0 w-80 bg-[#12151e] border-l border-white/8 z-[100] p-6 flex flex-col pt-24 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-sm font-black uppercase tracking-widest text-amber-400">កំណត់ចំណាំមេរៀន</h3>
-              <button onClick={() => setShowNotes(false)} className="text-zinc-600 hover:text-white"><List className="w-5 h-5" /></button>
+          <motion.div
+            initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+            className="fixed inset-y-0 right-0 w-80 bg-[#12151e] border-l border-white/8 z-[100] shadow-2xl p-6 flex flex-col pt-24">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-widest text-amber-400">កំណត់ចំណាំ</h3>
+                <p className="text-[10px] text-zinc-600 font-bold uppercase mt-0.5">{slide.id} · {slide.title}</p>
+              </div>
+              <button onClick={() => setShowNotes(false)} className="text-zinc-600 hover:text-white transition-colors">
+                <ChevronRight className="w-5 h-5" />
+              </button>
             </div>
-            <textarea autoFocus value={notes[slide.id] || ''} onChange={e => saveNote(e.target.value)}
-              placeholder="កត់ត្រានូវអ្វីដែលអ្នកបានរៀន..."
-              className="flex-1 w-full bg-black/40 rounded-xl p-4 text-sm text-zinc-300 resize-none outline-none border border-white/5 focus:border-amber-500/30 font-mono" />
+            <textarea autoFocus
+              value={notes[slide.id] || ''}
+              onChange={e => saveNote(e.target.value)}
+              placeholder="កត់ត្រានៅទីនេះ... (រក្សាទុកដោយស្វ័យប្រវត្តិ)"
+              className="flex-1 w-full bg-black/40 rounded-xl p-4 text-sm text-zinc-300 resize-none outline-none border border-white/5 focus:border-amber-500/30 transition-all placeholder:text-zinc-700 font-mono"
+            />
+            <p className="mt-4 text-[10px] text-zinc-700 font-bold uppercase leading-relaxed">
+              រក្សាទុកតាមស្លាយក្នុង localStorage
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
