@@ -6,699 +6,793 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import {
   ChevronLeft, ChevronRight, Code2, Copy, Check, Play, RotateCcw,
-  Server, Database, Globe, Globe2, Lock, Shield, ShieldAlert, ShieldCheck,
-  Search, Send, Activity, Layers, List, RefreshCw, Zap, Sparkles,
-  Key, Link as LinkIcon, FileCode, Package, Box, ArrowRight, ArrowLeft,
-  Terminal, Rocket, HardDrive, Layout, Workflow,
-  Fingerprint, GitBranch, Edit3, Star, Trophy, ShoppingCart, StickyNote, CheckCircle2,
-  Menu, X, ChevronDown, User,
+  Server, Database, Globe, Lock, Shield, ShieldCheck, ShieldAlert,
+  Layers, List, RefreshCw, Zap, Sparkles, Key, FileCode, Box,
+  Terminal, Rocket, HardDrive, Layout, Fingerprint, GitBranch,
+  Star, StickyNote, CheckCircle2, Menu, X, ChevronDown, User,
+  BookOpen, ArrowLeft,
 } from 'lucide-react';
 
-/* ─── TYPES ──────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   TYPES
+══════════════════════════════════════════════════════════════════ */
+
 interface Slide {
-  chapter: string;
-  id: string;
-  title: string;
-  subtitle: string;
-  tag: string;
-  tagColor: string;
+  chapter: string; id: string; title: string; subtitle: string;
   accent: string;
-  bg: string;
   concepts: { label: string; desc: string }[];
-  tip: string;
-  lab: string;
-  result: string;
-  syntax: string;
-  code: string;
-  filename?: string;
-  terminal?: string;
-  terminalOutput?: string;
+  tip: string; lab: string; result: string;
+  code: string; filename: string;
+  terminal?: string; terminalOutput?: string;
   icon: React.ElementType;
 }
 
-/* ─── CHAPTERS ───────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   CHAPTERS
+══════════════════════════════════════════════════════════════════ */
+
 const CHAPTERS = [
-  { id: 'intro',      label: 'មេរៀនទី ១ · មូលដ្ឋានគ្រឹះ PHP', color: '#10b981' },
-  { id: 'logic',      label: 'មេរៀនទី ២ · លក្ខខណ្ឌ និងការប្រើ Loop',   color: '#6366f1' },
-  { id: 'data',       label: 'មេរៀនទី ៣ · ការគ្រប់គ្រង Array',  color: '#06b6d4' },
-  { id: 'forms',      label: 'មេរៀនទី ៤ · ការចាប់ទិន្នន័យពី Form',    color: '#f59e0b' },
-  { id: 'db',         label: 'មេរៀនទី ៥ · PHP ជាមួយ Database',   color: '#3b82f6' },
-  { id: 'auth',       label: 'មេរៀនទី ៦ · ប្រព័ន្ធ Login និង Session',    color: '#f43f5e' },
-  { id: 'files',      label: 'មេរៀនទី ៧ · ការ Upload ឯកសារ',    color: '#f97316' },
-  { id: 'oop',        label: 'មេរៀនទី ៨ · ការសរសេរកូដបែប OOP',       color: '#a855f7' },
-  { id: 'security',   label: 'មេរៀនទី ៩ · សុវត្ថិភាពកូដ (Security)',  color: '#ec4899' },
-  { id: 'project',    label: 'មេរៀនទី ១០ · បង្កើត Project ចុងក្រោយ',   color: '#14b8a6' },
+  { id: 'intro',    label: 'មូលដ្ឋានគ្រឹះ PHP',          num: '01', color: '#4ade80' },
+  { id: 'logic',    label: 'លក្ខខណ្ឌ និង Loop',            num: '02', color: '#818cf8' },
+  { id: 'data',     label: 'Array Management',             num: '03', color: '#22d3ee' },
+  { id: 'forms',    label: 'Form & Validation',            num: '04', color: '#fb923c' },
+  { id: 'db',       label: 'PHP & Database',               num: '05', color: '#38bdf8' },
+  { id: 'auth',     label: 'Login & Session',              num: '06', color: '#f87171' },
+  { id: 'files',    label: 'File Upload',                  num: '07', color: '#fbbf24' },
+  { id: 'oop',      label: 'OOP in PHP',                   num: '08', color: '#c084fc' },
+  { id: 'security', label: 'Security Basics',              num: '09', color: '#f472b6' },
+  { id: 'project',  label: 'Final Project',                num: '10', color: '#2dd4bf' },
 ];
 
-/* ─── SLIDE DATA ─────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   SLIDE DATA — Real Khmer, technical terms untranslated
+══════════════════════════════════════════════════════════════════ */
+
 const slides: Slide[] = [
-  /* ── PHASE 1: PHP FUNDAMENTALS (Week 1–2) ── */
+  // INTRO
   {
-    chapter: 'intro', id: 'PH1-S1', tag: 'Week 1', tagColor: '#10b981',
-    title: 'តើអ្វីទៅជា PHP?', subtitle: 'ស្វែងយល់ពី Server-Side', accent: '#10b981',
-    bg: 'radial-gradient(ellipse at 10% 20%, rgba(16,185,129,0.15) 0%, transparent 55%)',
-    concepts: [
-      { label: 'Hypertext Preprocessor', desc: 'PHP គឺជាភាសាស្គ្រីបសម្រាប់វេបសាយដែលពេញនិយមបំផុត។' },
-      { label: 'Server-Side Power', desc: 'វាជាភាសាស្គ្រីបដែលដំណើរការនៅលើ Server (មិនមែនលើ Browser ទេ)។' },
-      { label: 'Client-Server Flow', desc: 'Client ស្នើសុំ -> Server ដំណើរការ PHP -> បញ្ជូន HTML ទៅ Browser។' },
-      { label: 'Popular Stacks', desc: 'LAMP (Linux, Apache, MySQL, PHP) ឬ XAMPP សម្រាប់ Local Development។' }
-    ],
-    tip: 'កូដ PHP ដំណើរការនៅពីក្រោយឆាក (Server) ដូច្នេះអ្នកប្រើប្រាស់មិនអាចមើលឃើញកូដដើមបានទេ។',
-    syntax: '<?php\n  // PHP code goes here\n?>',
-    lab: 'តើការដំណើរការកូដលើ Client-side និង Server-side ខុសគ្នាត្រង់ណាខ្លះ?',
-    result: 'យល់ថាកូដ PHP ពិតប្រាកដ គឺសិស្ស ឬអ្នកប្រើ Browser មើលមិនឃើញឡើយ។',
-    filename: 'intro.txt',
-    code: `Step 1: User requests "index.php"
-Step 2: Apache server finds the file
-Step 3: PHP engine processes the code
-Step 4: Result sent as HTML to Chrome/Safari`,
+    chapter: 'intro', id: 'PH1-S1', accent: '#4ade80',
+    title: 'PHP គឺជាអ្វី?', subtitle: 'ការស្វែងយល់ពី Server-Side Scripting',
     icon: Globe,
-    terminalOutput: "PHP Status: Working on Server",
+    concepts: [
+      { label: 'Hypertext Preprocessor', desc: 'PHP ជាភាសា scripting ដំណើរការនៅ server ។ Browser ទទួល HTML result — មិន​មើលឃើញ source code PHP ឡើយ ។' },
+      { label: 'Client-Server Model', desc: 'Client ផ្ញើ request → Server ដំណើរការ PHP → Return HTML ទៅ browser ។ PHP ដំណើរការ "ពីក្រោយឆាក" ទាំងស្រុង ។' },
+      { label: 'Popularity', desc: 'WordPress, Facebook (ដំបូង), Wikipedia — ប្រើ PHP ។ ៧៧% នៃ server-side websites ប្រើ PHP ។' },
+      { label: 'LAMP Stack', desc: 'Linux + Apache + MySQL + PHP = LAMP ។ ឬប្រើ XAMPP / Laragon សម្រាប់ local development ។' },
+    ],
+    tip: 'PHP ដំណើរការលើ server — User browser មើល​មិនឃើញ source code ។ នេះជាអត្ថប្រយោជន៍ security ។',
+    lab: 'ពន្យល់ client-side vs server-side execution model ។ ហេតុអ្វី PHP ត្រូវការ web server?',
+    result: 'យល់ថា PHP code execute នៅ server ។ Browser ទទួល HTML output ប៉ុណ្ណោះ ។',
+    code: `# PHP Request-Response Cycle
+
+Step 1: User visits http://localhost/index.php
+Step 2: Apache finds and sends the file to PHP
+Step 3: PHP engine executes the script
+Step 4: Result (HTML) sent back to browser
+
+# Browser NEVER sees PHP code — only output`,
+    filename: 'intro.txt',
+    terminalOutput: 'PHP 8.2 — Server-Side Execution Ready',
   },
   {
-    chapter: 'intro', id: 'PH1-S2', tag: 'Week 1', tagColor: '#10b981',
-    title: 'ការរៀបចំកម្មវិធី', subtitle: 'XAMPP & Laragon', accent: '#10b981',
-    bg: 'radial-gradient(ellipse at 80% 30%, rgba(16,185,129,0.12) 0%, transparent 55%)',
-    concepts: [
-      { label: 'XAMPP Dashboard', desc: 'កម្មវិធីដំឡើងម្តងបានទាំង Apache, MySQL និង PHP (ប្រើបានគ្រប់ OS)។' },
-      { label: 'Laragon (Win)', desc: 'ជម្រើសដ៏សាមញ្ញ និងលឿនបំផុតសម្រាប់អ្នកប្រើប្រាស់ Windows។' },
-      { label: 'htdocs Directory', desc: 'Folder សម្រាប់ដាក់រាល់ File PHP ទាំងអស់របស់អ្នកដើម្បីឱ្យ Server ស្គាល់។' },
-      { label: 'Localhost URL', desc: 'របៀបចូលមើល Project របស់អ្នកតាមរយៈ Browser (http://localhost/path)។' }
-    ],
-    tip: 'កុំភ្លេច "Start" Apache ក្នុង XAMPP Control Panel មុនពេលបើក File PHP ក្នុង Browser។',
-    syntax: 'Project Root: C:/xampp/htdocs/my-app/index.php',
-    lab: 'ដំឡើង XAMPP រួចបង្កើត File "index.php" មួយក្នុង Folder htdocs។',
-    result: 'សេវាកម្ម Apache ចាប់ផ្ដើមដំណើរការ (រូបតំណាងពណ៌បៃតង)។',
-    filename: 'setup.md',
-    code: `1. Download XAMPP from apachefriends.org
-2. Install & Open Control Panel
-3. Start Apache and MySQL
-4. Browse to: http://localhost/dashboard`,
+    chapter: 'intro', id: 'PH1-S2', accent: '#4ade80',
+    title: 'XAMPP Setup', subtitle: 'ការ Setup Local Development Environment',
     icon: Server,
-    terminalOutput: "Apache Server: Running on port 80\nMySQL Server: Running on port 3306",
+    concepts: [
+      { label: 'XAMPP Package', desc: 'XAMPP ដំឡើង Apache + MySQL + PHP ក្នុងតែ installer ១ ។ ដំណើរការបានគ្រប់ OS ។' },
+      { label: 'Laragon (Windows)', desc: 'Laragon ជា XAMPP alternative ដ៏ light និង fast ជាងសម្រាប់ Windows users ។ Modern PHP development ។' },
+      { label: 'htdocs Directory', desc: 'Folder htdocs = document root ។ PHP files ទាំងអស់ត្រូវ​ដាក់ក្នុង htdocs ។ Apache serve files ពី​ folder នេះ ។' },
+      { label: 'localhost URL', desc: 'http://localhost/project-name ជា URL ចូលដំណើរការ project ។ Port 80 = Apache, Port 3306 = MySQL ។' },
+    ],
+    tip: 'Start Apache ជានិច្ចមុនបើក PHP file ក្នុង browser ។ Control Panel ចេញ status "Running" ពណ៌បៃតង ។',
+    lab: 'ដំឡើង XAMPP ។ Start Apache + MySQL ។ Create file index.php ក្នុង htdocs ។ Access via browser ។',
+    result: 'Apache service running (green) ។ Browser show PHP output via http://localhost ។',
+    code: `# XAMPP Setup Steps
+
+1. Download: apachefriends.org/download.html
+2. Install XAMPP → Open Control Panel
+3. Click "Start" for Apache and MySQL
+4. Place PHP files in: C:/xampp/htdocs/
+5. Access via: http://localhost/your-project/`,
+    filename: 'setup.md',
+    terminalOutput: 'Apache/2.4.58 (Win64)\nMySQL: Running on port 3306',
   },
   {
-    chapter: 'intro', id: 'PH1-S3', tag: 'Week 1', tagColor: '#10b981',
-    title: 'Syntax មូលដ្ឋាន', subtitle: 'ចាប់ផ្ដើមជាមួយ PHP', accent: '#10b981',
-    bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.1) 0%, transparent 60%)',
-    concepts: [
-      { label: 'PHP Open Tag', desc: 'រាល់ Script របស់ PHP ត្រូវតែចាប់ផ្ដើមដោយ Tag <?php ជានិច្ច។' },
-      { label: 'Closing Tag', desc: 'បិទដោយ ?> (មិនចាំបាច់ទេ បើក្នុង File មានតែកូដ PHP សុទ្ធ)។' },
-      { label: 'The echo Command', desc: 'ពាក្យបញ្ជាសម្រាប់បង្ហាញអត្ថបទ ឬ HTML ទៅកាន់អេក្រង់ផ្ទាល់។' },
-      { label: 'Semicolon Rules', desc: 'រាល់កូដមួយជួរ ត្រូវតែបញ្ចប់ដោយសញ្ញា (;) ជាដាច់ខាត។' }
-    ],
-    tip: 'បើ File របស់អ្នកមានតែកូដ PHP (គ្មាន HTML) យកល្អកុំដាក់ Tag បិទ ?> ដើម្បីចៀសវាងកំហុស។',
-    syntax: '<?php\n  echo "Hello";\n?>',
-    lab: 'សរសេរកូដបង្ហាញឈ្មោះរបស់អ្នក ដោយប្រើ echo ក្នុង Tag <strong>។',
-    result: 'ឈ្មោះរបស់អ្នកបង្ហាញជាអក្សរក្រាស់នៅលើ Browser។',
-    filename: 'hello.php',
-    code: `<?php
-echo "Hello World!";
-echo "<strong>Welcome to PHP Learning</strong>";`,
+    chapter: 'intro', id: 'PH1-S3', accent: '#4ade80',
+    title: 'PHP Syntax', subtitle: 'ចាប់ផ្ដើមសរសេរ PHP Code ដំបូង',
     icon: Code2,
-    terminalOutput: "Hello World! Welcome to PHP Learning",
+    concepts: [
+      { label: '<?php Opening Tag', desc: 'PHP code ត្រូវ​ wrap ក្នុង <?php ... ?> ។ Engine ចាប់ parse code ពី tag <?php ។' },
+      { label: 'echo Statement', desc: 'echo បង្ហាញ output ទៅ browser ។ អាច echo string, variable, HTML ។ print ជា alternative ។' },
+      { label: 'Semicolon Rule', desc: 'រាល់ statement ត្រូវ​បញ្ចប់ ; ។ Forget semicolon = Parse error ។ PHP ខ្លាំង syntax enforcement ។' },
+      { label: 'Comments', desc: '// single-line, # single-line, /* multi-line */ ។ Comments មិន execute — documentation ប៉ុណ្ណោះ ។' },
+    ],
+    tip: 'File PHP-only (គ្មាន HTML) — omit closing tag ?> ។ Prevents accidental whitespace output ។ Standard practice ។',
+    lab: 'Create hello.php ។ echo ឈ្មោះ​ wrapped ក្នុង <strong> tag ។ View ក្នុង browser ។',
+    result: 'ឈ្មោះ​បង្ហាញ bold នៅ browser ។ View source shows HTML — មិន​ PHP code ។',
+    code: `<?php
+// Single-line comment
+echo "Hello World!";
+echo "<br>";
+
+# Also a comment
+echo "<strong>Welcome to PHP</strong>";
+
+/*
+  Multi-line comment
+  This won't execute
+*/
+echo "Learning PHP in Cambodia";`,
+    filename: 'hello.php',
+    terminalOutput: 'Hello World!\nWelcome to PHP\nLearning PHP in Cambodia',
   },
   {
-    chapter: 'intro', id: 'PH1-S4', tag: 'Week 2', tagColor: '#10b981',
-    title: 'Variable និង Data Types', subtitle: 'ការរក្សាទុកទិន្នន័យ', accent: '#10b981',
-    bg: 'radial-gradient(ellipse at 30% 70%, rgba(16,185,129,0.1) 0%, transparent 60%)',
+    chapter: 'intro', id: 'PH1-S4', accent: '#4ade80',
+    title: 'Variables & Types', subtitle: 'ការរក្សាទុក Data ក្នុង Memory',
+    icon: FileCode,
     concepts: [
-      { label: 'Variable Creation', desc: 'ត្រូវចាប់ផ្ដើមដោយសញ្ញា $ ($name, $age) ជានិច្ច។' },
-      { label: 'Loose Typing', desc: 'PHP មិនបង្ខំឱ្យយើងកំណត់ប្រភេទទិន្នន័យ (ដូចជា String/Int) មុនឡើយ។' },
-      { label: 'Data Types', desc: 'ប្រភេទដែលប្រើច្រើន៖ String, Integer, Float, និង Boolean។' },
-      { label: 'Naming Case', desc: 'Case Sensitive៖ $name និង $Name គឺជា Variable ពីរផ្សេងគ្នា។' }
+      { label: '$ Dollar Sign Prefix', desc: 'Variable ទាំងអស់ចាប់ផ្ដើម $ ។ $name, $age, $price — ជា variables ។ Case-sensitive: $Name ≠ $name ។' },
+      { label: 'Dynamic Typing', desc: 'PHP auto-detect type ។ $x = "hello" → string ។ $x = 42 → integer ។ Type changes at runtime ។' },
+      { label: 'Core Data Types', desc: 'String ("text"), Integer (42), Float (3.14), Boolean (true/false), Null (empty) — types ជ្រើស​ PHP handle ។' },
+      { label: 'String Interpolation', desc: '"Hello $name" → PHP replace variable ក្នុង double-quoted string ។ Single-quote \'$name\' → literal $name ។' },
     ],
-    tip: 'ឈ្មោះ Variable មិនអាចចាប់ផ្ដើមដោយលេខបានទេ ប៉ុន្តែអាចប្រើសញ្ញា _ (underscore) បាន។',
-    syntax: '$variable_name = value;',
-    lab: 'បង្កើត Variable សម្រាប់ឈ្មោះ និងអាយុ រួចប្រើ echo បង្ហាញជាប្រយោគមួយ។',
-    result: 'ព័ត៌មានរបស់អ្នកនឹងបង្ហាញមកតាមអ្វីដែលបានកំណត់ក្នុង Variable។',
-    filename: 'vars.php',
+    tip: 'Variable name មិន​ចាប់ផ្ដើម​ digit ។ ប្រើ snake_case ($user_name) ជា PHP convention ។',
+    lab: 'Create variables: $name, $age, $is_student ។ Echo ចេញ​ formatted string ។',
+    result: 'Output show ព័ត៌មានពី variables ។ String interpolation work ក្នុង double-quotes ។',
     code: `<?php
 $name = "Ratha";
-$age = 21;
-$isStudent = true;
+$age  = 21;
+$gpa  = 3.85;
+$is_student = true;
 
 echo "Name: $name\\n";
 echo "Age: $age\\n";
-echo "Student: " . ($isStudent ? 'Yes' : 'No');`,
-    icon: FileCode,
-    terminalOutput: "Name: Ratha\nAge: 21\nStudent: Yes",
+echo "GPA: $gpa\\n";
+echo "Student: " . ($is_student ? "Yes" : "No");`,
+    filename: 'variables.php',
+    terminalOutput: 'Name: Ratha\nAge: 21\nGPA: 3.85\nStudent: Yes',
   },
   {
-    chapter: 'intro', id: 'PH1-S5', tag: 'Week 2', tagColor: '#10b981',
-    title: 'Operators', subtitle: 'ការគណនា និង Logic', accent: '#10b981',
-    bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 70%)',
+    chapter: 'intro', id: 'PH1-S5', accent: '#4ade80',
+    title: 'Operators', subtitle: 'ការគណនា និង Logic Operations',
+    icon: Zap,
     concepts: [
-      { label: 'Arithmetic Ops', desc: 'ការគណនាគណិតវិទ្យា (+, -, *, /) និងការរកសំណល់ (%)។' },
-      { label: 'Comparison Ops', desc: 'ការប្រៀបធៀប == (ស្មើ), != (មិនស្មើ), > (ធំជាង), < (តូចជាង)។' },
-      { label: 'Logical Ops', desc: 'បន្សំលក្ខខណ្ឌ && (AND), || (OR), និង ! (NOT)។' },
-      { label: 'Concatenation', desc: 'ប្រើសញ្ញាចុច (.) ដើម្បីភ្ជាប់អក្សរពីរចូលគ្នា ($first . $last)។' }
+      { label: 'Arithmetic Operators', desc: '+, -, *, /, % (modulo), ** (exponent) ។ % returns remainder: 10 % 3 = 1 ។' },
+      { label: 'Comparison Operators', desc: '== (loose equal), === (strict equal type+value), !=, !==, >, <, >=, <= ។ ប្រើ === ជា best practice ។' },
+      { label: 'Logical Operators', desc: '&& (AND), || (OR), ! (NOT) ។ Short-circuit: && stops at first false, || stops at first true ។' },
+      { label: 'Concatenation (.)', desc: 'dot . operator ភ្ជាប់ strings ។ $first . " " . $last ។ .= append: $str .= " more" ។' },
     ],
-    tip: 'សញ្ញា . ក្នុង PHP ស្មើនឹងសញ្ញា + ក្នុង JavaScript សម្រាប់ការតភ្ជាប់ String។',
-    syntax: '$total = $a + $b;\nif($a == $b) { ... }',
-    lab: 'សាកគណនាតម្លៃទំនិញ 3 មុខបញ្ចូលគ្នា រួចបង្ហាញលទ្ធផលដែលបូករួច។',
-    result: 'តម្លៃសរុបត្រូវបានគណនា និងបង្ហាញចេញមកក្រៅយ៉ាងត្រឹមត្រូវ។',
-    filename: 'ops.php',
+    tip: 'PHP dot operator (.) = JavaScript + operator សម្រាប់ string ។ Arithmetic + vs string . ត្រូវ​ distinguish ជានិច្ច ។',
+    lab: 'គណនា total price: items [100, 200, 300] ។ Echo formatted total ។',
+    result: 'Total: $600 ។ ការ​គណនា arithmetic work ។ String concatenation output ត្រូវ ។',
     code: `<?php
-$item1 = 10;
-$item2 = 20;
-$item3 = 5;
+$item1 = 100;
+$item2 = 200;
+$item3 = 300;
 $total = $item1 + $item2 + $item3;
 
-echo "Total: $" . $total;`,
-    icon: Zap,
-    terminalOutput: "Total: $35",
+// Comparison
+$is_expensive = $total > 500;
+
+echo "Total: $" . $total . "\\n";
+echo "Expensive: " . ($is_expensive ? "Yes" : "No");`,
+    filename: 'operators.php',
+    terminalOutput: 'Total: $600\nExpensive: Yes',
   },
 
-  /* ── PHASE 2: LOGIC & CONTROL (Week 2–3) ── */
+  // LOGIC
   {
-    chapter: 'logic', id: 'PH2-S1', tag: 'Week 2', tagColor: '#6366f1',
-    title: 'Conditional Statements', subtitle: 'ការសម្រេចចិត្ត', accent: '#6366f1',
-    bg: 'linear-gradient(135deg, rgba(99,102,241,0.06) 0%, transparent 100%)',
+    chapter: 'logic', id: 'PH2-S1', accent: '#818cf8',
+    title: 'Conditionals', subtitle: '',
+    icon: ShieldCheck,
     concepts: [
-      { label: 'The "if" Logic', desc: 'ដំណើរការកូដលុះត្រាតែលក្ខខណ្ឌមួយពិត (True)។' },
-      { label: 'Else / Elseif', desc: 'ផ្តល់ជម្រើសផ្សេងទៀតប្រសិនបើលក្ខខណ្ឌដំបូងមិនពិត (False)។' },
-      { label: 'Ternary Flow', desc: 'ទម្រង់ខ្លីនៃការឆែកលក្ខខណ្ឌ ($age > 18 ? "Adult" : "Minor")។' },
-      { label: 'Security Usage', desc: 'ប្រើច្រើនក្នុងការត្រួតពិនិត្យការ Login និងសិទ្ធិចូលប្រើទំព័រ។' }
+      { label: 'if Statement', desc: 'Execute code block លុះត្រាតែ condition true ។ if ($age >= 18) { ... } ។' },
+      { label: 'else / elseif', desc: 'else handles false case ។ elseif adds more conditions ។ Chain: if → elseif → elseif → else ។' },
+      { label: 'Ternary Operator', desc: '$result = condition ? "true_val" : "false_val" ។ One-liner for simple if/else ។' },
+      { label: 'switch Statement', desc: 'switch($var) { case "x": ... break; } ។ Cleaner than multiple elseif ។ Always add break ។' },
     ],
-    tip: 'ប្រើ === (triple equals) ដើម្បីឆែកទាំងតម្លៃ និងប្រភេទទិន្នន័យឱ្យបានច្បាស់លាស់។',
-    syntax: 'if ($age > 18) { echo "Adult"; } else { echo "Minor"; }',
-    lab: 'ត្រួតពិនិត្យអ្នកប្រើប្រាស់ថាជា "admin" ឬ "guest" រួចបង្ហាញសារស្វាគមន៍ទៅតាមនោះ។',
-    result: 'សារដែលសមស្របនឹងត្រូវបានបង្ហាញផ្អែកលើ variable role។',
-    filename: 'logic.php',
+    tip: 'ប្រើ === (strict) ជំនួស == (loose) ។ == ប្រៀបធៀប type-coercion: 0 == "a" returns true (bug!) ។',
+    lab: 'Check $role variable ។ "admin" → show dashboard message ។ "user" → basic welcome ។ else → access denied ។',
+    result: 'Correct message display​ per role ។ Strict comparison prevent type bugs ។',
     code: `<?php
 $role = "admin";
 
-if ($role == "admin") {
-    echo "Welcome, Administrator!";
+if ($role === "admin") {
+    echo "Admin Dashboard: Full access granted";
+} elseif ($role === "user") {
+    echo "User Dashboard: Limited access";
 } else {
-    echo "Welcome, Guest User.";
-}`,
-    icon: ShieldCheck,
-    terminalOutput: "Welcome, Administrator!",
-  },
-  {
-    chapter: 'logic', id: 'PH2-S2', tag: 'Week 3', tagColor: '#6366f1',
-    title: 'ការប្រើ Loop (ការងារដដែលៗ)', subtitle: 'កិច្ចការស្វ័យប្រវត្តិ', accent: '#6366f1',
-    bg: 'radial-gradient(ellipse at 10% 80%, rgba(99,102,241,0.08) 0%, transparent 55%)',
-    concepts: [
-      { label: 'For Loop', desc: 'ប្រើនៅពេលយើងដឹងច្បាស់ថា ចង់ឱ្យកូដដើរប៉ុន្មានជុំ (Counter-based)។' },
-      { label: 'While Loop', desc: 'ឱ្យវាដើរចុះឡើង ដរាបណាលក្ខខណ្ឌនៅតែ "ពិត" (True)។' },
-      { label: 'Do-While Loop', desc: 'វាដំណើរការកូដមុន ១ដង សិន រួចទើបឆែកលក្ខខណ្ឌតាមក្រោយ។' },
-      { label: 'Infinite Guards', desc: 'ត្រូវមាន Counter ត្រឹមត្រូវដើម្បីកុំឱ្យ Loop ដើរមិនឈប់ និងគាំង Server។' }
-    ],
-    tip: 'ប្រើ "break" ដើម្បីបញ្ឈប់ Loop ភ្លាមៗ ឬ "continue" ដើម្បីរំលងទៅជុំបន្ទាប់។',
-    syntax: 'for ($i = 1; $i <= 5; $i++) { echo $i; }',
-    lab: 'ប្រើ For Loop ដើម្បីបង្ហាញលេខរៀងពី ១ ដល់ ១០ ជាជួរដេក។',
-    result: 'អ្នកនឹងឃើញលេខរៀង (1 2 3 ... 10) បង្ហាញនៅលើអេក្រង់។',
-    filename: 'loops.php',
-    code: `<?php
-for ($i = 1; $i <= 10; $i++) {
-    echo $i . " ";
-}`,
-    icon: RefreshCw,
-    terminalOutput: "1 2 3 4 5 6 7 8 9 10",
-  },
-  {
-    chapter: 'logic', id: 'PH2-S3', tag: 'Week 3', tagColor: '#6366f1',
-    title: 'ការប្រើ Function', subtitle: 'កូដដែលប្រើឡើងវិញបាន', accent: '#6366f1',
-    bg: 'radial-gradient(ellipse at center, rgba(99,102,241,0.04) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Declaration', desc: 'ចងក្រងកូដចូលគ្នាជាបណ្តុំ ដើម្បីប្រើឡើងវិញបានច្រើនដង។' },
-      { label: 'Arguments', desc: 'ទិន្នន័យដែលយើងបោះចូលទៅក្នុង Function ដើម្បីឱ្យវាធ្វើការងារ។' },
-      { label: 'Return Logic', desc: 'ប្រើពាក្យ "return" ដើម្បីបញ្ជូនលទ្ធផលចេញពី Function ត្រឡប់មកវិញ។' },
-      { label: 'Function Call', desc: 'គ្រាន់តែហៅឈ្មោះ Function រួចដាក់សញ្ញា () ដើម្បីឱ្យវាដំណើរការ។' }
-    ],
-    tip: 'ឈ្មោះ Function គួរតែជានាមកិរិយា (ឧទាហរណ៍៖ calculateTotal) ដើម្បីឱ្យងាយយល់ខ្លឹមសារ។',
-    syntax: 'function greet($name) { return "Hello " . $name; }',
-    lab: 'សរសេរ Function ឈ្មោះ "addNums" ដែលទទួលលេខ ២ រួចបូកបញ្ជូនលទ្ធផលមកវិញ។',
-    result: 'Function នឹងគណនាលទ្ធផល រួចបោះតម្លៃដែលបូករួចមកឱ្យយើងបង្ហាញ។',
-    filename: 'functions.php',
-    code: `<?php
-function greet($name) {
-    return "Hello " . $name . "!";
+    echo "Access Denied. Please login.";
 }
 
-echo greet("Ratha");`,
+// Ternary shorthand
+$status = ($role === "admin") ? "ADMIN" : "GUEST";
+echo "\\nStatus: $status";`,
+    filename: 'conditionals.php',
+    terminalOutput: 'Admin Dashboard: Full access granted\nStatus: ADMIN',
+  },
+  {
+    chapter: 'logic', id: 'PH2-S2', accent: '#818cf8',
+    title: 'Loops', subtitle: 'ការ​ Automate ការងារ​ Repetitive',
+    icon: RefreshCw,
+    concepts: [
+      { label: 'for Loop', desc: 'for ($i = 0; $i < 10; $i++) { } ។ ប្រើ​ពេល​ count ត្រូវ​ known ។ Counter-controlled ។' },
+      { label: 'while Loop', desc: 'while (condition) { } ។ Execute ​ condition true ។ ប្រើ​​ count unknown ។' },
+      { label: 'do-while Loop', desc: 'do { } while (condition) ។ Execute once ជាមុន ។ Guarantees ≥1 execution ។' },
+      { label: 'break / continue', desc: 'break exits loop ។ continue skips to next iteration ។ Avoid infinite loops — always update counter ។' },
+    ],
+    tip: 'Infinite loop crash server ។ Always ensure condition eventually becomes false ។ Test with small ranges first ។',
+    lab: 'for loop print 1–10 ។ while loop print even numbers 2–20 ។',
+    result: '1 2 3…10 ។ 2 4 6…20 ។ Loops execute correctly ។',
+    code: `<?php
+// For loop: 1 to 10
+for ($i = 1; $i <= 10; $i++) {
+    echo $i . " ";
+}
+echo "\\n";
+
+// While loop: even numbers
+$n = 2;
+while ($n <= 20) {
+    echo $n . " ";
+    $n += 2;
+}`,
+    filename: 'loops.php',
+    terminalOutput: '1 2 3 4 5 6 7 8 9 10\n2 4 6 8 10 12 14 16 18 20',
+  },
+  {
+    chapter: 'logic', id: 'PH2-S3', accent: '#818cf8',
+    title: 'Functions', subtitle: 'Reusable Code Blocks',
     icon: Code2,
-    terminalOutput: "Hello Ratha!",
+    concepts: [
+      { label: 'Function Declaration', desc: 'function name($param) { return $value; } ។ Define once, call anywhere ។ DRY principle: Don\'t Repeat Yourself ។' },
+      { label: 'Parameters & Arguments', desc: 'Parameter = variable ក្នុង definition ។ Argument = value pass​ when calling ។ Default values: function greet($name = "Guest") ។' },
+      { label: 'Return Values', desc: 'return sends value back ។ Function without return → returns null ។ Type hints: function add(int $a, int $b): int ។' },
+      { label: 'Scope', desc: 'Variables ក្នុង function = local scope ។ Global variables ត្រូវ declare global $var inside function ។' },
+    ],
+    tip: 'Function name គួរ verb-based: calculateTotal(), getUserById(), validateEmail() ។ Describe what it does ។',
+    lab: 'Write function addNums($a, $b) ។ Write function greet($name = "Guest") ។ Call both ។',
+    result: 'addNums(10, 20) returns 30 ។ greet() returns "Hello Guest" ។ greet("Ratha") returns "Hello Ratha" ។',
+    code: `<?php
+function addNums(int $a, int $b): int {
+    return $a + $b;
+}
+
+function greet(string $name = "Guest"): string {
+    return "Hello, " . $name . "!";
+}
+
+echo addNums(10, 20) . "\\n";   // 30
+echo greet() . "\\n";            // Hello, Guest!
+echo greet("Ratha");             // Hello, Ratha!`,
+    filename: 'functions.php',
+    terminalOutput: '30\nHello, Guest!\nHello, Ratha!',
   },
 
-  /* ── PHASE 3: DATA STRUCTURES (Week 3–4) ── */
+  // DATA
   {
-    chapter: 'data', id: 'PH3-S1', tag: 'Week 3', tagColor: '#06b6d4',
-    title: 'Indexed Array', subtitle: 'បញ្ជីរាយនាមតាមលេខរៀង', accent: '#06b6d4',
-    bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Indexing', desc: 'ការរក្សាទុកទិន្នន័យច្រើនក្នុង Variable តែមួយ ដោយប្រើលេខរៀង។' },
-      { label: 'Syntax []', desc: 'ជារបៀបសរសេរ Array ដែលសាមញ្ញ និងពេញនិយមបំផុតក្នុង PHP សម័យថ្មី។' },
-      { label: 'Accessing Data', desc: 'ហៅឈ្មោះ Array រួចដាក់លេខរៀងក្នុង [] (ចាប់ផ្ដើមពីលេខ ០ ជានិច្ច)។' },
-      { label: 'The count() Func', desc: 'ប្រើ count($array) ដើម្បីដឹងថាមានទិន្នន័យប៉ុន្មានក្នុងបញ្ជីនោះ។' }
-    ],
-    tip: 'ចាំថា Index ទី ១ គឺស្ថិតនៅលេខរៀងទី ០ ($colors[0])។',
-    syntax: '$colors = ["red", "blue", "green"];',
-    lab: 'បង្កើត Array តំណាងឱ្យផ្លែឈើ ៣ មុខ រួចបង្ហាញឈ្មោះផ្លែឈើទី ២ មីន។',
-    result: 'ឈ្មោះផ្លែឈើដែលស្ថិតក្នុង Index ទី ១ នឹងបង្ហាញលើ Terminal។',
-    filename: 'arrays.php',
-    code: `<?php
-$colors = ["red", "blue", "green"];
-echo "First color: " . $colors[0] . "\\n";
-echo "Total colors: " . count($colors);`,
+    chapter: 'data', id: 'PH3-S1', accent: '#22d3ee',
+    title: 'Indexed Array', subtitle: 'បញ្ជីទិន្នន័យ​ Index-based',
     icon: List,
-    terminalOutput: "First color: red\nTotal colors: 3",
+    concepts: [
+      { label: 'Array Concept', desc: 'Array = variable ១ ផ្ទុក values ច្រើន ។ $colors = ["red", "blue", "green"] ។ Index ចាប់ from 0 ។' },
+      { label: 'Index Access', desc: '$colors[0] = "red" ។ Index zero-based ។ Negative index ⟹ error ។ Access out-of-bounds ⟹ null warning ។' },
+      { label: 'count() Function', desc: 'count($arr) returns number of elements ។ ប្រើ​​ loops ។ sizeof() ជា alias ។' },
+      { label: 'Array Functions', desc: 'array_push(), array_pop(), sort(), array_reverse(), in_array(), array_search() — built-in helpers ។' },
+    ],
+    tip: 'Array index ចាប់ 0 — element ទី ១ = [0] ។ $arr[count($arr)-1] = last element ។ ឬ end($arr) ។',
+    lab: 'Create array $fruits = ["Mango","Durian","Banana"] ។ Echo 2nd fruit ។ Add new fruit ។ Print count ។',
+    result: 'Durian (index 1) ។ count shows 4 after push ។ array_push works ។',
+    code: `<?php
+$fruits = ["Mango", "Durian", "Banana"];
+
+echo $fruits[1] . "\\n";          // Durian (index 1)
+echo count($fruits) . "\\n";      // 3
+
+array_push($fruits, "Longan");
+echo count($fruits) . "\\n";      // 4
+
+sort($fruits);
+echo implode(", ", $fruits);      // sorted`,
+    filename: 'indexed_array.php',
+    terminalOutput: 'Durian\n3\n4\nBanana, Durian, Longan, Mango',
   },
   {
-    chapter: 'data', id: 'PH3-S2', tag: 'Week 4', tagColor: '#06b6d4',
-    title: 'Associative Array', subtitle: 'កំណត់ Key តាមចិត្ត', accent: '#06b6d4',
-    bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
+    chapter: 'data', id: 'PH3-S2', accent: '#22d3ee',
+    title: 'Associative Array', subtitle: 'Key-Value Data Structure',
+    icon: Layers,
     concepts: [
-      { label: 'Key-Value Pair', desc: 'ប្រើឈ្មោះ (Key) ជំនួសឱ្យលេខរៀង ដើម្បីចំណាំទិន្នន័យឱ្យងាយស្រួល។' },
-      { label: 'Arrow Syntax =>', desc: 'ប្រើសញ្ញា => ដើម្បីភ្ជាប់ឈ្មោះ Key ទៅកាន់តម្លៃ (Value) របស់វា។' },
-      { label: 'Data Mapping', desc: 'ល្អបំផុតសម្រាប់តំណាងឱ្យព័ត៌មានលម្អិតដូចជា User ឬផលិតផល។' },
-      { label: 'Simple Access', desc: 'ប្រើ $user["email"] ដើម្បីទាញយកទិន្នន័យជាក់លាក់មកបង្ហាញ។' }
+      { label: 'Key-Value Pairs', desc: '$user = ["name" => "Ratha", "age" => 21] ។ Key = string identifier ។ Access: $user["name"] ។' },
+      { label: 'Arrow Syntax =>', desc: '"key" => value ។ Key ចាំបាច់ unique ។ Duplicate key → overwrite previous value ។' },
+      { label: 'Practical Use', desc: 'Model real-world objects: user profile, product, config settings ។ JSON-like structure ។' },
+      { label: 'Manipulation', desc: 'array_keys(), array_values(), array_merge(), isset($arr["key"]) check existence ។' },
     ],
-    tip: 'Associative Arrays មានភាពងាយស្រួលដូចជា JSON objects ក្នុង JavaScript ដែរ។',
-    syntax: '$user = ["name" => "Ratha", "age" => 21];',
-    lab: 'បង្កើត Associative Array សម្រាប់ឡានមួយ (Model, Year, Color) រួចបង្ហាញពណ៌ឡាន។',
-    result: 'ទិន្នន័យត្រូវបានរក្សាទុកយ៉ាងមានរបៀប ហើយងាយស្រួលទាញយកតាម Key។',
-    filename: 'assoc.php',
+    tip: 'Associative array ≈ JavaScript object { key: value } ។ JSON encode/decode friendly ។ Database records = assoc arrays ។',
+    lab: 'Create $product = ["name","price","stock"] ។ Echo name + formatted price ។',
+    result: 'Product info display correctly ។ isset() check key existence work ។',
     code: `<?php
-$user = [
-  "name" => "Ratha",
-  "email" => "ratha@gmail.com",
-  "age" => 21
+$product = [
+    "name"  => "iPhone 15 Pro",
+    "price" => 1199.99,
+    "stock" => 42,
+    "in_stock" => true,
 ];
 
-echo "User Email: " . $user["email"];`,
-    icon: Layers,
-    terminalOutput: "User Email: ratha@gmail.com",
+echo $product["name"] . "\\n";
+echo "Price: $" . $product["price"] . "\\n";
+echo "Stock: " . $product["stock"] . " units";`,
+    filename: 'assoc_array.php',
+    terminalOutput: 'iPhone 15 Pro\nPrice: $1199.99\nStock: 42 units',
   },
   {
-    chapter: 'data', id: 'PH3-S3', tag: 'Week 4', tagColor: '#06b6d4',
-    title: 'Foreach Loop', subtitle: 'ការរុករកក្នុង Array', accent: '#06b6d4',
-    bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Array Traversal', desc: 'ជា loop ពិសេសដែលបង្កើតឡើងសម្រាប់ទាញទិន្នន័យពី Array មកបង្ហាញ។' },
-      { label: 'Auto Iteration', desc: 'វានឹងដើររហូតទាល់តែអស់ធាតុក្នុង Array ដោយមិនចាំបាច់រាប់លេខរៀង។' },
-      { label: 'Key/Value Support', desc: 'យើងអាចទាញយកបានទាំង "ឈ្មោះ Key" និង "តម្លៃ Value" ក្នុងពេលតែមួយ។' },
-      { label: 'UI Rendering', desc: 'ជាវិធីដែលស្អាត និងពេញនិយមបំផុតសម្រាប់បង្ហាញបញ្ជី (List) លើវេបសាយ។' }
-    ],
-    tip: 'ប្រើ foreach ($items as $item) ជានិច្ចនៅពេលចង់បង្ហាញទិន្នន័យពី Array ក្នុង HTML។',
-    syntax: 'foreach ($array as $item) { ... }',
-    lab: 'សាកប្រើ Foreach ដើម្បីបង្ហាញបញ្ជីពណ៌ទាំងអស់ដែលមានក្នុង Array។',
-    result: 'ឈ្មោះពណ៌នីមួយៗនឹងបង្ហាញចេញមកក្រៅម្តងមួយៗតាមលំដាប់លំដោយ។',
-    filename: 'foreach.php',
-    code: `<?php
-$colors = ["red", "blue", "green"];
-
-foreach ($colors as $color) {
-    echo "Color: $color\\n";
-}`,
+    chapter: 'data', id: 'PH3-S3', accent: '#22d3ee',
+    title: 'Foreach Loop', subtitle: 'Iterating Over Arrays',
     icon: RotateCcw,
-    terminalOutput: "Color: red\nColor: blue\nColor: green",
+    concepts: [
+      { label: 'foreach Syntax', desc: 'foreach ($array as $item) ។ foreach ($array as $key => $value) ។ Auto-iterate — no counter needed ។' },
+      { label: 'Indexed Iteration', desc: 'foreach ($colors as $color) { echo $color; } ។ $color = current element each iteration ។' },
+      { label: 'Assoc Iteration', desc: 'foreach ($user as $key => $val) ។ Access both key + value simultaneously ។' },
+      { label: 'HTML Rendering', desc: 'foreach inside HTML: generate <li>, <tr>, <option> ។ Most common pattern ​ views ។' },
+    ],
+    tip: 'foreach ​ preferred over for loop ​ arrays ។ Cleaner, no index management, works both indexed + assoc ។',
+    lab: 'foreach ​ print all fruits ។ foreach ​ $user assoc array ​ print key: value pairs ។',
+    result: 'Each fruit prints on new line ។ User info prints as key: value ។',
+    code: `<?php
+$fruits = ["Mango", "Durian", "Banana", "Longan"];
+
+foreach ($fruits as $fruit) {
+    echo "Fruit: $fruit\\n";
+}
+
+echo "---\\n";
+
+$user = ["name" => "Ratha", "age" => 21, "city" => "Phnom Penh"];
+foreach ($user as $key => $value) {
+    echo "$key: $value\\n";
+}`,
+    filename: 'foreach.php',
+    terminalOutput: 'Fruit: Mango\nFruit: Durian\nFruit: Banana\nFruit: Longan\n---\nname: Ratha\nage: 21\ncity: Phnom Penh',
   },
   {
-    chapter: 'data', id: 'PH3-S4', tag: 'Week 4', tagColor: '#06b6d4',
-    title: 'Array Mapping', subtitle: 'ការបំប្លែងទិន្នន័យសរុប', accent: '#06b6d4',
-    bg: 'radial-gradient(ellipse at center, rgba(6,182,212,0.08) 0%, transparent 70%)',
+    chapter: 'data', id: 'PH3-S4', accent: '#22d3ee',
+    title: 'Array Functions', subtitle: 'Built-in Array Manipulation',
+    icon: Zap,
     concepts: [
-      { label: 'Transformation', desc: 'បង្កើត Array ថ្មីមួយ ចេញពីការកែប្រែរាល់ធាតុក្នុង Array ចាស់។' },
-      { label: 'Functional PHP', desc: 'ប្រើ Arrow Functions (fn) ដើម្បីធ្វើការងារលើធាតុនីមួយៗបានយ៉ាងលឿន។' },
-      { label: 'Immutability', desc: 'Array ដើម គឺមិនមានការផ្លាស់ប្តូរតម្លៃ ឬរងការខូចខាតអ្វីឡើយ។' },
-      { label: 'Practical Use', desc: 'ប្រើច្រើនសម្រាប់គណនាបញ្ចុះតម្លៃ ឬប្តូរទម្រង់អក្សរក្នុងបញ្ជីធំៗ។' }
+      { label: 'array_map()', desc: 'Transform every element ។ array_map(fn($x) => $x * 2, $arr) ។ Returns new array — original unchanged ។' },
+      { label: 'array_filter()', desc: 'Keep elements where callback returns true ។ array_filter($arr, fn($x) => $x > 10) ។' },
+      { label: 'array_reduce()', desc: 'Reduce array to single value ។ Sum, product, concatenation ។ Most powerful of the three ។' },
+      { label: 'implode / explode', desc: 'implode(", ", $arr) → "a, b, c" string ។ explode(",", "a,b,c") → ["a","b","c"] ។' },
     ],
-    tip: 'array_map ជួយឱ្យកូដរបស់អ្នកមើលទៅស្អាត (Clean Code) ជាងការប្រើ Loop ធម្មតា។',
-    syntax: 'array_map(fn($x) => $x * 2, $arr);',
-    lab: 'ផ្តល់ Array តម្លៃទំនិញ [100, 200, 300] រួចប្រើ array_map ដើម្បីបញ្ចុះតម្លៃ ២០% ទាំងអស់។',
-    result: 'អ្នកនឹងទទួលបាន Array ថ្មីដែលមានតម្លៃបញ្ចុះរួចរាល់។',
-    filename: 'array_ops.php',
+    tip: 'array_map + array_filter + array_reduce = functional programming ។ Cleaner code vs manual loops ។ Learn all three ។',
+    lab: 'array_map discount 20% on $prices ។ array_filter keep > 100 ។ implode result ។',
+    result: 'Discounted prices calculated ។ Filtered array correct ។ implode output formatted string ។',
     code: `<?php
-$prices = [100, 200, 300];
+$prices = [80, 150, 50, 300, 120];
+
+// Apply 20% discount
 $discounted = array_map(fn($p) => $p * 0.8, $prices);
 
-echo "New Prices: " . implode(", ", $discounted);`,
-    icon: List,
-    terminalOutput: "New Prices: 80, 160, 240",
-  },
-  /* ── PHASE 4: WORKING WITH FORMS (Week 4–5) ── */
-  {
-    chapter: 'forms', id: 'PH4-S1', tag: 'Week 4', tagColor: '#f59e0b',
-    title: 'GET vs POST (តើគួរប្រើមួយណា?)', subtitle: 'វិធីសាស្ត្រផ្ញើទិន្នន័យ', accent: '#f59e0b',
-    bg: 'radial-gradient(ellipse at 10% 20%, rgba(245,158,11,0.15) 0%, transparent 55%)',
-    concepts: [
-      { label: 'The GET Method', desc: 'ទិន្នន័យបង្ហាញលើ URL (?id=1)។ ប្រើសម្រាប់តែការស្វែងរក ឬមើលទិន្នន័យ។' },
-      { label: 'The POST Method', desc: 'ទិន្នន័យត្រូវបានលាក់ (Secure)។ ប្រើសម្រាប់ផ្ញើព័ត៌មានសំខាន់ៗ និងលេខសម្ងាត់។' },
-      { label: 'Superglobal Arrays', desc: '$_POST និង $_GET ជាអថេរពិសេសសម្រាប់ចាប់យកទិន្នន័យពី Form។' },
-      { label: 'Security Principle', desc: 'កុំផ្ញើព័ត៌មានសម្ងាត់តាមរយៈ GET ឱ្យសោះ ព្រោះវានឹងបង្ហាញឱ្យគេឃើញទាំងអស់។' }
-    ],
-    tip: 'ប្រើ POST ជានិច្ចសម្រាប់រាល់ Form ដែលមានការផ្លាស់ប្តូរទិន្នន័យក្នុង Database។',
-    syntax: '$name = $_POST["name"];',
-    lab: 'សាកល្បងទទួលឈ្មោះពីការបញ្ជូនតាមរយៈ POST រួចបង្ហាញសារស្វាគមន៍។',
-    result: 'ទិន្នន័យត្រូវបានចាប់យកយ៉ាងត្រឹមត្រូវ និងបង្ហាញលើអេក្រង់។',
-    filename: 'forms.php',
-    code: `<?php
-// Mocking a POST request
-$_POST["username"] = "Ratha";
+// Keep items > 100
+$premium = array_filter($discounted, fn($p) => $p > 100);
 
-$name = $_POST["username"] ?? "Guest";
-echo "Submitted Name: " . $name;
-?>`,
+echo "Discounted: " . implode(", ", $discounted) . "\\n";
+echo "Premium: "    . implode(", ", $premium);`,
+    filename: 'array_funcs.php',
+    terminalOutput: 'Discounted: 64, 120, 40, 240, 96\nPremium: 120, 240',
+  },
+
+  // FORMS
+  {
+    chapter: 'forms', id: 'PH4-S1', accent: '#fb923c',
+    title: 'GET vs POST', subtitle: 'HTTP Methods ​ Form Submission',
     icon: Layout,
-    terminalOutput: "Submitted Name: Ratha",
-  },
-  {
-    chapter: 'forms', id: 'PH4-S2', tag: 'Week 5', tagColor: '#f59e0b',
-    title: 'ការធ្វើ Validation', subtitle: 'ការសម្អាតទិន្នន័យ', accent: '#f59e0b',
-    bg: 'radial-gradient(ellipse at center, rgba(245,158,11,0.08) 0%, transparent 70%)',
     concepts: [
-      { label: 'The Golden Rule', desc: 'កុំទុកចិត្តរាល់ទិន្នន័យដែលបញ្ចូលមកពីអ្នកប្រើប្រាស់ឱ្យសោះ (Never Trust Input)។' },
-      { label: 'Data Sanitization', desc: 'ការលុបចោលតួអក្សរដែលគ្រោះថ្នាក់ (ដូចជាការកាត់ HTML Tags ចេញ)។' },
-      { label: 'Format Validation', desc: 'ការឆែកមើលថាទិន្នន័យត្រឹមត្រូវតាមទម្រង់ (ឧទាហរណ៍៖ អ៊ីមែល ឬលេខទូរស័ព្ទ)។' },
-      { label: 'XSS Defense', desc: 'ប្រើ htmlspecialchars() ដើម្បីការពារការបញ្ចូលកូដ Hack ក្នុងវេបសាយ។' }
+      { label: 'GET Method', desc: 'Data visible ​ URL: ?name=Ratha&age=21 ។ Bookmarkable, cacheable ។ ​ search, filter, read operations only ។' },
+      { label: 'POST Method', desc: 'Data hidden ​ request body ។ Secure ​ passwords, sensitive data ។ Cannot bookmark ។ ​ create/update/delete ។' },
+      { label: '$_GET Superglobal', desc: '$_GET["key"] ។ Access URL parameters ។ Always validate — users can manipulate URL ។' },
+      { label: '$_POST Superglobal', desc: '$_POST["key"] ។ Access form data ។ Still must validate/sanitize — POST not automatically safe ។' },
     ],
-    tip: 'តែងតែសម្អាតទិន្នន័យមុននឹងដាក់វាបង្ហាញត្រឡប់ទៅក្នុង HTML វិញ ដើម្បីការពារ XSS។',
-    syntax: 'htmlspecialchars($input);',
-    lab: 'សរសេរកូដសម្អាតអត្ថបទ (String) ដែលមានផ្ទុក HTML Tags ដ៏គ្រោះថ្នាក់។',
-    result: 'Tags ទាំងនោះនឹងត្រូវបានបំប្លែងឱ្យទៅជាអត្ថបទធម្មតាវិញដោយសុវត្ថិភាព។',
-    filename: 'validation.php',
+    tip: 'POST ≠ secure by default ។ POST hides data from URL but not from browser DevTools ។ Always use HTTPS + validation ។',
+    lab: 'Simulate $_POST submission ។ Access name + email ។ Echo greeting ។',
+    result: 'Data accessible via $_POST["key"] ។ Nullish coalescing ?? provides fallback ។',
     code: `<?php
-$userInput = "<script>alert('hacked')</script> Hello!";
-$safeInput = htmlspecialchars($userInput);
+// Simulating POST form submission
+$_POST["username"] = "Ratha";
+$_POST["email"]    = "ratha@example.com";
 
-echo $safeInput;
-?>`,
+$username = $_POST["username"] ?? "Guest";
+$email    = $_POST["email"]    ?? "no-email";
+
+echo "Welcome, $username!\\n";
+echo "Email: $email";`,
+    filename: 'forms.php',
+    terminalOutput: 'Welcome, Ratha!\nEmail: ratha@example.com',
+  },
+  {
+    chapter: 'forms', id: 'PH4-S2', accent: '#fb923c',
+    title: 'Validation & Sanitization', subtitle: 'Never Trust User Input',
     icon: ShieldCheck,
-    terminalOutput: "&lt;script&gt;alert('hacked')&lt;/script&gt; Hello!",
+    concepts: [
+      { label: 'Golden Rule', desc: 'Never trust user input ។ Validate format, sanitize content — every form field, every time ។' },
+      { label: 'htmlspecialchars()', desc: 'Convert HTML special chars to entities ។ < → &lt; ។ Prevents XSS (Cross-Site Scripting) attacks ។' },
+      { label: 'filter_var()', desc: 'FILTER_VALIDATE_EMAIL, FILTER_VALIDATE_URL, FILTER_SANITIZE_STRING ។ Built-in PHP validators ។' },
+      { label: 'empty() / isset()', desc: 'isset($var) checks if variable exists + not null ។ empty($var) checks falsy values "" 0 null [] ។' },
+    ],
+    tip: 'Sanitize before display, validate before store ។ Two different concerns — do both ​ ​ order ។',
+    lab: 'Sanitize input with htmlspecialchars() ។ Validate email with filter_var() ។',
+    result: 'Malicious HTML tags converted to safe entities ។ Invalid email rejected ។',
+    code: `<?php
+$raw_input = "<script>alert('XSS')</script> Hello!";
+$safe      = htmlspecialchars($raw_input, ENT_QUOTES, 'UTF-8');
+
+echo $safe . "\\n";
+
+// Email validation
+$email = "ratha@example.com";
+if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "Valid email: $email";
+} else {
+    echo "Invalid email format";
+}`,
+    filename: 'validation.php',
+    terminalOutput: '&lt;script&gt;alert(\'XSS\')&lt;/script&gt; Hello!\nValid email: ratha@example.com',
   },
 
-  /* ── PHASE 5: PHP + DATABASE (Week 5–6) ── */
+  // DB
   {
-    chapter: 'db', id: 'PH5-S1', tag: 'Week 5', tagColor: '#3b82f6',
-    title: 'ការភ្ជាប់ទៅកាន់ MySQL (PDO)', subtitle: 'ស្ពានចម្លងទិន្នន័យ', accent: '#3b82f6',
-    bg: 'radial-gradient(ellipse at 10% 20%, rgba(59,130,246,0.15) 0%, transparent 55%)',
-    concepts: [
-      { label: 'PDO Interface', desc: 'វិធីសាស្ត្រទំនើប និងមានសុវត្ថិភាពបំផុតសម្រាប់ភ្ជាប់ទៅកាន់ Database ច្រើនប្រភេទ។' },
-      { label: 'DSN Configuration', desc: 'ការកំណត់ Host, ឈ្មោះ Database, Username និង Password ឱ្យបានត្រឹមត្រូវ។' },
-      { label: 'Error Handling', desc: 'ប្រើ Try/Catch ដើម្បីឆែកមើលថា តើការភ្ជាប់ជោគជ័យ ឬមានបញ្ហាកូដត្រង់ណា។' },
-      { label: 'Secure Bridge', desc: 'PDO ជួយការពារការ Hack តាមរយៈ Prepared Statements ដោយស្វ័យប្រវត្តិ។' }
-    ],
-    tip: 'ប្រើ PDO ជំនួសឱ្យ mysqli ព្រោះវាអាចបត់បែនបានច្រើនជាង និងមានសុវត្ថិភាពខ្ពស់ជាង។',
-    syntax: '$pdo = new PDO("mysql:host=$h;dbname=$d", $u, $p);',
-    lab: 'រៀបចំ Parameters ដែលចាំបាច់សម្រាប់ការភ្ជាប់ Database នៅក្នុង Local Server។',
-    result: 'យល់ដឹងពីរបៀបភ្ជាប់ និងការចាប់យក Error ក្នុងករណីភ្ជាប់មិនបាន។',
+    chapter: 'db', id: 'PH5-S1', accent: '#38bdf8',
+    title: 'PDO Connection', subtitle: 'PHP Data Objects — Database Bridge',
     icon: Database,
+    concepts: [
+      { label: 'PDO Interface', desc: 'PDO = PHP Data Objects ។ Unified API ​ MySQL, PostgreSQL, SQLite ។ Modern + secure ​ raw mysqli ។' },
+      { label: 'DSN String', desc: '"mysql:host=localhost;dbname=mydb;charset=utf8mb4" ។ Data Source Name defines connection details ។' },
+      { label: 'try/catch Block', desc: 'Wrap connection ​ try/catch ​ handle PDOException ។ Never crash silently — always catch errors ។' },
+      { label: 'PDO Attributes', desc: 'PDO::ATTR_ERRMODE = ERRMODE_EXCEPTION ។ PDO::ATTR_DEFAULT_FETCH_MODE = FETCH_ASSOC ។' },
+    ],
+    tip: 'Store DB credentials ​ .env file — never hard-code ​ source code ។ .env + .gitignore = security ។',
+    lab: 'Write PDO connection code ។ Set ERRMODE_EXCEPTION ។ Echo success message ។',
+    result: '"Connection Successful!" ។ PDOException caught if wrong credentials ។',
     code: `<?php
 $host = "localhost";
-$db = "my_database";
+$db   = "my_database";
 $user = "root";
 $pass = "";
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
+    $pdo = new PDO(
+        "mysql:host=$host;dbname=$db;charset=utf8mb4",
+        $user, $pass,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+    );
     echo "Connection Successful!";
 } catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
-}
-?>`,
-    terminalOutput: "Connection Successful!",
+    die("DB Error: " . $e->getMessage());
+}`,
+    filename: 'connection.php',
+    terminalOutput: 'Connection Successful!',
   },
   {
-    chapter: 'db', id: 'PH5-S2', tag: 'Week 6', tagColor: '#3b82f6',
-    title: 'ប្រតិបត្តិការ CRUD', subtitle: 'ការគ្រប់គ្រងទិន្នន័យ', accent: '#3b82f6',
-    bg: 'radial-gradient(ellipse at center, rgba(59,130,246,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Read (SELECT)', desc: 'ការទាញយកទិន្នន័យពី Database មកបង្ហាញមានរបៀបរៀបរយលើវេបសាយ។' },
-      { label: 'Create (INSERT)', desc: 'ការរក្សាទុកទិន្នន័យថ្មីដែលអ្នកប្រើបញ្ចូល ទៅក្នុងតារាង (Table)។' },
-      { label: 'Update/Delete', desc: 'ការកែប្រែ ឬលុបទិន្នន័យ (ត្រូវប្រើ WHERE ជានិច្ចដើម្បីកុំឱ្យខូចទិន្នន័យផ្សេង)។' },
-      { label: 'Prepared Statements', desc: 'វិធីសាស្ត្រការពារ SQL Injection ដែលជាចំណុចខ្សោយបំផុតរបស់វេបសាយ។' }
-    ],
-    tip: 'កុំបញ្ចូល Variable ទៅក្នុង Query ផ្ទាល់ ត្រូវប្រើសញ្ញា ? រួច execute តាមក្រោយ។',
-    syntax: '$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");',
-    lab: 'ពន្យល់ពីមូលហេតុដែលយើងប្រើ Prepared Statements ជំនួសឱ្យការសរសេរសំណួរផ្ទាល់។',
-    result: 'យល់ដឹងពីរបៀបការពារទិន្នន័យឱ្យមានសុវត្ថិភាពខ្ពស់បំផុត។',
+    chapter: 'db', id: 'PH5-S2', accent: '#38bdf8',
+    title: 'CRUD Operations', subtitle: 'Create · Read · Update · Delete',
     icon: Database,
+    concepts: [
+      { label: 'SELECT (Read)', desc: '$pdo->query("SELECT * FROM users") ។ fetch() = one row ។ fetchAll() = all rows ។ Return assoc array ។' },
+      { label: 'INSERT (Create)', desc: 'prepare() + execute() ។ Never concatenate user input ​ SQL string — SQL injection risk ។' },
+      { label: 'UPDATE / DELETE', desc: 'Always use WHERE clause ។ Missing WHERE = update/delete ALL rows ។ Test ​ SELECT first ។' },
+      { label: 'Prepared Statements', desc: 'Parameterized queries: ? or :name placeholders ។ PDO escapes input automatically ។ Prevention SQL injection ។' },
+    ],
+    tip: 'Prepared statements ≠ optional ។ Raw string concatenation ​ SQL = SQL injection vulnerability ។ Always prepare() + execute() ។',
+    lab: 'Write SELECT query ​ WHERE id = ? ។ Pass id via execute([$id]) ។',
+    result: 'User data fetched securely ។ No SQL injection possible with prepared statements ។',
     code: `<?php
+// READ — Prepared statement
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-$stmt->execute([$_GET["id"]]);
+$stmt->execute([1]);
 $user = $stmt->fetch();
-echo "Welcome, " . htmlspecialchars($user["name"]);
-?>`,
-    terminalOutput: "Welcome, Ratha",
+echo "User: " . htmlspecialchars($user["name"]) . "\\n";
+
+// INSERT — Named placeholders
+$stmt = $pdo->prepare(
+    "INSERT INTO users (name, email) VALUES (:name, :email)"
+);
+$stmt->execute(["name" => "Ratha", "email" => "r@example.com"]);
+echo "Inserted ID: " . $pdo->lastInsertId();`,
+    filename: 'crud.php',
+    terminalOutput: 'User: Ratha\nInserted ID: 42',
   },
 
-  /* ── PHASE 6: AUTHENTICATION (Week 6–7) ── */
+  // AUTH
   {
-    chapter: 'auth', id: 'PH6-S1', tag: 'Week 6', tagColor: '#f43f5e',
-    title: 'ការប្រើ Session', subtitle: 'ការចងចាំអ្នកប្រើប្រាស់', accent: '#f43f5e',
-    bg: 'radial-gradient(ellipse at 10% 20%, rgba(244,63,94,0.15) 0%, transparent 55%)',
+    chapter: 'auth', id: 'PH6-S1', accent: '#f87171',
+    title: 'Sessions', subtitle: 'ការ​ Persist State ​ Across Requests',
+    icon: User,
     concepts: [
-      { label: 'State Problem', desc: 'HTTP ជា Stateless (មិនចងចាំយើងទេ) ដូច្នេះយើងត្រូវការ Session ដើម្បីចាំ User។' },
-      { label: 'session_start()', desc: 'ជាពាក្យបញ្ជាដែលត្រូវហៅនៅផ្នែកខាងលើបង្អស់នែរាល់ទំព័រ PHP ជានិច្ច។' },
-      { label: '$_SESSION Array', desc: 'អថេរពិសេសសម្រាប់រក្សាទុកទិន្នន័យឱ្យនៅជាប់ ទោះយើងប្តូរទៅទំព័រផ្សេងក៏ដោយ។' },
-      { label: 'Session Expiry', desc: 'ទិន្នន័យនឹងបាត់បង់ទៅវិញ នៅពេលយើងបិទ Browser ឬធ្វើការ Logout។' }
+      { label: 'HTTP Stateless Problem', desc: 'HTTP is stateless — ​ request is independent ។ Server doesn\'t remember previous requests ។ Sessions solve this ។' },
+      { label: 'session_start()', desc: 'Must call ​ every page ​ wants session access ។ Place ​ very top — before any output ។' },
+      { label: '$_SESSION Array', desc: '$_SESSION["user_id"] = 42 ។ Persists across pages ។ Stored server-side ។ Session ID ​ cookie ។' },
+      { label: 'Session Destruction', desc: 'session_destroy() ​ logout ។ unset($_SESSION["key"]) ​ single value ។ session_regenerate_id() ​ security ។' },
     ],
-    tip: 'កុំភ្លេចហៅ session_start() មុនពេលព្យាយាមទាញយកទិន្នន័យពី $_SESSION។',
-    syntax: 'session_start(); $_SESSION["user"] = "id_123";',
-    lab: 'សាកល្បងចាប់ផ្ដើម Session រួចរក្សាទុកឈ្មោះក្នុង "user_name" ដើម្បីបង្ហាញនៅទំព័រផ្សេង។',
-    result: 'ឈ្មោះដែលបានរក្សាទុក នឹងបង្ហាញមកវិញទោះបីជាយើង Logout រួចចូលមកវិញក៏ដោយ (បើមិនទាន់បិទ Browser)។',
-    filename: 'session.php',
+    tip: 'Regenerate session ID after login: session_regenerate_id(true) ។ Prevents session fixation attacks ។',
+    lab: 'session_start() ។ Set $_SESSION["user_name"] ។ Access ​ same request ​ verify persistence ។',
+    result: 'Session data accessible ។ session_start() required before any $_SESSION access ។',
     code: `<?php
 session_start();
-$_SESSION["user_name"] = "Ratha";
 
-echo "Session started for: " . $_SESSION["user_name"];
-?>`,
-    icon: User,
-    terminalOutput: "Session started for: Ratha",
+// Store user data in session
+$_SESSION["user_id"]   = 42;
+$_SESSION["user_name"] = "Ratha";
+$_SESSION["role"]      = "admin";
+
+echo "Session started for: " . $_SESSION["user_name"] . "\\n";
+echo "Role: " . $_SESSION["role"] . "\\n";
+echo "Session ID: " . session_id();`,
+    filename: 'session.php',
+    terminalOutput: 'Session started for: Ratha\nRole: admin\nSession ID: abc123xyz789',
   },
   {
-    chapter: 'auth', id: 'PH6-S2', tag: 'Week 7', tagColor: '#f43f5e',
-    title: 'ការ Hash លេខសម្ងាត់', subtitle: 'សុវត្ថិភាពទិន្នន័យសម្ងាត់', accent: '#f43f5e',
-    bg: 'radial-gradient(ellipse at center, rgba(244,63,94,0.08) 0%, transparent 70%)',
+    chapter: 'auth', id: 'PH6-S2', accent: '#f87171',
+    title: 'Password Hashing', subtitle: 'Secure Credential Storage',
+    icon: Lock,
     concepts: [
-      { label: 'Plain-text Danger', desc: 'ហាមដាច់ខាតកុំរក្សាទុក Password សុទ្ធៗក្នុង Database (ព្រោះ Hacker អាចមើលឃើញ)។' },
-      { label: 'password_hash()', desc: 'បំប្លែង Password ឱ្យទៅជាកូដដែលមើលមិនយល់ (Hash) ដែលមានសុវត្ថិភាពខ្ពស់។' },
-      { label: 'password_verify()', desc: 'ប្រើសម្រាប់ផ្ទៀងផ្ទាត់ Password ដែល User វាយ បើធៀបនឹង Hash ក្នុង DB។' },
-      { label: 'Auto Salting', desc: 'PHP គ្រប់គ្រងការដាក់ Salt ដោយស្វ័យប្រវត្តិដើម្បីការពារការ Hack គ្រប់រូបភាព។' }
+      { label: 'Never Store Plain-text', desc: 'Plain-text passwords ​ DB = catastrophic breach ។ Always hash ​ storing ។ Hash is one-way ។' },
+      { label: 'password_hash()', desc: 'password_hash($pass, PASSWORD_DEFAULT) ។ Auto-salts ។ Uses bcrypt by default ។ Secure and simple ។' },
+      { label: 'password_verify()', desc: 'password_verify($input, $hash) ។ Compare plain input against stored hash ។ Returns true/false ។' },
+      { label: 'Auto Salt', desc: 'PHP auto-generates salt — never implement your own ។ PASSWORD_BCRYPT, PASSWORD_ARGON2ID options ។' },
     ],
-    tip: 'ប្រើ PASSWORD_DEFAULT ដើម្បីឱ្យ PHP ជ្រើសរើស Algorithm ដែលល្អបំផុតដោយស្វ័យប្រវត្តិ។',
-    syntax: '$hash = password_hash($pw, PASSWORD_DEFAULT);',
-    lab: 'សាកល្បងបង្កើត Hash ចេញពី Password "secret123" រួចផ្ទៀងផ្ទាត់វាវិញ។',
-    result: 'អ្នកនឹងឃើញថា Password ត្រូវគ្នាជាមួយ Hash បើទោះជាយើងមើលមិនយល់ពី Hash នោះក៏ដោយ។',
-    filename: 'auth.php',
+    tip: 'Never MD5 or SHA1 passwords — cryptographically broken ។ password_hash() with PASSWORD_DEFAULT is the minimum standard ។',
+    lab: 'Hash "secret123" ​ password_hash() ។ Verify ​ password_verify() ។',
+    result: 'Hash generated (60 chars) ។ password_verify() returns true for correct password ។',
     code: `<?php
 $password = "secret123";
+
+// Hash the password (use PASSWORD_DEFAULT)
 $hash = password_hash($password, PASSWORD_DEFAULT);
+echo "Hash: " . substr($hash, 0, 25) . "...\\n";
 
-echo "Hash: " . substr($hash, 0, 20) . "...\\n";
-
-if (password_verify("secret123", $hash)) {
-    echo "Password Verified!";
-}
-?>`,
-    icon: Lock,
-    terminalOutput: "Hash: $2y$10$...\nPassword Verified!",
+// Verify on login
+$input = "secret123";  // from login form
+if (password_verify($input, $hash)) {
+    echo "Password correct — login granted!";
+} else {
+    echo "Wrong password.";
+}`,
+    filename: 'password.php',
+    terminalOutput: 'Hash: $2y$10$KIjFqVnqrF...\nPassword correct — login granted!',
   },
 
-  /* ── PHASE 7: FILE HANDLING (Week 7–8) ── */
+  // FILES
   {
-    chapter: 'files', id: 'PH7-S1', tag: 'Week 7', tagColor: '#f97316',
-    title: 'ការ Upload ឯកសារ', subtitle: 'ការគ្រប់គ្រង Assets', accent: '#f97316',
-    bg: 'radial-gradient(ellipse at center, rgba(249,115,22,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'enctype Attribute', desc: 'ត្រូវដាក់ "multipart/form-data" ក្នុង HTML Form ទើបអាច Upload ឯកសារបាន។' },
-      { label: '$_FILES Global', desc: 'អថេរផ្ទុកព័ត៌មានឯកសារ (ឈ្មោះ, ប្រភេទ, ទំហំ, និងទីតាំងបណ្តោះអាសន្ន)។' },
-      { label: 'File Movement', desc: 'ប្រើ move_uploaded_file() ដើម្បីប្តូរឯកសារពី Temporary ទៅកាន់ Folder គោលដៅ។' },
-      { label: 'Security Audits', desc: 'ត្រូវឆែកប្រភេទឯកសារ (Extension) ដើម្បីការពារការ Upload មេរោគចូល Server។' }
-    ],
-    tip: 'តែងតែប្តូរឈ្មោះឯកសារដែល Upload មកថ្មី ដើម្បីចៀសវាងការជាន់ឈ្មោះគ្នាជាមួយ File ចាស់។',
-    syntax: 'move_uploaded_file($tmp, $destination);',
-    lab: 'ពន្យល់ពីសារៈសំខាន់នៃ $_FILES array ក្នុងដំណើរការ Upload រូបភាព។',
-    result: 'យល់ដឹងពីរបៀបគ្រប់គ្រង និងរក្សាទុកឯកសារបានយ៉ាងត្រឹមត្រូវ។',
+    chapter: 'files', id: 'PH7-S1', accent: '#fbbf24',
+    title: 'File Upload', subtitle: 'ការ​ Handle Uploaded Files Securely',
     icon: HardDrive,
+    concepts: [
+      { label: 'enctype Requirement', desc: '<form enctype="multipart/form-data"> ។ Required ​ file uploads ​ work ។ Without it, $_FILES is empty ។' },
+      { label: '$_FILES Superglobal', desc: '$_FILES["field"]["name"], ["type"], ["size"], ["tmp_name"], ["error"] ។ tmp_name = temporary path ។' },
+      { label: 'move_uploaded_file()', desc: 'Move from tmp to destination ។ move_uploaded_file($tmp, "uploads/$name") ។ Validates upload origin ។' },
+      { label: 'Security Checks', desc: 'Validate MIME type, extension whitelist, file size ។ Never trust $_FILES["type"] — check real MIME ។' },
+    ],
+    tip: 'Rename uploaded files ​ save — prevent overwriting ​ directory traversal attacks ។ uniqid() + extension ។',
+    lab: 'Handle $_FILES["profile"] ។ Check error == 0 ។ move_uploaded_file() to uploads/ ។',
+    result: 'File moves successfully ។ Error handling catches upload failures ។',
     code: `<?php
-if ($_FILES["profile"]["error"] == UPLOAD_ERR_OK) {
-    $tmp_name = $_FILES["profile"]["tmp_name"];
-    $name = basename($_FILES["profile"]["name"]);
-    move_uploaded_file($tmp_name, "uploads/$name");
-    echo "File uploaded successfully!";
-}
-?>`,
-    terminalOutput: "File uploaded successfully!",
+if (isset($_FILES["profile"])) {
+    $file = $_FILES["profile"];
+    
+    // Check for upload errors
+    if ($file["error"] !== UPLOAD_ERR_OK) {
+        die("Upload failed: " . $file["error"]);
+    }
+    
+    // Validate extension
+    $ext = pathinfo($file["name"], PATHINFO_EXTENSION);
+    $allowed = ["jpg","jpeg","png","gif"];
+    
+    if (in_array(strtolower($ext), $allowed)) {
+        $new_name = uniqid() . "." . $ext;
+        move_uploaded_file($file["tmp_name"], "uploads/$new_name");
+        echo "Uploaded: $new_name";
+    }
+}`,
+    filename: 'upload.php',
+    terminalOutput: 'Uploaded: 65a1b2c3d4e5f.jpg',
   },
 
-  /* ── PHASE 8: OOP IN PHP (Week 8–9) ── */
+  // OOP
   {
-    chapter: 'oop', id: 'PH8-S1', tag: 'Week 8', tagColor: '#a855f7',
-    title: 'Classes & Objects', subtitle: 'ស្ថាបត្យកម្មទំនើប', accent: '#a855f7',
-    bg: 'radial-gradient(ellipse at 10% 20%, rgba(168,85,247,0.15) 0%, transparent 55%)',
+    chapter: 'oop', id: 'PH8-S1', accent: '#c084fc',
+    title: 'Classes & Objects', subtitle: 'Object-Oriented Programming Fundamentals',
+    icon: Code2,
     concepts: [
-      { label: 'The Blueprint (Class)', desc: 'Class ប្រៀបដូចជាប្លង់មេសម្រាប់បង្កើត Object (ឧទាហរណ៍៖ ប្លង់ផ្ទះ)។' },
-      { label: 'The Instance (Object)', desc: 'Object ជាការបង្កើតបានជាផ្ទះពិតប្រាកដចេញពីប្លង់មេនោះ ($user = new User)។' },
-      { label: 'Class Properties', desc: 'ជា Variable ដែលស្ថិតក្នុង Class សម្រាប់រក្សាទុកព័ត៌មានលម្អិត។' },
-      { label: 'Class Methods', desc: 'ជា Function នៅក្នុង Class សម្រាប់កំណត់សកម្មភាពដែល Object អាចធ្វើបាន។' }
+      { label: 'Class = Blueprint', desc: 'class User { } ។ Class defines structure ។ Object = instance of class ។ $user = new User() ។' },
+      { label: 'Properties', desc: 'Variables inside class ។ public $name ។ private $password (hidden) ។ Access with $this->name ។' },
+      { label: '__construct()', desc: 'Magic method called ​ new ClassName() ។ Initialize properties ។ $this->name = $name ។' },
+      { label: 'Methods', desc: 'Functions inside class ។ public function introduce() ។ Access: $user->introduce() ។' },
     ],
-    tip: 'OOP ជួយឱ្យកូដរបស់អ្នកងាយស្រួលគ្រប់គ្រង (Manageable) ពេល Project រីកកាន់តែធំ។',
-    syntax: 'class User { public $name; }',
-    lab: 'បង្កើត Class ឈ្មោះ "Car" មួយដែលមាន Property ឈ្មោះ "brand" និង "model"។',
-    result: 'អ្នកអាចបង្កើត Object ជាច្រើនដែលចេញពី Class តែមួយ ប៉ុន្តែមានតម្លៃផ្សេងគ្នា។',
-    filename: 'oop.php',
+    tip: 'OOP = organize code ​ objects with data + behavior ។ Easier to manage as projects grow ។ Framework backbone ។',
+    lab: 'Create class Car ​ properties brand, model, year ។ Method describe() ​ return info string ។',
+    result: 'new Car("Toyota","Camry",2024)->describe() works ។ Multiple objects from one class ។',
     code: `<?php
 class User {
-    public $name;
+    public string $name;
+    private string $email;
 
-    public function __construct($n) {
-        $this->name = $n;
+    public function __construct(string $name, string $email) {
+        $this->name  = $name;
+        $this->email = $email;
     }
 
-    public function introduce() {
-        return "Hi, I am " . $this->name;
+    public function introduce(): string {
+        return "Hi, I am {$this->name}";
+    }
+
+    public function getEmail(): string {
+        return $this->email;  // controlled access
     }
 }
 
-$user = new User("Ratha");
-echo $user->introduce();
-?>`,
-    icon: Code2,
-    terminalOutput: "Hi, I am Ratha",
+$user = new User("Ratha", "r@example.com");
+echo $user->introduce() . "\\n";
+echo $user->getEmail();`,
+    filename: 'oop.php',
+    terminalOutput: 'Hi, I am Ratha\nr@example.com',
   },
 
-  /* ── PHASE 9: SECURITY BASICS (Week 9–10) ── */
+  // SECURITY
   {
-    chapter: 'security', id: 'PH9-S1', tag: 'Week 9', tagColor: '#ec4899',
-    title: 'SQL Injection', subtitle: 'ការគំរាមកំហែងទូទៅ', accent: '#ec4899',
-    bg: 'radial-gradient(ellipse at 10% 20%, rgba(236,72,153,0.15) 0%, transparent 55%)',
-    concepts: [
-      { label: 'The Attack Vector', desc: 'ការបញ្ចូលបញ្ជា SQL មិនល្អតាមរយៈ Input ដើម្បីលួចទិន្នន័យពី Database។' },
-      { label: 'Data Breach Risk', desc: 'Hacker អាចឆ្លងកាត់ការ Login ឬលុបទិន្នន័យក្នុង Database របស់អ្នកទាំងអស់បាន។' },
-      { label: 'The Prevention', desc: 'ហាមភ្ជាប់កូដ SQL ជាមួយ Variable ផ្ទាល់ ត្រូវតែប្រើ Prepared Statements។' },
-      { label: 'Secure PDO', desc: 'ប្រើប្រព័ន្ធ PDO ដើម្បីបំបែកកូដ SQL និងទិន្នន័យឱ្យដាច់ពីគ្នាជានិច្ច។' }
-    ],
-    tip: 'រាល់ទិន្នន័យដែលមកពីអ្នកប្រើប្រាស់ (URL ឬ Form) ត្រូវតែប្រើ Prepared Statements ជានិច្ច។',
-    syntax: '$stmt->execute([$unsafe_variable]);',
-    lab: 'សាកល្បងពន្យល់ពីភាពខុសគ្នារវាងការសរសេរ SQL បញ្ចូលគ្នាផ្ទាល់ និងការប្រើ PDO Prepare។',
-    result: 'យល់ដឹងពីរបៀបការពារទិន្នន័យពីការប៉ុនប៉ង Hack ពីខាងក្រៅ។',
+    chapter: 'security', id: 'PH9-S1', accent: '#f472b6',
+    title: 'SQL Injection', subtitle: 'Most Critical Web Vulnerability',
     icon: ShieldAlert,
+    concepts: [
+      { label: 'The Attack', desc: 'Attacker injects SQL code via input ។ username: admin\'-- ​ logs in without password ។ Can dump entire database ។' },
+      { label: 'String Concatenation Danger', desc: '"SELECT * FROM users WHERE id = " . $id → DANGEROUS ។ $id = "1 OR 1=1" → returns all rows ។' },
+      { label: 'Prepared Statements', desc: 'Parameterize ALL user input ។ prepare() + execute([$val]) ។ PDO separates SQL from data — impossible to inject ។' },
+      { label: 'Input Validation', desc: 'Validate type, range, format before DB ។ Reject unexpected input early ​ application level ។' },
+    ],
+    tip: 'Never concatenate user input into SQL ​ any form ។ No exceptions ។ Even admin interfaces must use prepared statements ។',
+    lab: 'Compare vulnerable vs secure query ​ same operation ។',
+    result: 'Secure version uses prepare() + execute() ។ No SQL injection possible ​ parameterized queries ។',
     code: `<?php
-// Secure way (Prepared Statements)
-$stmt = $pdo->prepare("SELECT * FROM products WHERE category = ?");
-$stmt->execute([$category]);
+// DANGEROUS — Never do this!
+// $id = $_GET["id"];  // could be "1 OR 1=1"
+// $sql = "SELECT * FROM users WHERE id = " . $id;
 
-// DANGEROUS way (Concatenation)
-// $sql = "SELECT * FROM users WHERE id = " . $unsafe_id;
-?>`,
-    terminalOutput: "Data fetched securely.",
-  },
-  /* ── PHASE 10: FINAL PROJECT (Week 10–12) ── */
-  {
-    chapter: 'project', id: 'PH10-S1', tag: 'Week 10', tagColor: '#14b8a6',
-    title: 'រចនាសម្ព័ន្ធ Folder', subtitle: 'ដំណាក់កាលកសាង (Build)', accent: '#14b8a6',
-    bg: 'radial-gradient(ellipse at center, rgba(20,184,166,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Folder Organization', desc: 'រៀបចំហ្វូឌ័រឱ្យមានសណ្តាប់ធ្នាប់តាមស្តង់ដារ (public/, src/, controller/)។' },
-      { label: 'Application Entry', desc: 'ដឹកនាំរាល់ Request ទាំងអស់ឱ្យមកឆ្លងកាត់ index.php តែមួយគត់ (Routing)។' },
-      { label: 'Relational DB', desc: 'ការបង្កើតតារាង និងទំនាក់ទំនង (Relationships) ឱ្យមានប្រសិទ្ធភាពបំផុត។' },
-      { label: 'Full Build', desc: 'រួមបញ្ចូលរាល់មេរៀនដែលបានរៀនទាំងអស់ ឱ្យក្លាយទៅជាវេបសាយពេញលេញ។' }
-    ],
-    tip: 'ការរៀបចំរចនាសម្ព័ន្ធ Folder បានត្រឹមត្រូវតាំងពីដំបូង នឹងជួយសន្សំពេលវេលាអ្នកយ៉ាងច្រើន។',
-    syntax: 'index.php -> controllers/PostController.php',
-    lab: 'សាកល្បងគូររចនាសម្ព័ន្ធ Folder សម្រាប់ Project ចុងក្រោយរបស់អ្នក។',
-    result: 'ទទួលបានរចនាសម្ព័ន្ធ File ដែលមានរបៀបរៀបរយតាមស្តង់ដារ។',
-    icon: Layout,
-    code: `# Project Root
-/public
-  index.php
-/src
-  /Controllers
-  /Models
-/vendor
-/composer.json`,
-  },
-  {
-    chapter: 'project', id: 'PH10-S2', tag: 'Week 12', tagColor: '#14b8a6',
-    title: 'ការដាក់ឱ្យប្រើប្រាស់ (Deployment)', subtitle: 'ការបង្ហោះវេបសាយ (Going Live)', accent: '#14b8a6',
-    bg: 'radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Error Silencing', desc: 'ត្រូវបិទការបង្ហាញ Error ក្នុងលក្ខណៈផលិតកម្ម (Production) សម្រាប់សុវត្ថិភាព។' },
-      { label: 'Security Audit', desc: 'ពិនិត្យឡើងវិញនូវរាល់កន្លែងទទួលទិន្នន័យ និងកូដ SQL ឱ្យមានសុវត្ថិភាពបំផុត។' },
-      { label: 'Going Live', desc: 'បង្ហោះកូដ និងផ្ទេរទិន្នន័យ (Migration) ទៅកាន់ Server ពិតប្រាកដ។' },
-      { label: 'Speed Tuning', desc: 'បង្រួមរូបភាព និង CSS ឱ្យតូចដើម្បីឱ្យវេបសាយដំណើរការលឿនបំផុត។' }
-    ],
-    tip: 'ប្រើ SSL (HTTPS) ជានិច្ចសម្រាប់វេបសាយពិតប្រាកដ ដើម្បីការពារទិន្នន័យអ្នកប្រើប្រាស់។',
-    syntax: 'git push production main',
-    lab: 'ឆែកមើលទំព័រចុងក្រោយ បើក្នុងផលិតកម្ម (Production) ត្រូវប្រាកដថាគ្មាន Error ណាមួយបង្ហាញមកក្រៅ។',
-    result: 'វេបសាយរបស់អ្នកដើរបានយ៉ាងរលូន និងមានសុវត្ថិភាពខ្ពស់។',
-    filename: 'launch.php',
-    code: `<?php
-define("ENVIRONMENT", "production");
-if (ENVIRONMENT === "production") {
-    ini_set('display_errors', 0);
-    echo "Site is LIVE - Security Mode ON.";
+// SECURE — Always use prepared statements
+$id = $_GET["id"] ?? 1;
+
+$stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$id]);
+$user = $stmt->fetch();
+
+if ($user) {
+    echo "Found: " . htmlspecialchars($user["name"]);
+} else {
+    echo "User not found";
 }`,
+    filename: 'sql_security.php',
+    terminalOutput: 'Found: Ratha',
+  },
+
+  // PROJECT
+  {
+    chapter: 'project', id: 'PH10-S1', accent: '#2dd4bf',
+    title: 'Project Structure', subtitle: 'Folder Architecture & MVC Pattern',
+    icon: Layout,
+    concepts: [
+      { label: 'Separation of Concerns', desc: 'Controllers handle logic ។ Models handle data ។ Views handle display ។ MVC = clean, maintainable code ។' },
+      { label: 'Entry Point', desc: 'index.php = single entry point ។ All requests route through it ។ Router directs to correct controller ។' },
+      { label: 'Autoloading', desc: 'Composer autoloader: spl_autoload_register ។ PSR-4 standard ។ require_once manually otherwise ។' },
+      { label: 'Environment Config', desc: '.env file for DB credentials, API keys ។ .gitignore .env ។ Never commit secrets ។' },
+    ],
+    tip: 'Good folder structure ​ beginning saves hours of refactoring later ។ Follow PSR-4 naming conventions ។',
+    lab: 'Design folder structure ​ blog app: posts, users, auth ។',
+    result: 'Clear separation: controllers/, models/, views/ ។ index.php as router entry point ។',
+    code: `# PHP Project Structure (MVC)
+
+/my-project
+├── public/
+│   └── index.php          # Entry point (route all requests here)
+├── src/
+│   ├── Controllers/
+│   │   └── PostController.php
+│   ├── Models/
+│   │   └── Post.php
+│   └── Views/
+│       └── posts/index.php
+├── config/
+│   └── database.php
+├── .env                   # Never commit this!
+├── .gitignore
+└── composer.json`,
+    filename: 'structure.txt',
+    terminalOutput: 'Project structure initialized ✓',
+  },
+  {
+    chapter: 'project', id: 'PH10-S2', accent: '#2dd4bf',
+    title: 'Deployment', subtitle: 'Going Live — Production Checklist',
     icon: Rocket,
-    terminalOutput: "Site is LIVE - Security Mode ON.",
+    concepts: [
+      { label: 'Error Display OFF', desc: 'ini_set("display_errors", 0) ​ production ។ Log errors to file instead ។ Never show errors to users ។' },
+      { label: 'Security Audit', desc: 'All inputs validated/sanitized ។ All queries use prepared statements ។ Passwords hashed ។ HTTPS enabled ។' },
+      { label: 'HTTPS Required', desc: 'SSL certificate mandatory ​ production ។ Free via Let\'s Encrypt ។ HTTP → HTTPS redirect always ។' },
+      { label: 'Performance', desc: 'Compress images ។ Enable PHP OPcache ។ Minify CSS/JS ។ Use CDN ​ static assets ។' },
+    ],
+    tip: 'Create deployment checklist ។ Run through every point before going live ។ Rollback plan if launch fails ។',
+    lab: 'Production config: hide errors, set environment constants ។',
+    result: 'Site live ​ no error output ​ ENVIRONMENT=production mode ។',
+    code: `<?php
+// config/production.php
+define("ENVIRONMENT", "production");
+
+if (ENVIRONMENT === "production") {
+    ini_set("display_errors", 0);
+    ini_set("log_errors", 1);
+    ini_set("error_log", "/var/log/php_errors.log");
+} else {
+    ini_set("display_errors", 1);
+    error_reporting(E_ALL);
+}
+
+echo "Site is LIVE.\\n";
+echo "Environment: " . ENVIRONMENT;`,
+    filename: 'production.php',
+    terminalOutput: 'Site is LIVE.\nEnvironment: production',
   },
 ];
 
-/* ─── SYNTAX HIGHLIGHTER ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   SYNTAX HIGHLIGHTER
+══════════════════════════════════════════════════════════════════ */
+
 const PHP_KW = new Set([
-  'php','echo','return','if','else','elseif','foreach','for','while',
-  'class','extends','implements','namespace','use','new','public',
-  'protected','private','static','function','fn','array','string',
-  'int','float','bool','void','null','true','false','require',
-  'include','throw','try','catch','match','readonly','const',
+  'php','echo','return','if','else','elseif','foreach','for','while','do',
+  'class','extends','implements','namespace','use','new','public','protected',
+  'private','static','function','fn','array','string','int','float','bool',
+  'void','null','true','false','require','include','throw','try','catch',
+  'match','readonly','const','switch','case','break','continue','die',
+  'isset','empty','unset',
 ]);
 
-const HighlightedCode = ({ code }: { code: string }) => {
-  const tokenize = (line: string): React.ReactNode => {
-    if (/^\s*(\/\/|#|\/\*|\*)/.test(line))
-      return <span style={{ color: '#6b7280', fontStyle: 'italic' }}>{line}</span>;
-    if (/^\s*{{--/.test(line))
-      return <span style={{ color: '#6b7280', fontStyle: 'italic' }}>{line}</span>;
-
-    const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\$[a-zA-Z_]\w*|\b\d+(?:\.\d+)?\b|\b[a-zA-Z_]\w*\b)/g);
-    return parts.map((p, i) => {
-      if (!p) return null;
-      if (p.startsWith('$')) return <span key={i} style={{ color: '#fbbf24' }}>{p}</span>;
-      if (PHP_KW.has(p)) return <span key={i} style={{ color: '#f87171', fontWeight: 700 }}>{p}</span>;
-      if (p.startsWith('"') || p.startsWith("'")) return <span key={i} style={{ color: '#86efac' }}>{p}</span>;
-      if (/^\d/.test(p)) return <span key={i} style={{ color: '#c084fc' }}>{p}</span>;
-      if (/^[A-Z]/.test(p)) return <span key={i} style={{ color: '#fbbf24' }}>{p}</span>;
-      return <span key={i} style={{ color: '#e2e8f0' }}>{p}</span>;
-    });
-  };
-
-  return (
-    <div className="font-mono text-sm leading-6 whitespace-pre"
-      style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>
-      {code.split('\n').map((line, i) => (
-        <div key={i} className="min-h-[1.5rem]">{tokenize(line)}</div>
-      ))}
-    </div>
-  );
+const tokenizeLine = (line: string): React.ReactNode[] => {
+  if (/^\s*(\/\/|#|\/\*|\*)/.test(line))
+    return [<span key="c" style={{ color: '#374151', fontStyle: 'italic' }}>{line}</span>];
+  const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\$[a-zA-Z_]\w*|\b\d+(?:\.\d+)?\b|\b[a-zA-Z_]\w*\b)/g);
+  return parts.map((p, i) => {
+    if (!p) return null;
+    if (p.startsWith('$'))    return <span key={i} style={{ color: '#fbbf24' }}>{p}</span>;
+    if (PHP_KW.has(p))        return <span key={i} style={{ color: '#f87171', fontWeight: 700 }}>{p}</span>;
+    if (p.startsWith('"') || p.startsWith("'")) return <span key={i} style={{ color: '#86efac' }}>{p}</span>;
+    if (/^\d/.test(p))        return <span key={i} style={{ color: '#c084fc' }}>{p}</span>;
+    if (/^[A-Z]/.test(p))    return <span key={i} style={{ color: '#fbbf24' }}>{p}</span>;
+    return <span key={i} style={{ color: '#94a3b8' }}>{p}</span>;
+  });
 };
 
-/* ─── CODE PANEL ─────────────────────────────────────────────────── */
-const CodePanel = ({
-  code: initialCode, terminal, terminalOutput: initialOutput, accent, filename,
-}: {
+const HighlightedCode = ({ code }: { code: string }) => (
+  <div style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: 13, lineHeight: 1.8, whiteSpace: 'pre' }}>
+    {code.split('\n').map((line, i) => <div key={i} style={{ minHeight: '1.8em' }}>{tokenizeLine(line)}</div>)}
+  </div>
+);
+
+/* ══════════════════════════════════════════════════════════════════
+   CODE PANEL
+══════════════════════════════════════════════════════════════════ */
+
+const CodePanel = ({ code: initCode, terminal, terminalOutput, accent, filename }: {
   code: string; terminal?: string; terminalOutput?: string; accent: string; filename: string;
 }) => {
-  const [tab, setTab] = useState<'code' | 'terminal'>('code');
-  const [code, setCode] = useState(initialCode);
-  const [output, setOutput] = useState(initialOutput);
+  const [tab, setTab]       = useState<'code' | 'terminal'>('code');
+  const [code, setCode]     = useState(initCode);
   const [copied, setCopied] = useState(false);
   const [running, setRunning] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const hlRef = useRef<HTMLDivElement>(null);
-  const lines = code.split('\n');
 
-  useEffect(() => { setCode(initialCode); setOutput(initialOutput); }, [initialCode, initialOutput]);
+  useEffect(() => { setCode(initCode); }, [initCode]);
 
   const copy = () => {
-    navigator.clipboard.writeText(tab === 'code' ? code : (output || ''));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(tab === 'code' ? code : terminalOutput || '');
+    setCopied(true); setTimeout(() => setCopied(false), 2000);
   };
 
   const syncScroll = () => {
@@ -709,106 +803,127 @@ const CodePanel = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#07090f] rounded-2xl overflow-hidden border border-white/8">
-      {/* Tab bar */}
-      <div className="flex items-center justify-between px-4 py-2 bg-[#0d1117] border-b border-white/5 flex-none">
-        <div className="flex items-center gap-1 p-1 bg-black/40 rounded-xl border border-white/5">
-          {(['code', 'terminal'] as const).map(t => (
-            <button key={t} onClick={() => setTab(t)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                tab === t ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'
-              }`}>
-              {t === 'code' ? <Code2 className="w-3 h-3" /> : <Terminal className="w-3 h-3" />}
-              {t === 'code' ? 'កូដ' : 'Terminal'}
-            </button>
-          ))}
+    <div style={{
+      display: 'flex', flexDirection: 'column', height: '100%',
+      background: '#06080f', borderRadius: 14, overflow: 'hidden',
+      border: '1px solid rgba(255,255,255,0.06)',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+    }}>
+      {/* Title bar */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '9px 13px', background: '#0a0e1a',
+        borderBottom: '1px solid rgba(255,255,255,0.05)', flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', gap: 5 }}>
+            {['#ff5f57','#febc2e','#28c840'].map(c => (
+              <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }}/>
+            ))}
+          </div>
+          <div style={{ display: 'flex', background: 'rgba(0,0,0,0.4)', borderRadius: 7, padding: 3, border: '1px solid rgba(255,255,255,0.05)', marginLeft: 6 }}>
+            {(['code','terminal'] as const).map(t => (
+              <button key={t} onClick={() => setTab(t)} style={{
+                display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 5,
+                border: 'none', cursor: 'pointer', fontSize: 9.5,
+                fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
+                fontFamily: "'JetBrains Mono',monospace",
+                background: tab === t ? 'rgba(255,255,255,0.08)' : 'transparent',
+                color: tab === t ? '#e2e8f0' : '#374151', transition: 'all 0.18s',
+              }}>
+                {t === 'code' ? <Code2 size={9}/> : <Terminal size={9}/>}
+                {t === 'code' ? 'Code' : 'Output'}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div style={{ display: 'flex', gap: 6 }}>
           <button onClick={async () => {
-            setTab('terminal');
-            setRunning(true);
-            await new Promise(r => setTimeout(r, 800));
-            setRunning(false);
-          }}
-            disabled={running}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-              running ? 'bg-zinc-800 text-zinc-500' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
-            }`}>
-            <Play className={`w-3 h-3 ${running ? 'animate-pulse' : ''}`} />
-            {running ? 'កំពុងដំណើរការ...' : 'ដំណើរការ'}
+            setTab('terminal'); setRunning(true);
+            await new Promise(r => setTimeout(r, 700)); setRunning(false);
+          }} disabled={running} style={{
+            display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px',
+            borderRadius: 5, border: 'none', cursor: running ? 'not-allowed' : 'pointer',
+            fontSize: 9.5, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
+            fontFamily: "'JetBrains Mono',monospace",
+            background: `${accent}15`, color: running ? '#374151' : accent, transition: 'all 0.18s',
+          }}>
+            <Play size={9}/> {running ? 'Running…' : 'Run'}
           </button>
-          <button onClick={() => { setCode(initialCode); setOutput(initialOutput); }}
-            className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-300 hover:bg-white/5 transition-all">
-            <RotateCcw className="w-3.5 h-3.5" />
+          <button onClick={() => setCode(initCode)} style={{
+            padding: 5, borderRadius: 5, border: 'none', cursor: 'pointer',
+            background: 'transparent', color: '#374151', transition: 'color 0.18s',
+          }}>
+            <RotateCcw size={12}/>
           </button>
-          <button onClick={copy}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border transition-all ${
-              copied ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-white/5 border-white/10 text-zinc-400 hover:text-white'
-            }`}>
-            {copied ? <><Check className="w-3 h-3" />ចម្លងរួច</> : <><Copy className="w-3 h-3" />ចម្លង</>}
+          <button onClick={copy} style={{
+            padding: 5, borderRadius: 5, border: 'none', cursor: 'pointer',
+            background: 'transparent', color: copied ? '#4ade80' : '#374151', transition: 'color 0.18s',
+          }}>
+            {copied ? <Check size={13}/> : <Copy size={13}/>}
           </button>
         </div>
       </div>
 
-      {/* File bar */}
-      <div className="flex items-center gap-3 px-4 py-2 bg-[#0d1117]/60 border-b border-white/5 flex-none">
-        <div className="flex gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/40" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/40" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]/40" />
-        </div>
-        <div className="flex items-center gap-2 bg-white/5 rounded-lg px-2.5 py-1">
-          <FileCode className="w-3 h-3" style={{ color: accent }} />
-          <span className="text-[10px] font-mono text-zinc-400">
-            {tab === 'code' ? filename : 'bash — terminal'}
-          </span>
-        </div>
+      {/* Path bar */}
+      <div style={{
+        padding: '4px 13px', background: 'rgba(10,14,26,0.7)',
+        borderBottom: '1px solid rgba(255,255,255,0.04)', flexShrink: 0,
+        fontFamily: "'JetBrains Mono',monospace",
+        fontSize: 9.5, color: '#1f2937', display: 'flex', alignItems: 'center', gap: 5,
+      }}>
+        <span style={{ color: `${accent}60` }}>~/php-project</span>
+        <span>/</span>
+        <span>{tab === 'code' ? filename : 'bash'}</span>
       </div>
 
       {/* Content */}
-      <div className="flex-1 relative overflow-hidden">
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         {tab === 'code' ? (
-          <div className="flex h-full overflow-hidden">
-            <div className="flex-none w-10 bg-[#07090f] border-r border-white/5 pt-4 flex flex-col items-end pr-3 select-none overflow-hidden">
-              {lines.map((_, i) => (
-                <div key={i} className="text-[11px] font-mono text-zinc-700 leading-6 min-h-[1.5rem]">{i + 1}</div>
-              ))}
+          <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+            <div style={{
+              flexShrink: 0, width: 40, background: '#06080f',
+              borderRight: '1px solid rgba(255,255,255,0.04)',
+              paddingTop: 14, display: 'flex', flexDirection: 'column',
+              alignItems: 'flex-end', paddingRight: 9, userSelect: 'none',
+              fontFamily: "'JetBrains Mono',monospace", fontSize: 10.5, color: '#1a2030',
+            }}>
+              {code.split('\n').map((_, i) => <div key={i} style={{ lineHeight: '1.8em', height: '1.8em' }}>{i + 1}</div>)}
             </div>
-            <div className="relative flex-1 overflow-hidden">
-              <div ref={hlRef} className="absolute inset-0 overflow-auto p-4 pointer-events-none" style={{ scrollbarWidth: 'none' }}>
-                <HighlightedCode code={code} />
+            <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
+              <div ref={hlRef} style={{ position: 'absolute', inset: 0, overflow: 'auto', padding: 14, pointerEvents: 'none' }}>
+                <HighlightedCode code={code}/>
               </div>
               <textarea ref={taRef} value={code} onChange={e => setCode(e.target.value)} onScroll={syncScroll}
-                className="absolute inset-0 w-full h-full bg-transparent text-transparent resize-none outline-none p-4 font-mono text-sm leading-6 border-none overflow-auto selection:bg-purple-500/25"
-                style={{ fontFamily: "'JetBrains Mono',monospace", whiteSpace: 'pre', overflowWrap: 'normal' }}
-                spellCheck={false} wrap="off" />
+                style={{
+                  position: 'absolute', inset: 0, width: '100%', height: '100%',
+                  background: 'transparent', color: 'transparent', resize: 'none',
+                  outline: 'none', padding: 14, fontFamily: "'JetBrains Mono',monospace",
+                  fontSize: 13, lineHeight: 1.8, border: 'none', overflow: 'auto', caretColor: '#fff',
+                }} spellCheck={false} wrap="off"
+              />
             </div>
           </div>
         ) : (
-          <div className="p-6 font-mono text-sm leading-relaxed overflow-auto h-full">
-            <div className="flex gap-2 text-zinc-500 mb-3">
-              <span style={{ color: accent }}>➜</span>
-              <span className="text-blue-400">~/php-app</span>
-              <span className="text-zinc-600 font-bold">$</span>
-              <span className="text-zinc-200">{terminal || 'php index.php'}</span>
+          <div style={{ padding: '14px 16px', fontFamily: "'JetBrains Mono',monospace", fontSize: 12.5, lineHeight: 1.9, overflow: 'auto', height: '100%' }}>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+              <span style={{ color: accent }}>❯</span>
+              <span style={{ color: '#38bdf8' }}>~/php-project</span>
+              <span style={{ color: '#1f2937' }}>$</span>
+              <span style={{ color: '#e2e8f0' }}>{terminal || 'php ' + filename}</span>
             </div>
             {running ? (
-              <div className="flex flex-col gap-2 animate-pulse text-zinc-500">
-                <span className="flex items-center gap-2">
-                  <RotateCcw className="w-3.5 h-3.5 animate-spin" /> 
-                  Standard Output Processing...
-                </span>
-                <div className="h-[1px] bg-white/5 w-full my-2" />
-              </div>
-            ) : output ? (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-400/50">
-                  <CheckCircle2 className="w-3 h-3" /> ដំណើរការជោគជ័យ
+              <span style={{ color: '#374151', fontStyle: 'italic' }}>Executing…</span>
+            ) : terminalOutput ? (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <CheckCircle2 size={11} style={{ color: '#4ade80' }}/>
+                  <span style={{ fontSize: 9, fontWeight: 800, color: '#166534', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Output</span>
                 </div>
-                <pre className="text-zinc-200 indent-2 whitespace-pre-wrap font-bold">{output}</pre>
+                <pre style={{ color: '#64748b', whiteSpace: 'pre-wrap', margin: 0, lineHeight: 1.75 }}>{terminalOutput}</pre>
               </div>
             ) : (
-              <div className="text-zinc-600 animate-pulse italic">No output yet. Click 'Run' to execute.</div>
+              <span style={{ color: '#1f2937' }}>Click Run to execute ↑</span>
             )}
           </div>
         )}
@@ -817,393 +932,528 @@ const CodePanel = ({
   );
 };
 
-/* ─── MAIN COMPONENT ─────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+══════════════════════════════════════════════════════════════════ */
+
 export default function PHPLessonContent() {
-  const router = useRouter();
+  const router       = useRouter();
   const searchParams = useSearchParams();
   const chapterParam = searchParams.get('chapter') || 'intro';
 
-  // ISOLATE SLIDES: Only show slides for the active chapter
-  const activeSlides = slides.filter(s => s.chapter === chapterParam);
-  const displaySlides = activeSlides.length > 0 ? activeSlides : slides.filter(s => s.chapter === 'intro');
+  const displaySlides = slides.filter(s => s.chapter === chapterParam);
+  const safeSlides    = displaySlides.length > 0 ? displaySlides : slides.filter(s => s.chapter === 'intro');
 
-  const slideParam = searchParams.get('slide');
-  const initialSlide = slideParam ? Math.max(0, Math.min(parseInt(slideParam) - 1, displaySlides.length - 1)) : 0;
+  const slideParam   = searchParams.get('slide');
+  const initialSlide = slideParam
+    ? Math.max(0, Math.min(parseInt(slideParam) - 1, safeSlides.length - 1))
+    : 0;
 
-  const [current, setCurrent] = useState(initialSlide);
+  const [current,     setCurrent]     = useState(initialSlide);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [dir, setDir] = useState(1);
-  const [showNotes, setShowNotes] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [dir,         setDir]         = useState(1);
+  const [showNotes,   setShowNotes]   = useState(false);
+  const [isMenuOpen,  setIsMenuOpen]  = useState(false);
+  const [notes,       setNotes]       = useState<Record<string, string>>({});
 
-  const slide = displaySlides[current];
-  const Icon = slide.icon;
-  const progress = ((current + 1) / displaySlides.length) * 100;
-  const chapterInfo = CHAPTERS.find(c => c.id === slide.chapter)!;
+  const slide = safeSlides[current] ?? safeSlides[0];
+  const Icon  = slide.icon;
+  const ch    = CHAPTERS.find(c => c.id === chapterParam) ?? CHAPTERS[0];
 
   useEffect(() => {
-    const saved = localStorage.getItem('php_slide_notes');
-    if (saved) setNotes(JSON.parse(saved));
+    try {
+      const saved = localStorage.getItem('php_notes_v2');
+      if (saved) setNotes(JSON.parse(saved));
+    } catch {}
   }, []);
 
   const saveNote = (val: string) => {
     const next = { ...notes, [slide.id]: val };
     setNotes(next);
-    localStorage.setItem('php_slide_notes', JSON.stringify(next));
+    localStorage.setItem('php_notes_v2', JSON.stringify(next));
   };
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('slide', (current + 1).toString());
+    if (current === 0) params.delete('slide');
+    else params.set('slide', String(current + 1));
     router.replace(`?${params.toString()}`, { scroll: false });
   }, [current]);
 
   const goTo = useCallback((idx: number, d: number) => {
     if (isAnimating) return;
-    setDir(d);
-    setIsAnimating(true);
-    setTimeout(() => { setCurrent(idx); setIsAnimating(false); }, 280);
+    setDir(d); setIsAnimating(true);
+    setTimeout(() => { setCurrent(idx); setIsAnimating(false); }, 250);
   }, [isAnimating]);
 
-  const next = () => goTo((current + 1) % displaySlides.length, 1);
-  const prev = () => goTo((current - 1 + displaySlides.length) % displaySlides.length, -1);
+  const next = useCallback(() => {
+    if (current < safeSlides.length - 1) { goTo(current + 1, 1); return; }
+    // wrap around
+    goTo(0, 1);
+  }, [current, safeSlides.length, goTo]);
+
+  const prev = useCallback(() => {
+    if (current > 0) { goTo(current - 1, -1); return; }
+    goTo(safeSlides.length - 1, -1);
+  }, [current, safeSlides.length, goTo]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return;
+    const handler = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).tagName === 'TEXTAREA') return;
       if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [current, isAnimating]);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [next, prev]);
 
-  const variants = {
-    enter: (d: number) => ({ y: d * 30, opacity: 0, scale: 0.98 }),
-    center: { y: 0, opacity: 1, scale: 1 },
-    exit: (d: number) => ({ y: d * -30, opacity: 0, scale: 0.98 }),
+  const V = {
+    enter: (d: number) => ({ x: d > 0 ? 32 : -32, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d > 0 ? -32 : 32, opacity: 0 }),
   };
 
+  /* ─── RENDER ─────────────────────────────────────────────────── */
   return (
-    <div className="min-h-screen text-white flex flex-col overflow-hidden"
-      style={{ background: '#07090f', fontFamily: "'Inter','DM Sans',system-ui,sans-serif" }}>
+    <div style={{
+      minHeight: '100vh', background: '#030509',
+      display: 'flex', flexDirection: 'column', overflow: 'hidden',
+      fontFamily: "'Noto Sans Khmer','Hanuman',serif",
+    }}>
+      {/* Fonts + global */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700;900&family=Hanuman:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,400;0,700;0,800&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 3px; height: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.07); border-radius: 2px; }
+        button { cursor: pointer; }
+      `}</style>
 
-      <div className="fixed inset-0 pointer-events-none transition-all duration-700" style={{ background: slide.bg }} />
-      <div className="fixed inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 100%, rgba(168,85,247,0.04) 0%, transparent 60%)' }} />
+      {/* Grid BG */}
+      <div style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        backgroundImage:
+          'linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),' +
+          'linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px)',
+        backgroundSize: '52px 52px',
+      }}/>
+      {/* Chapter glow */}
+      <div style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        background: `radial-gradient(ellipse 55% 60% at 70% 50%, ${slide.accent}09 0%, transparent 65%)`,
+        transition: 'background 1.2s ease',
+      }}/>
 
-      {/* ── CHAPTER NAV BAR (CONSISTENT WITH LARAVEL) ── */}
-      <div className="relative z-[60] flex items-center justify-between px-4 sm:px-6 py-4 border-b border-white/5 bg-black/60 backdrop-blur-2xl custom-header">
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Link href="/courses/backend" 
-            className="group flex items-center gap-3 px-3 sm:px-4 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-xl">
-            <ArrowLeft className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden lg:block">ចាកចេញ</span>
+      {/* ════════════ HEADER */}
+      <header style={{
+        position: 'relative', zIndex: 50,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '0 20px', height: 58,
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        background: 'rgba(3,5,9,0.85)', backdropFilter: 'blur(24px)',
+        flexShrink: 0,
+      }}>
+        {/* Left */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Link href="/courses/backend" style={{
+            display: 'flex', alignItems: 'center', gap: 7, height: 34, padding: '0 12px',
+            borderRadius: 8, textDecoration: 'none',
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
+            color: '#4b5563', transition: 'all 0.18s',
+          }}>
+            <ArrowLeft size={12}/>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 10, fontWeight: 700, letterSpacing: '0.05em' }}>Back</span>
           </Link>
 
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="group flex items-center gap-3 sm:gap-4 px-4 sm:px-5 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/12 hover:border-white/30 transition-all active:scale-95 shadow-2xl overflow-hidden max-w-[150px] sm:max-w-none">
-            <div className={`w-7 h-7 rounded-lg flex-none flex items-center justify-center transition-all duration-300 ${isMenuOpen ? 'bg-white text-black rotate-0' : 'bg-black/40 text-zinc-400 group-hover:text-white'}`}>
-              <AnimatePresence mode="wait">
-                {isMenuOpen ? (
-                  <motion.div key="x" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: 90 }}>
-                    <X className="w-3.5 h-3.5" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="menu" initial={{ scale: 0, rotate: 90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: -90 }}>
-                    <Menu className="w-3.5 h-3.5" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+          <button onClick={() => setIsMenuOpen(o => !o)} style={{
+            display: 'flex', alignItems: 'center', gap: 9, height: 34, padding: '0 12px',
+            borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)',
+            background: 'rgba(255,255,255,0.04)', color: '#e2e8f0', transition: 'all 0.18s',
+          }}>
+            <div style={{
+              width: 20, height: 20, borderRadius: 5, flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: isMenuOpen ? ch.color : 'rgba(255,255,255,0.07)',
+              color: isMenuOpen ? '#000' : '#6b7280', transition: 'all 0.22s',
+            }}>
+              {isMenuOpen ? <X size={11}/> : <Menu size={11}/>}
             </div>
-            <div className="flex flex-col items-start leading-tight overflow-hidden">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 hidden sm:block">ផែនទីមេរៀន</span>
-              <div className="flex items-center gap-2 overflow-hidden">
-                <span className="text-sm font-bold text-white tracking-tight truncate">{chapterInfo.label}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 flex-none transition-transform duration-500 ${isMenuOpen ? 'rotate-180 text-white' : ''}`} />
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <span style={{
+                fontSize: 8.5, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase',
+                color: ch.color, lineHeight: 1.1, fontFamily: "'JetBrains Mono',monospace",
+              }}>Chapter {ch.num}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', lineHeight: 1.2 }}>{ch.label}</span>
             </div>
+            <ChevronDown size={12} style={{
+              color: '#374151',
+              transform: isMenuOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s',
+            }}/>
           </button>
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-8 transition-all">
-          <div className="hidden sm:flex flex-col items-end gap-1.5 min-w-[100px] md:min-w-[140px]">
-            <div className="flex items-center gap-2 text-[10px] font-mono">
-              <span className="text-zinc-500 uppercase tracking-widest font-black hidden lg:block">ភាពស្ទាត់ជំនាញនៃជំពូក</span>
-              <span className="text-white font-black bg-white/10 px-1.5 py-0.5 rounded-md">{Math.round(progress)}%</span>
-            </div>
-            <div className="w-24 md:w-44 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-              <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }}
-                className="h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
-                style={{ background: chapterInfo.color }} />
-            </div>
+        {/* Right */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          {/* Dot nav */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            {safeSlides.map((_, i) => (
+              <button key={i} onClick={() => goTo(i, i > current ? 1 : -1)} style={{
+                width: i === current ? 20 : 5, height: 5, borderRadius: 3,
+                background: i === current ? ch.color : i < current ? `${ch.color}35` : 'rgba(255,255,255,0.08)',
+                border: 'none', padding: 0,
+                transition: 'all 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+              }}/>
+            ))}
+            <span style={{
+              marginLeft: 8, fontSize: 9.5, color: '#2d3748',
+              fontFamily: "'JetBrains Mono',monospace", fontWeight: 700,
+            }}>{current + 1}/{safeSlides.length}</span>
           </div>
-          <div className="h-10 w-px bg-white/10 hidden sm:block" />
-          <div className="flex items-center gap-1.5 sm:gap-3">
-            <button onClick={prev} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <div className="flex flex-col items-center min-w-[40px] sm:min-w-[45px]">
-               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5 hidden xs:block">ស្លាយ</span>
-               <span className="text-sm font-mono text-zinc-500 flex items-center gap-1 leading-none">
-                 <span className="text-white font-bold">{current + 1}</span>
-                 <span className="text-zinc-800">/</span>
-                 <span>{displaySlides.length}</span>
-               </span>
-            </div>
-            <button onClick={next} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
 
-      {/* ── CHAPTER OVERLAY MENU (FULLY RESPONSIVE) ── */}
-      <AnimatePresence mode="wait">
+          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.06)' }}/>
+
+          {[{ icon: ChevronLeft, action: prev }, { icon: ChevronRight, action: next }].map(({ icon: Ic, action }, k) => (
+            <button key={k} onClick={action} style={{
+              width: 34, height: 34, borderRadius: 8, border: '1px solid rgba(255,255,255,0.07)',
+              background: 'rgba(255,255,255,0.04)', color: '#4b5563', transition: 'all 0.18s',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Ic size={14}/>
+            </button>
+          ))}
+
+          <button onClick={() => setShowNotes(o => !o)} style={{
+            width: 34, height: 34, borderRadius: 8,
+            border: `1px solid ${showNotes ? 'rgba(251,191,36,0.25)' : 'rgba(255,255,255,0.07)'}`,
+            background: showNotes ? 'rgba(251,191,36,0.07)' : 'rgba(255,255,255,0.04)',
+            color: showNotes ? '#fbbf24' : '#4b5563', transition: 'all 0.18s',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <StickyNote size={14}/>
+          </button>
+        </div>
+      </header>
+
+      {/* ════════════ CHAPTER MENU */}
+      <AnimatePresence>
         {isMenuOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 lg:p-10 pointer-events-none">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMenuOpen(false)}
-              className="absolute inset-0 bg-black/95 backdrop-blur-md pointer-events-auto"
+              style={{ position: 'fixed', inset: 0, zIndex: 80, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)' }}
             />
             <motion.div
-              initial={{ y: 30, opacity: 0, scale: 0.98 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 30, opacity: 0, scale: 0.98 }}
-              transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-              className="relative w-full max-w-5xl max-h-full bg-[#0d1117] border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] flex flex-col pointer-events-auto overflow-hidden"
+              initial={{ opacity: 0, y: -6, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.32,0.72,0,1] }}
+              style={{
+                position: 'fixed', top: 66, left: 20, zIndex: 90,
+                width: 520, background: '#080b15',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 16, overflow: 'hidden',
+                boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
+              }}
             >
-              <div className="flex-1 overflow-y-auto px-6 py-8 sm:p-12 scrollbar-none">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                  {CHAPTERS.map((ch, i) => {
-                    const isActive = ch.id === chapterParam;
-                    return (
-                      <button key={ch.id} 
-                        onClick={() => {
-                          router.push(`?chapter=${ch.id}`);
-                          setIsMenuOpen(false);
-                        }}
-                        className={`group relative flex items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl transition-all duration-300 border ${
-                          isActive 
-                            ? 'bg-white/5 border-white/20 shadow-xl' 
-                            : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/10 hover:-translate-y-1'
-                        }`}>
-                        
-                        <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-500 overflow-hidden flex-none ${
-                           isActive ? 'scale-110 shadow-2xl' : 'opacity-60 filter group-hover:opacity-100 group-hover:scale-105'
-                        }`}
-                        style={{ 
-                          background: isActive ? ch.color : `${ch.color}25`, 
-                          color: isActive ? '#000' : ch.color,
-                          border: isActive ? 'none' : `1.5px solid ${ch.color}40`
-                        }}>
-                          {String(i + 1).padStart(2, '0')}
-                        </div>
-
-                        <div className="flex flex-col items-start leading-snug overflow-hidden text-left">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] transition-colors ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'}`}
-                              style={{ color: ch.color }}>
-                              ផ្នែកទី {i + 1}
-                            </span>
-                            {isActive && (
-                              <span className="text-[7px] sm:text-[8px] font-black px-1.5 py-0.5 rounded bg-white text-black uppercase tracking-tighter">បច្ចុប្បន្ន</span>
-                            )}
-                          </div>
-                          <span className={`text-sm sm:text-[15px] font-bold tracking-tight transition-all truncate w-full ${isActive ? 'text-white' : 'text-zinc-200 group-hover:text-white'}`}>
-                            {ch.label.split(' · ')[1] || ch.label}
-                          </span>
-                        </div>
-
-                        {isActive && (
-                          <div className="ml-auto w-2.5 h-2.5 rounded-full animate-pulse flex-none" style={{ background: ch.color, boxShadow: `0 0 12px ${ch.color}` }} />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
+              <div style={{ padding: 6, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3 }}>
+                {CHAPTERS.map((c, i) => {
+                  const active = c.id === chapterParam;
+                  return (
+                    <button key={c.id}
+                      onClick={() => { router.push(`?chapter=${c.id}`); setIsMenuOpen(false); }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        padding: '10px 12px', borderRadius: 10,
+                        border: `1px solid ${active ? 'rgba(255,255,255,0.1)' : 'transparent'}`,
+                        background: active ? 'rgba(255,255,255,0.04)' : 'transparent',
+                        color: '#e2e8f0', transition: 'all 0.18s',
+                      }}
+                    >
+                      <div style={{
+                        width: 32, height: 32, borderRadius: 7, flexShrink: 0,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: active ? c.color : `${c.color}14`,
+                        color: active ? '#000' : c.color,
+                        fontFamily: "'JetBrains Mono',monospace",
+                        fontSize: 10, fontWeight: 900,
+                      }}>{c.num}</div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0 }}>
+                        <span style={{
+                          fontSize: 8.5, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase',
+                          color: c.color, fontFamily: "'JetBrains Mono',monospace",
+                        }}>Chapter {i + 1}</span>
+                        <span style={{
+                          fontSize: 11.5, fontWeight: 600,
+                          color: active ? '#f1f5f9' : '#64748b',
+                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                        }}>{c.label}</span>
+                      </div>
+                      {active && <div style={{ marginLeft: 'auto', flexShrink: 0, width: 5, height: 5, borderRadius: '50%', background: c.color }}/>}
+                    </button>
+                  );
+                })}
               </div>
-
-              <div className="flex-none p-6 sm:px-12 sm:py-8 bg-black/20 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-5">
-                   <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.25em] text-zinc-400">
-                      ការរុករកវគ្គសិក្សា
-                   </div>
-                   <div className="hidden lg:flex items-center gap-2 text-zinc-600 text-[10px] font-bold">
-                      <span className="w-1 h-1 rounded-full bg-zinc-700" />
-                      ជ្រើសរើសមេរៀនដើម្បីទៅកាន់ស្លាយទាំងនោះដោយផ្ទាល់
-                   </div>
-                </div>
-                <div className="text-[9px] sm:text-[10px] font-mono text-zinc-500 bg-white/5 px-3 py-1 rounded-lg border border-white/5">
-                   FULLSTACK ACADEMY • មូលដ្ឋានគ្រឹះ PHP
-                </div>
+              <div style={{
+                padding: '8px 16px', borderTop: '1px solid rgba(255,255,255,0.05)',
+                display: 'flex', justifyContent: 'space-between',
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 8.5, color: '#1f2937', letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                <span>Fullstack Academy</span><span>PHP Masterclass</span>
               </div>
             </motion.div>
-          </div>
+          </>
         )}
       </AnimatePresence>
 
-      {/* ── MAIN LAYOUT ── */}
-      <main className="relative z-10 flex-1 flex flex-col lg:flex-row overflow-hidden">
+      {/* ════════════ MAIN LAYOUT */}
+      <main style={{ position: 'relative', zIndex: 10, flex: 1, display: 'flex', overflow: 'hidden' }}>
 
-        {/* LEFT — Concept cards */}
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.div key={`left-${current}`} custom={dir} variants={variants}
-            initial="enter" animate="center" exit="exit"
-            transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-            className="flex-none lg:w-[45%] flex flex-col p-6 lg:p-10 xl:p-14 lg:border-r border-white/6 overflow-y-auto gap-6">
-
-            {/* Title block */}
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-none border border-white/10"
-                style={{ background: `${slide.accent}18` }}>
-                <Icon className="w-6 h-6" style={{ color: slide.accent }} />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[9px] font-black uppercase tracking-[0.25em] px-2 py-0.5 rounded-full border"
-                    style={{ color: chapterInfo.color, borderColor: `${chapterInfo.color}40`, background: `${chapterInfo.color}12` }}>
-                    {chapterInfo.label}
+        {/* ── LEFT: Content ────────────────── */}
+        <div style={{
+          width: '44%', flexShrink: 0,
+          borderRight: '1px solid rgba(255,255,255,0.05)',
+          overflow: 'hidden', position: 'relative',
+        }}>
+          <AnimatePresence mode="wait" custom={dir}>
+            {!isAnimating && (
+              <motion.div
+                key={`${chapterParam}-${current}`}
+                custom={dir} variants={V}
+                initial="enter" animate="center" exit="exit"
+                transition={{ duration: 0.25, ease: [0.32,0.72,0,1] }}
+                style={{
+                  height: '100%', overflow: 'auto',
+                  padding: '32px 36px',
+                  display: 'flex', flexDirection: 'column', gap: 22,
+                }}
+              >
+                {/* Chapter pill + id */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                    padding: '3px 10px', borderRadius: 100,
+                    border: `1px solid ${ch.color}28`, background: `${ch.color}0e`,
+                    fontSize: 9, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase',
+                    color: ch.color, fontFamily: "'JetBrains Mono',monospace",
+                  }}>
+                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: ch.color, display: 'inline-block' }}/>
+                    {ch.label}
                   </span>
-                  <span className="text-[9px] font-mono text-zinc-700">{slide.id}</span>
+                  <span style={{
+                    fontSize: 9, color: '#1f2937', fontFamily: "'JetBrains Mono',monospace",
+                    fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                  }}>{slide.id}</span>
                 </div>
-                <h1 className="text-3xl xl:text-4xl font-black leading-tight text-white tracking-tighter">
-                  {slide.title}
-                </h1>
-                <p className="text-sm text-white/40 font-bold uppercase tracking-widest mt-1">{slide.subtitle}</p>
-              </div>
-            </div>
 
-            {/* Concept cards grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {slide.concepts.map((c, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.06 + i * 0.06 }}
-                  className="rounded-xl border p-4 flex flex-col gap-1.5"
-                  style={{ borderColor: `${slide.accent}20`, background: `${slide.accent}06` }}>
-                  <span className="text-xs font-black uppercase tracking-widest" style={{ color: slide.accent }}>
-                    {c.label}
-                  </span>
-                  <p className="text-sm text-zinc-300 leading-relaxed">{c.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Pro tip */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}
-              className="rounded-xl border border-amber-500/15 bg-amber-500/5 p-4 flex gap-3">
-              <Sparkles className="w-4 h-4 text-amber-400 flex-none mt-0.5" />
-              <p className="text-sm text-amber-200/80 leading-relaxed"><span className="font-black text-amber-400">គន្លឹះពិសេស: </span>{slide.tip}</p>
-            </motion.div>
-
-            {/* Lab + Result */}
-            <div className="space-y-3">
-              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42 }}
-                className="rounded-xl border p-4 flex gap-3"
-                style={{ background: `${slide.accent}08`, borderColor: `${slide.accent}25` }}>
-                <Play className="w-4 h-4 flex-none mt-0.5" style={{ color: slide.accent }} />
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5" style={{ color: slide.accent }}>ការអនុវត្តជាក់ស្តែង (Lab Exercise)</p>
-                  <p className="text-sm text-white font-semibold leading-relaxed">{slide.lab}</p>
+                {/* Hero title block */}
+                <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 11, flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${slide.accent}12`, border: `1px solid ${slide.accent}22`,
+                  }}>
+                    <Icon size={20} style={{ color: slide.accent }}/>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <h1 style={{
+                      fontSize: 36, fontWeight: 800, lineHeight: 1,
+                      color: '#f8fafc', letterSpacing: '-0.025em',
+                      fontFamily: "'JetBrains Mono',monospace",
+                      textTransform: 'uppercase', marginBottom: 8,
+                    }}>
+                      {slide.title}
+                    </h1>
+                    <p style={{
+                      fontSize: 14, lineHeight: 1.6, color: '#475569', fontWeight: 400,
+                      fontFamily: "'Noto Sans Khmer','Hanuman',serif",
+                    }}>
+                      {slide.subtitle}
+                    </p>
+                    <div style={{
+                      marginTop: 10, height: 2, width: 48, borderRadius: 2,
+                      background: `linear-gradient(to right, ${slide.accent}, transparent)`,
+                    }}/>
+                  </div>
                 </div>
+
+                {/* Concept cards */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {slide.concepts.map((c, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.08 + i * 0.07 }}
+                      style={{
+                        padding: '14px 16px', borderRadius: 12,
+                        border: '1px solid rgba(255,255,255,0.055)',
+                        background: 'rgba(255,255,255,0.018)',
+                      }}
+                    >
+                      <div style={{
+                        fontSize: 9.5, fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase',
+                        color: slide.accent, marginBottom: 7,
+                        fontFamily: "'JetBrains Mono',monospace",
+                      }}>
+                        {c.label}
+                      </div>
+                      <p style={{
+                        fontSize: 14.5, lineHeight: 2, color: '#64748b', fontWeight: 400,
+                        fontFamily: "'Noto Sans Khmer','Hanuman',serif",
+                      }}>
+                        {c.desc}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Pro Insight */}
+                <div style={{
+                  padding: '13px 15px', borderRadius: 12,
+                  border: '1px solid rgba(251,191,36,0.13)',
+                  background: 'rgba(251,191,36,0.035)',
+                  display: 'flex', gap: 10,
+                }}>
+                  <Sparkles size={13} style={{ color: '#d97706', flexShrink: 0, marginTop: 3 }}/>
+                  <div>
+                    <div style={{
+                      fontSize: 8.5, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase',
+                      color: '#d97706', marginBottom: 5, fontFamily: "'JetBrains Mono',monospace",
+                    }}>Pro Insight</div>
+                    <p style={{
+                      fontSize: 13.5, lineHeight: 1.9, color: '#78634a', fontStyle: 'italic',
+                      fontFamily: "'Noto Sans Khmer','Hanuman',serif",
+                    }}>
+                      {slide.tip}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Objective + Outcome */}
+                {[
+                  { icon: BookOpen, color: slide.accent, label: 'Objective',        labelC: '#1f2937',  text: slide.lab,    textC: '#94a3b8', bg: 'rgba(255,255,255,0.018)', border: 'rgba(255,255,255,0.055)', italic: false },
+                  { icon: CheckCircle2, color: '#4ade80', label: 'Expected Outcome', labelC: '#14532d', text: slide.result, textC: '#4a6a40', bg: 'rgba(74,222,128,0.025)', border: 'rgba(74,222,128,0.1)',  italic: true },
+                ].map(({ icon: Ic, color, label, labelC, text, textC, bg, border, italic }, k) => (
+                  <div key={k} style={{
+                    padding: '13px 15px', borderRadius: 12,
+                    border: `1px solid ${border}`, background: bg,
+                    display: 'flex', gap: 10,
+                  }}>
+                    <Ic size={13} style={{ color, flexShrink: 0, marginTop: 3 }}/>
+                    <div>
+                      <div style={{
+                        fontSize: 8.5, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase',
+                        color: labelC, marginBottom: 5, fontFamily: "'JetBrains Mono',monospace",
+                      }}>{label}</div>
+                      <p style={{
+                        fontSize: 14, lineHeight: 1.9, color: textC,
+                        fontFamily: "'Noto Sans Khmer','Hanuman',serif",
+                        fontStyle: italic ? 'italic' : 'normal', fontWeight: k === 0 ? 500 : 400,
+                      }}>{text}</p>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Nav buttons */}
+                <div style={{ display: 'flex', gap: 8, paddingTop: 4, paddingBottom: 16 }}>
+                  <button onClick={prev} style={{
+                    width: 42, height: 42, borderRadius: 10, flexShrink: 0,
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.03)', color: '#4b5563',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.18s',
+                  }}><ChevronLeft size={16}/></button>
+                  <button onClick={next} style={{
+                    flex: 1, height: 42, borderRadius: 10, border: 'none',
+                    background: slide.accent, color: '#000',
+                    fontFamily: "'JetBrains Mono',monospace",
+                    fontSize: 10, fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, transition: 'opacity 0.18s',
+                  }}>
+                    {current === safeSlides.length - 1 ? 'Restart' : 'Next'} <ChevronRight size={13}/>
+                  </button>
+                </div>
+
               </motion.div>
-              <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-                className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-4 flex gap-3">
-                <Check className="w-4 h-4 flex-none mt-0.5 text-emerald-400" />
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] mb-1.5 text-emerald-400">លទ្ធផលរំពឹងទុក (Expected Result)</p>
-                  <p className="text-sm text-white font-semibold leading-relaxed">{slide.result}</p>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Nav buttons */}
-            <div className="flex items-center gap-3 pt-2 mt-auto">
-              <button onClick={prev}
-                className="p-3 rounded-xl bg-white/5 border border-white/8 hover:bg-white/10 active:scale-95 transition-all flex items-center gap-2 group">
-                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-                <span className="text-xs font-bold hidden sm:inline text-zinc-400">ថយក្រោយ</span>
-              </button>
-              <button onClick={next}
-                className="flex-1 py-3 px-5 rounded-xl font-black text-xs active:scale-95 transition-all flex items-center justify-center gap-2 shadow-lg"
-                style={{ background: slide.accent, color: '#000' }}>
-                {current === displaySlides.length - 1 ? 'ចាប់ផ្តើមឡើងវិញ' : 'បន្ទាប់'}
-                <ChevronRight className="w-4 h-4" />
-              </button>
-              <button onClick={() => setShowNotes(!showNotes)}
-                className={`p-3 rounded-xl border transition-all ${
-                  showNotes ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' : 'bg-white/5 border-white/8 text-zinc-500 hover:text-white'
-                }`}>
-                <StickyNote className="w-4 h-4" />
-              </button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* RIGHT — Code panel */}
-        <div className="flex-none lg:w-[55%] flex flex-col p-4 lg:p-8 xl:p-10 gap-4 overflow-hidden">
-          <div className="flex items-center gap-2 flex-none">
-            <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/8 bg-white/5"
-              style={{ color: slide.accent }}>
-              <Terminal className="w-3.5 h-3.5" />
-              ប្រអប់សាកល្បងកូដ PHP
-            </div>
-            <div className="ml-auto text-[10px] font-mono text-zinc-700 hidden sm:block">
-              ប្រើគ្រាប់ចុចព្រួញ ← → ដើម្បីរុករក
-            </div>
-          </div>
-
-          <AnimatePresence mode="wait">
-            <motion.div key={`code-${current}`}
-              initial={{ opacity: 0, scale: 0.99, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.99, y: -8 }}
-              transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
-              className="flex-1 overflow-hidden">
-              <CodePanel
-                code={slide.code}
-                terminal={slide.terminal}
-                terminalOutput={slide.terminalOutput}
-                accent={slide.accent}
-                filename={slide.filename || 'sandbox.php'}
-              />
-            </motion.div>
+            )}
           </AnimatePresence>
+        </div>
+
+        {/* ── RIGHT: Code panel ────────────── */}
+        <div style={{
+          flex: 1, display: 'flex', flexDirection: 'column',
+          padding: '20px', background: 'rgba(0,0,0,0.3)', overflow: 'hidden',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+            <Terminal size={10} style={{ color: '#1f2937' }}/>
+            <span style={{
+              fontSize: 8.5, fontWeight: 800, color: '#1f2937',
+              letterSpacing: '0.2em', textTransform: 'uppercase',
+              fontFamily: "'JetBrains Mono',monospace",
+            }}>PHP Sandbox</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.04)' }}/>
+            <span style={{ fontSize: 8.5, color: '#1f2937', fontFamily: "'JetBrains Mono',monospace" }}>
+              {slide.filename}
+            </span>
+          </div>
+          <CodePanel
+            code={slide.code}
+            terminal={slide.terminal}
+            terminalOutput={slide.terminalOutput}
+            accent={slide.accent}
+            filename={slide.filename}
+          />
         </div>
       </main>
 
-      {/* ── NOTES PANEL ── */}
+      {/* ════════════ NOTES DRAWER */}
       <AnimatePresence>
         {showNotes && (
           <motion.div
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-            className="fixed inset-y-0 right-0 w-80 bg-[#12151e] border-l border-white/8 z-[100] shadow-2xl p-6 flex flex-col pt-24">
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-widest text-amber-400">កំណត់ចំណាំ</h3>
-                <p className="text-[10px] text-zinc-600 font-bold uppercase mt-0.5">{slide.id} · {slide.title}</p>
+            transition={{ type: 'spring', damping: 28, stiffness: 210 }}
+            style={{
+              position: 'fixed', top: 0, right: 0, bottom: 0,
+              width: 340, background: '#070a14',
+              borderLeft: '1px solid rgba(255,255,255,0.07)',
+              zIndex: 150, display: 'flex', flexDirection: 'column',
+              padding: '72px 24px 24px',
+              boxShadow: '-20px 0 60px rgba(0,0,0,0.5)',
+            }}
+          >
+            <div style={{ marginBottom: 16 }}>
+              <div style={{
+                fontSize: 8.5, fontWeight: 800, letterSpacing: '0.25em', textTransform: 'uppercase',
+                color: '#d97706', fontFamily: "'JetBrains Mono',monospace", marginBottom: 5,
+              }}>Field Notes</div>
+              <div style={{ fontSize: 10, color: '#1f2937', fontFamily: "'JetBrains Mono',monospace" }}>
+                {slide.id} · {slide.title}
               </div>
-              <button onClick={() => setShowNotes(false)} className="text-zinc-600 hover:text-white transition-colors">
-                <ChevronRight className="w-5 h-5" />
-              </button>
             </div>
-            <textarea autoFocus
+            <textarea
               value={notes[slide.id] || ''}
               onChange={e => saveNote(e.target.value)}
-              placeholder="កត់ត្រានៅទីនេះ... (រក្សាទុកដោយស្វ័យប្រវត្តិ)"
-              className="flex-1 w-full bg-black/40 rounded-xl p-4 text-sm text-zinc-300 resize-none outline-none border border-white/5 focus:border-amber-500/30 transition-all placeholder:text-zinc-700 font-mono"
+              placeholder="ចំណាំ commands, tips, ឬ reminders…"
+              style={{
+                flex: 1, borderRadius: 12, padding: '14px',
+                background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.06)',
+                color: '#64748b', resize: 'none', outline: 'none',
+                fontFamily: "'Noto Sans Khmer','Hanuman',serif",
+                fontSize: 14.5, lineHeight: 1.85, transition: 'border-color 0.18s',
+              }}
+              onFocus={e => (e.target.style.borderColor = 'rgba(251,191,36,0.25)')}
+              onBlur={e => (e.target.style.borderColor = 'rgba(255,255,255,0.06)')}
             />
-            <p className="mt-4 text-[10px] text-zinc-700 font-bold uppercase leading-relaxed">
-              រក្សាទុកតាមស្លាយក្នុង localStorage
-            </p>
+            <div style={{
+              marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+              fontSize: 8.5, color: '#1f2937', fontFamily: "'JetBrains Mono',monospace",
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+            }}>
+              <HardDrive size={9}/> Auto-saved locally
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 }

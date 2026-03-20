@@ -4,294 +4,220 @@ import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { 
-  GitBranch, Terminal, Code2, BookOpen, Clock, 
-  ChevronLeft, ChevronRight, ArrowLeft, ArrowRight,
-  Menu, X, ChevronDown, Check, Zap, Sparkles, 
-  Play, RefreshCw, FileCode, Layers, Search, 
-  Shield, Rocket, List, Activity, StickyNote,
-  GitMerge, GitCommit, GitPullRequest, Database,
-  ArrowUp, ArrowDown, Share2, Globe, Lock, HardDrive,
-  Copy, CheckCircle2, RotateCcw, Box
+import {
+  GitBranch, Terminal, Code2, ChevronLeft, ChevronRight,
+  ArrowLeft, Menu, X, ChevronDown, Sparkles, Play,
+  RefreshCw, Layers, Share2, Shield, GitMerge,
+  GitPullRequest, Globe, Lock, HardDrive, Copy,
+  CheckCircle2, RotateCcw, Box, StickyNote, BookOpen
 } from 'lucide-react';
 
-/* ─── TYPES ──────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   TYPES
+══════════════════════════════════════════════════════════════════ */
 
+interface Concept { label: string; desc: string }
 interface Slide {
-  id: string;
-  chapter: string;
-  title: string;
-  subtitle: string;
-  icon: React.ElementType;
-  accent: string;
-  bg: string;
-  concepts: { label: string; desc: string }[];
-  tip: string;
-  lab: string;
-  result: string;
-  code: string;
-  filename: string;
-  terminal: string;
-  terminalOutput: string;
+  id: string; chapter: string; title: string; subtitle: string;
+  icon: React.ElementType; accent: string;
+  concepts: Concept[]; tip: string; lab: string; result: string;
+  code: string; filename: string; terminal: string; terminalOutput: string;
 }
 
 const CHAPTERS = [
-  { id: 'foundations', label: '1. គ្រឹះនៃ Git', color: '#10b981' },
-  { id: 'branching', label: '2. ការគ្រប់គ្រង Branch', color: '#3b82f6' },
-  { id: 'merging', label: '3. ការបញ្ចូលគ្នា និងការដោះស្រាយវិវាទកូដ', color: '#f59e0b' },
-  { id: 'remotes', label: '4. ទិន្នន័យពីចម្ងាយ និងលំហូរការងារ PR', color: '#a855f7' },
-  { id: 'mastery', label: '5. បច្ចេកទេស Git កម្រិតខ្ពស់', color: '#f43f5e' }
+  { id: 'foundations', label: 'គ្រឹះ Git',         num: '01', color: '#4ade80' },
+  { id: 'branching',   label: 'Branch Management', num: '02', color: '#38bdf8' },
+  { id: 'merging',     label: 'Merge & Conflict',  num: '03', color: '#fb923c' },
+  { id: 'remotes',     label: 'Remote & PR Flow',  num: '04', color: '#e879f9' },
+  { id: 'mastery',     label: 'Advanced Git',      num: '05', color: '#f87171' },
 ];
 
-/* ─── SLIDE DATA ─────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   SLIDE DATA
+══════════════════════════════════════════════════════════════════ */
 
 const GIT_SLIDES: Slide[] = [
-  // FOUNDATIONS
   {
     id: 'intro', chapter: 'foundations',
-    title: 'VCS ទំនើប', subtitle: 'ការស្វែងយល់ពី Version Control',
-    icon: GitBranch, accent: '#10b981', bg: 'radial-gradient(circle at 10% 10%, rgba(16,185,129,0.15) 0%, transparent 50%)',
+    title: 'Version Control', subtitle: 'ការស្វែងយល់ពី Version Control System',
+    icon: GitBranch, accent: '#4ade80',
     concepts: [
-      { label: 'Version Control', desc: 'ប្រព័ន្ធដែលកត់ត្រារាល់ការផ្លាស់ប្តូរចំពោះឯកសារ ឬសំណុំឯកសារតាមពេលវេលា ដើម្បីឱ្យអ្នកអាចទាញយកជំនាន់ជាក់លាក់ណាមួយមកវិញនៅពេលក្រោយ។' },
-      { label: 'Snapshot Model', desc: 'ខុសពីប្រព័ន្ធផ្សេងទៀត Git ចាត់ទុកទិន្នន័យរបស់វាដូចជាស៊េរីនៃរូបភាព (Snapshots) នៃប្រព័ន្ធឯកសារតូចមួយ។' }
+      { label: 'VCS គឺជាអ្វី?', desc: 'Version Control System ជាប្រព័ន្ធដែលកត់ត្រារាល់ការផ្លាស់ប្ដូរ (change) ចំពោះ file តាមពេលវេលា ។ ឱ្យអ្នកអាច revert ទៅ version ណាមួយក្នុងអតីតកាល, compare changes, ឬ collaborate ជាមួយ team ។' },
+      { label: 'Snapshot Model', desc: 'Git ខុសពី VCS ផ្សេង — វា snapshot ប្រព័ន្ធ file ទាំងមូលគ្រប់ commit ។ File ដែលមិនផ្លាស់ប្ដូរ Git គ្រាន់ link ទៅ snapshot មុន ដើម្បី efficient ។' }
     ],
-    tip: 'Git ត្រូវបានបង្កើតឡើងដោយ Linus Torvalds ដែលជាអ្នកបង្កើត Linux ដើម្បីគ្រប់គ្រងកូដដ៏មហិមារបស់វា។',
-    lab: 'ចាប់ផ្តើម repository ថ្មី និងពិនិត្យមើលស្ថានភាពរបស់វា។',
-    result: 'អ្នកគួរតែឃើញសារ "Initialized empty Git repository" និង "No commits yet"។',
-    code: '# Step 1: Initialize Git\ngit init\n\n# Step 2: Check current status\ngit status',
-    filename: 'terminal.sh',
-    terminal: 'git init\ngit status',
-    terminalOutput: 'Initialized empty Git repository in /Users/dev/project/.git/\nOn branch main\n\nNo commits yet\n\nnothing to commit (create/copy files and use "git add" to track)'
+    tip: 'Git ត្រូវបានសរសេរដោយ Linus Torvalds ក្នុង ១០ ថ្ងៃ ក្នុងឆ្នាំ ២០០៥ ដើម្បីគ្រប់គ្រង source code របស់ Linux kernel ។',
+    lab: 'Initialize repository ថ្មីមួយ ហើយ inspect state ដំបូងរបស់វា ។',
+    result: 'Terminal បង្ហាញ "Initialized empty Git repository" — repository ស្អាត ready ។',
+    code: `git init\ngit status`,
+    filename: 'init.sh', terminal: 'git init && git status',
+    terminalOutput: `Initialized empty Git repository in /project/.git/\n\nOn branch main\nnothing to commit`
   },
   {
     id: 'config', chapter: 'foundations',
-    title: 'អត្តសញ្ញាណ និងការកំណត់', subtitle: 'ការរៀបចំបរិយាកាសការងាររបស់អ្នក',
-    icon: Lock, accent: '#10b981', bg: 'radial-gradient(circle at 90% 10%, rgba(16,185,129,0.1) 0%, transparent 60%)',
+    title: 'Config & Identity', subtitle: 'ការ Setup Global Configuration',
+    icon: Lock, accent: '#4ade80',
     concepts: [
-      { label: 'Identity', desc: 'Git ត្រូវដឹងថាអ្នកជានរណា ដើម្បីឱ្យវាអាចបញ្ជាក់ថា commit នោះជានរណាជាអ្នកសរសេរ។' },
-      { label: 'Configuration', desc: 'ការកំណត់ត្រូវបានរក្សាទុកក្នុង ~/.gitconfig (global) ឬ project/.git/config (local)។' }
+      { label: 'Identitiy', desc: 'Git attach ឈ្មោះ និង email ទៅ commit ។ Setup ម្ដង global — apply ទៅ repository ទាំងអស់ក្នុង machine ។' },
+      { label: 'Config Layers', desc: 'Git មាន ៣ levels: system, global (~/.gitconfig), និង local (.git/config) ។' }
     ],
-    tip: 'ប្រាកដថា Email ត្រូវគ្នាជាមួយគណនី GitHub/GitLab របស់អ្នក ដើម្បីទទួលបានការទទួលស្គាល់លើការរួមចំណែករបស់អ្នក។',
-    lab: 'កំណត់ឈ្មោះអ្នកប្រើប្រាស់ និង Email ជាលក្ខណៈ global។',
-    result: 'ប្រើ git config --list ដើម្បីផ្ទៀងផ្ទាត់ការកំណត់។',
-    code: '# Set global username\ngit config --global user.name "John Doe"\n\n# Set global email\ngit config --global user.email "john@example.com"',
-    filename: 'setup.sh',
-    terminal: 'git config --global user.name "John Doe"\ngit config --list',
-    terminalOutput: 'user.name=John Doe\nuser.email=john@example.com\ncore.repositoryformatversion=0\ncore.filemode=true'
+    tip: 'Email ត្រូវ match ជាមួយ GitHub account ដើម្បី contribution graph track បានត្រូវ ។',
+    lab: 'Set global user.name និង user.email ហើយ verify ជាមួយ git config --list ។',
+    result: 'List បង្ហាញ user.name, user.email ត្រូវតាម input ។',
+    code: `git config --global user.name "Dara Sok"\ngit config --global user.email "dara@example.com"`,
+    filename: 'config.sh', terminal: 'git config --list',
+    terminalOutput: `user.name=Dara Sok\nuser.email=dara@example.com`
   },
   {
     id: 'staging', chapter: 'foundations',
-    title: 'ស្ថានភាពទាំង ៣ របស់ឯកសារ', subtitle: 'Working, Staging, និង Committed',
-    icon: Layers, accent: '#10b981', bg: 'radial-gradient(circle at 50% 50%, rgba(16,185,129,0.08) 0%, transparent 70%)',
+    title: 'Three States', subtitle: 'Working Directory · Staging Area · Repository',
+    icon: Layers, accent: '#4ade80',
     concepts: [
-      { label: 'Working Directory', desc: 'កន្លែងដែលអ្នកកែសម្រួលឯកសារ។ ឯកសារទាំងនេះគឺ "untracked" ឬ "modified" រហូតដល់វាត្រូវបាន staged។' },
-      { label: 'Staging Area', desc: 'The Index. កន្លែងកណ្តាលដែលការផ្លាស់ប្តូរត្រូវបានត្រៀមសម្រាប់ commit បន្ទាប់។' },
-      { label: 'Commit History', desc: 'កំណត់ត្រាអចិន្ត្រៃយ៍នៃ snapshots នៅក្នុង folder .git។' }
+      { label: 'Working Directory', desc: 'កន្លែង edit file ។ Git ដឹង file ត្រូវ modify ប៉ុន្ដែ មិន track change ដោយ auto ។' },
+      { label: 'Staging Area', desc: 'Draft commit ។ git add ដាក់ snapshot នៃ change ចូល index ។ git commit យក index ទៅ permanent history ។' }
     ],
-    tip: 'ចាត់ទុក staging area ដូចជា "បញ្ជរទូទាត់ប្រាក់" ដែលអ្នកបញ្ជាក់ពីអ្វីដែលត្រូវបញ្ចូលក្នុងការទិញរបស់អ្នក។',
-    lab: 'បន្ថែមឯកសារទៅក្នុង staging area និងបង្កើត commit ដំបូងរបស់អ្នក។',
-    result: 'ការពិនិត្យមើល git log គួរតែបង្ហាញ commit hash, ព័ត៌មានអ្នកនិពន្ធ និងសារ (Message)។',
-    code: '# 1. Track files\ngit add .\n\n# 2. Commit with message\ngit commit -m "feat: Initial project structure"\n\n# 3. View history\ngit log --oneline',
-    filename: 'workflow.sh',
-    terminal: 'git add index.php\ngit commit -m "Initial commit"\ngit log',
-    terminalOutput: 'commit 8f2a4b1 (HEAD -> main)\nAuthor: John Doe <john@example.com>\nDate: Thu Mar 19 19:45:00 2026\n\n    Initial commit'
+    tip: 'Staging area ជា superpower — ឱ្យអ្នក craft atomic commit — stage file ដែល related ជាមួយ ។',
+    lab: 'Create file → git add → git commit → inspect log ។',
+    result: 'git log --oneline បង្ហាញ commit hash, author, date, message ត្រូវ ។',
+    code: `git add .\ngit commit -m "feat: add initial files"\ngit log --oneline`,
+    filename: 'staging.sh', terminal: 'git log --oneline',
+    terminalOutput: `a3f9c12 (HEAD -> main) feat: add initial files`
   },
-
-  // BRANCHING
+  {
+    id: 'gitignore', chapter: 'foundations',
+    title: 'Ignoring Files', subtitle: 'ការប្រើ .gitignore ដើម្បីដក file មិនចាំបាច់',
+    icon: Shield, accent: '#4ade80',
+    concepts: [
+      { label: '.gitignore គឺជាអ្វី?', desc: 'ជា file ដែលប្រាប់ Git ថា file ឬ directory ណាខ្លះមិនបាច់ track ។ សំខាន់សម្រាប់ node_modules ឬ secrets ។' },
+      { label: 'Pattern Rules', desc: 'ប្រើ wildcard (*) ដូចជា *.log ដើម្បី ignore files ទាំងអស់ដែលមាន extension .log ។' }
+    ],
+    tip: 'កុំ commit របស់ធំៗ ឬ secrets ឱ្យសោះ ។ ប្រើ .gitignore ជានិច្ចតាំងពី start project ។',
+    lab: 'បង្កើត file .gitignore ហើយដាក់ pattern ដើម្បី ignore log files ។',
+    result: 'File ដែល ignore នឹងមិនបង្ហាញក្នុង staging area ពេលប្រើ git status ឡើយ ។',
+    code: `echo "node_modules/" >> .gitignore\necho "*.log" >> .gitignore`,
+    filename: '.gitignore', terminal: 'git status',
+    terminalOutput: `On branch main\nUntracked files: .gitignore`
+  },
+  {
+    id: 'diff', chapter: 'foundations',
+    title: 'Git Diff', subtitle: 'ពិនិត្យមើល Changes line-by-line',
+    icon: Code2, accent: '#4ade80',
+    concepts: [
+      { label: 'diff command', desc: 'git diff បង្ហាញភាពខុសគ្នារវាង working directory និង staging area ។' },
+      { label: 'Staged Diff', desc: 'ប្រើ --staged ដើម្បីមើលអ្វីដែលបាន add ចូល staging area រួចហើយ ។' }
+    ],
+    tip: 'មុននឹង commit, ប្រើ git diff ជានិច្ច ដើម្បីប្រាកដថាអ្នកមិនបានដាក់ code trash ចូលទៅក្នុង repository ។',
+    lab: 'កែប្រែ file រួចប្រើ git diff ដើម្បីមើល changes មុននឹង git add ។',
+    result: 'Terminal បង្ហាញបន្ទាត់បន្ថែម (+) ពណ៌បៃតង និងបន្ទាត់លុប (-) ពណ៌ក្រហម ។',
+    code: `git diff\ngit diff --staged`,
+    filename: 'diff.sh', terminal: 'git diff',
+    terminalOutput: `--- a/app.js\n+++ b/app.js\n-console.log("Old");\n+console.log("New");`
+  },
   {
     id: 'branch-intro', chapter: 'branching',
-    title: 'ការប្រើប្រាស់ Branch', subtitle: 'ការអភិវឌ្ឍន៍មុខងារស្របគ្នា',
-    icon: Share2, accent: '#3b82f6', bg: 'radial-gradient(circle at 10% 10%, rgba(59,130,246,0.15) 0%, transparent 50%)',
+    title: 'Branch Model', subtitle: 'ការអភិវឌ្ឍ Parallel ជាមួយ Branch',
+    icon: Share2, accent: '#38bdf8',
     concepts: [
-      { label: 'Pointer Logic', desc: 'Branch នៅក្នុង Git គ្រាន់តែជាទ្រនិច (Pointer) ដ៏ស្រាលដែលអាចផ្លាស់ទីបានទៅកាន់ commit ជាក់លាក់ណាមួយ។' },
-      { label: 'Parallel Work', desc: 'Branches អនុញ្ញាតឱ្យអ្នកធ្វើការលើមុខងារថ្មីៗដោយមិនធ្វើឱ្យខូចកូដផលិតកម្ម (Production code) ស្នូល។' }
+      { label: 'Branch = Pointer', desc: 'Branch ក្នុង Git គ្រាន់តែជា lightweight pointer ទៅ commit ។ Switch branch instant ។' },
+      { label: 'Parallel Dev', desc: 'Branch ឱ្យ developer ធ្វើ feature, bugfix ដោយ isolate ពី production code ។' }
     ],
-    tip: 'Branch ស្ទើរតែមិនចំណាយធនធានអ្វីទាំងអស់នៅក្នុង Git។ បង្កើតពួកវាឱ្យបានរហ័សសម្រាប់រាល់ភារកិច្ចថ្មីនីមួយៗ។',
-    lab: 'បង្កើត feature branch ថ្មី និងប្តូរទៅកាន់ branch នោះ។',
-    result: 'ផ្ទៀងផ្ទាត់ branch បច្ចុប្បន្នរបស់អ្នកជាមួយ git branch។',
-    code: '# Create a branch\ngit branch feature/auth\n\n# Switch to it\ngit switch feature/auth\n\n# OR do both in one command\ngit checkout -b feature/auth',
-    filename: 'branches.sh',
-    terminal: 'git checkout -b feature/login\ngit branch',
-    terminalOutput: 'Switched to a new branch \'feature/login\'\n  main\n* feature/login'
+    tip: 'Create branches ឱ្យបានច្រើន, ញឹកញាប់ ។ ១ task = ១ branch ។',
+    lab: 'Create feature/auth branch ហើយ switch ទៅ branch នោះ ។',
+    result: 'git branch បង្ហាញ asterisk (*) នៅ branch ថ្មី ។',
+    code: `git switch -c feature/auth\ngit branch`,
+    filename: 'branch.sh', terminal: 'git branch',
+    terminalOutput: `* feature/auth\n  main`
   },
-  {
-    id: 'moving-changes', chapter: 'branching',
-    title: 'Switch និង Restore', subtitle: 'ការគ្រប់គ្រងមាតិកាក្នុងកន្លែងធ្វើការ',
-    icon: RefreshCw, accent: '#3b82f6', bg: 'radial-gradient(circle at 90% 90%, rgba(59,130,246,0.1) 0%, transparent 60%)',
-    concepts: [
-      { label: 'git switch', desc: 'វិធីទំនើបដើម្បីផ្លាស់ប្តូរ branches។ ផ្តោតតែលើការផ្លាស់ទី HEAD ប៉ុណ្ណោះ។' },
-      { label: 'git restore', desc: 'ប្រើសម្រាប់ដកឯកសារចេញពី staging ឬកំណត់ការផ្លាស់ប្តូរក្នុង working directory ឡើងវិញ។' }
-    ],
-    tip: 'ជៀសវាងការប្រើ git checkout សម្រាប់គ្រប់យ៉ាង; "switch" និង "restore" ច្បាស់លាស់ជាង និងពិបាកក្នុងការធ្វើឱ្យខុស។',
-    lab: 'ត្រឡប់ការកែប្រែដែលខុសក្នុង working directory របស់អ្នក និងប្តូរត្រឡប់ទៅ main វិញ។',
-    result: 'ឯកសារគួរតែត្រឡប់ទៅស្ថានភាព commit ចុងក្រោយរបស់វាវិញ។',
-    code: '# Un-stage a file\ngit restore --staged README.md\n\n# Discard local changes\ngit restore README.md\n\n# Switch branches\ngit switch main',
-    filename: 'ops.sh',
-    terminal: 'git restore profile.php\ngit switch main',
-    terminalOutput: 'Switched to branch \'main\'\nYour branch is up to date with \'origin/main\'.'
-  },
-
-  // MERGING
   {
     id: 'merge-basics', chapter: 'merging',
-    title: 'ការបញ្ចូលកូដ (Merging)', subtitle: 'ការបញ្ចូលការផ្លាស់ប្តូរពី Feature',
-    icon: GitMerge, accent: '#f59e0b', bg: 'radial-gradient(circle at 0% 90%, rgba(245,158,11,0.1) 0%, transparent 50%)',
+    title: 'Merge Strategies', subtitle: 'Fast-Forward vs Three-Way Merge',
+    icon: GitMerge, accent: '#fb923c',
     concepts: [
-      { label: 'Fast-Forward', desc: 'កើតឡើងនៅពេលដែល branch បច្ចុប្បន្នមិនមាន commit ថ្មីប្លែក។ Git គ្រាន់តែរំកិលទ្រនិចទៅមុខ។' },
-      { label: '3-Way Merge', desc: 'កើតឡើងនៅពេលដែល branches មានការបែកចេញពីគ្នា។ Git បង្កើត "Merge Commit" ថ្មីមួយតាមរយៈយុទ្ធសាស្ត្រ recursive។' }
+      { label: 'Fast-Forward', desc: 'Git move pointer ទៅ ahead — history ត្រង់ (linear) ។' },
+      { label: 'Three-Way Merge', desc: 'ប្រើពេល branches diverge ។ បង្កើត merge commit ។' }
     ],
-    tip: 'តែងតែ merge branch main ចូលទៅក្នុង feature branch របស់អ្នក មុននឹង merge feature របស់អ្នកចូលទៅក្នុង main ដើម្បីដោះស្រាយកំហុសឱ្យបានទាន់ពេល។',
-    lab: 'Merge branch "feature/auth" របស់អ្នកត្រឡប់ចូលទៅក្នុង main វិញ។',
-    result: 'អ្នកគួរតែឃើញសារ "Fast-forward" ឬ merge commit នៅក្នុង logs។',
-    code: '# Switch to main first\ngit switch main\n\n# Merge the feature\ngit merge feature/auth',
-    filename: 'merge.sh',
-    terminal: 'git merge feature/auth',
-    terminalOutput: 'Updating 8f2a4b1..c3d4e5f\nFast-forward\n auth_controller.php | 12 ++++++++++++\n 1 file changed, 12 insertions(+)'
+    tip: 'Resolve conflicts ក្នុង feature branch មុននឹង merge ចូល main branch ។',
+    lab: 'Merge feature/auth ចូល main ។ Inspect history ជាមួយ --graph ។',
+    result: 'Log បង្ហាញ "Fast-forward" ឬ merge commit node ក្នុង graph ។',
+    code: `git switch main\ngit merge feature/auth`,
+    filename: 'merge.sh', terminal: 'git merge feature/auth',
+    terminalOutput: `Updating a3f9c12..e7b4d91\nFast-forward`
   },
-  {
-    id: 'conflict', chapter: 'merging',
-    title: 'Conflict Resolution', subtitle: 'ការដោះស្រាយវិវាទកូដ',
-    icon: Shield, accent: '#f59e0b', bg: 'radial-gradient(circle at 100% 100%, rgba(245,158,11,0.1) 0%, transparent 60%)',
-    concepts: [
-      { label: 'Conflict Markers', desc: 'Git បញ្ចូលសញ្ញា <<<<<<<, =======, និង >>>>>>> ដើម្បីបង្ហាញកន្លែងដែលមានការជាន់គ្នានៃការផ្លាស់ប្តូរ។' },
-      { label: 'Manual Fix', desc: 'អ្នកត្រូវតែកែសម្រួលឯកសារ ជ្រើសរើសបន្ទាត់ដែលត្រឹមត្រូវ លុបសញ្ញាសម្គាល់ចេញ និងធ្វើការ commit។' }
-    ],
-    tip: 'Conflicts មិនមែនជាកំហុសទេ! វាគ្រាន់តែជាការដែល Git សួរអ្នកដោយគួរសមថា តើកំណែ (Version) មួយណាដែលត្រឹមត្រូវ។',
-    lab: 'សាកល្បងបង្កើត និងដោះស្រាយ merge conflict។',
-    result: 'ឯកសារចុងក្រោយគួរតែមាន logic ដែលបានបញ្ចូលគ្នាត្រឹមត្រូវ ហើយស្ថានភាព repo គួរតែ "clean"។',
-    code: '# If merge fails, check status\ngit status\n\n# Look for "Unmerged paths"\n# Edit file, then:\ngit add <conflicted-file>\ngit merge --continue',
-    filename: 'conflict.txt',
-    terminal: 'git merge feature/ui',
-    terminalOutput: 'Auto-merging styles.css\nCONFLICT (content): Merge conflict in styles.css\nAutomatic merge failed; fix conflicts and then commit the result.'
-  },
-
-  // REMOTES
   {
     id: 'remote-intro', chapter: 'remotes',
-    title: 'Remote និង Cloud', subtitle: 'ការធ្វើសមកាលកម្មជាមួយពិភពលោក',
-    icon: Globe, accent: '#a855f7', bg: 'radial-gradient(circle at 50% 0%, rgba(168,85,247,0.1) 0%, transparent 60%)',
+    title: 'Remotes & Push', subtitle: 'Sync ជាមួយ GitHub / GitLab',
+    icon: Globe, accent: '#e879f9',
     concepts: [
-      { label: 'origin', desc: 'ឈ្មោះលំនាំដើមដែលត្រូវបានផ្តល់ឱ្យ remote repository ដែលអ្នកបាន clone មក។' },
-      { label: 'git remote', desc: 'បញ្ជាសម្រាប់គ្រប់គ្រងការភ្ជាប់ទៅកាន់ repository ខាងក្រៅ (GitHub, GitLab)។' }
+      { label: 'origin', desc: '"origin" ជា alias convention សម្រាប់ remote URL ។ git clone auto-set origin ។' },
+      { label: 'fetch vs pull', desc: 'git fetch download changes ប៉ុន្ដែមិន merge ។ git pull = fetch + merge ។' }
     ],
-    tip: 'តែងតែដំណើរការ "git fetch" ដើម្បីមើលការផ្លាស់ប្តូរពី remote ដោយមិនចាំបាច់បញ្ចូល (Merge) វាភ្លាមៗទៅក្នុងកិច្ចការបច្ចុប្បន្នរបស់អ្នក។',
-    lab: 'បន្ថែម remote ថ្មី និង push កូដរបស់អ្នក។',
-    result: 'ផ្ទៀងផ្ទាត់ remote ជាមួយ git remote -v។',
-    code: '# Add remote\ngit remote add origin https://github.com/user/repo.git\n\n# Push main branch\ngit push -u origin main',
-    filename: 'remote.sh',
-    terminal: 'git remote -v',
-    terminalOutput: 'origin  https://github.com/fullstack/git-core.git (fetch)\norigin  https://github.com/fullstack/git-core.git (push)'
+    tip: 'git remote -v ជា habit ។ Always verify remote URL មុន push ។',
+    lab: 'Add remote origin ហើយ push main branch ទៅ GitHub ។',
+    result: 'Branch live on GitHub ។',
+    code: `git remote add origin https://github.com/user/repo.git\ngit push -u origin main`,
+    filename: 'remote.sh', terminal: 'git remote -v',
+    terminalOutput: `origin  https://github.com/dara/repo.git (fetch)\norigin  https://github.com/dara/repo.git (push)`
   },
-  {
-    id: 'prs', chapter: 'remotes',
-    title: 'លំហូរការងារ PR', subtitle: 'កិច្ចសហការក្រុមអាជីព',
-    icon: GitPullRequest, accent: '#a855f7', bg: 'radial-gradient(circle at 50% 100%, rgba(168,85,247,0.08) 0%, transparent 70%)',
-    concepts: [
-      { label: 'Pull Request', desc: 'វិធីផ្លូវការដើម្បីសុំឱ្យក្រុមការងារពិនិត្យមើលកូដរបស់អ្នក មុនពេលវាត្រូវបានបញ្ចូលទៅក្នុង main។' },
-      { label: 'Code Review', desc: 'មតិកែលម្អពីមិត្តរួមអាជីព ដើម្បីធានាគុណភាព ស្វែងរក bugs និងចែករំលែកចំណេះដឹង។' }
-    ],
-    tip: 'PR តូចៗ និងផ្តោតលើចំណុចជាក់លាក់ ត្រូវបានពិនិត្យលឿនជាង និងមានកំហុសតិចជាងការផ្លាស់ប្តូរដ៏ធំធេង។',
-    lab: 'ទាញយកការផ្លាស់ប្តូរចុងក្រោយ និង push New Feature PR ថ្មីមួយ។',
-    result: 'Branch បច្ចុប្បន្នត្រូវបានធ្វើបច្ចុប្បន្នភាពជាមួយការផ្លាស់ប្តូរពី remote។',
-    code: '# Get latest main\ngit checkout main\ngit pull origin main\n\n# Go back to feature\ngit checkout feature/new\ngit merge main\ngit push origin feature/new',
-    filename: 'pr.sh',
-    terminal: 'git pull origin main',
-    terminalOutput: 'remote: Enumerating objects: 5, done.\nremote: Counting objects: 100% (5/5), done.\nUnpacking objects: 100% (3/3), 965 bytes | 965.00 KiB/s, done.\nFrom github.com/user/repo\n * branch            main       -> FETCH_HEAD\n   8f2a4b1..c3d4e5f  main       -> origin/main'
-  },
-
-  // MASTERY
   {
     id: 'stash', chapter: 'mastery',
-    title: 'ការប្រើប្រាស់ Git Stash', subtitle: 'ការផ្លាស់ប្តូរបរិបទការងាររហ័ស',
-    icon: Box, accent: '#f43f5e', bg: 'radial-gradient(circle at 10% 10%, rgba(244,63,94,0.15) 0%, transparent 50%)',
+    title: 'Git Stash', subtitle: 'Context Switching ដោយ​មិន Commit',
+    icon: Box, accent: '#f87171',
     concepts: [
-      { label: 'Stashing', desc: 'រក្សាទុកកិច្ចការដែលអ្នកកំពុងធ្វើក្នុង working directory ជាបណ្តោះអាសន្ន។' },
-      { label: 'Context Switch', desc: 'អនុញ្ញាតឱ្យអ្នកត្រឡប់ទៅស្ថានភាព "ស្អាត" ដើម្បីធ្វើការលើអ្វីផ្សេងទៀត ដោយមិនចាំបាច់ commit កិច្ចការដែលមិនទាន់រួចរាល់។' }
+      { label: 'Stash Stack', desc: 'git stash save work-in-progress ទៅ temporary stack ។ Working directory ក្លាយ clean ។' },
+      { label: 'Named Stashes', desc: 'git stash push -m "label" ឱ្យ label stash entry ដើម្បីងាយចំណាំ ។' }
     ],
-    tip: 'ប្រើ "git stash pop" ដើម្បីយកការផ្លាស់ប្តូរដែលបានរក្សាទុកចុងក្រោយមកវិញ និងលុបវាចេញពីបញ្ជី។',
-    lab: 'Stash ការផ្លាស់ប្តូរបច្ចុប្បន្នរបស់អ្នក ដើម្បីទាញយកការជួសជុលបន្ទាន់មួយ។',
-    result: 'git status គួរតែបង្ហាញ "nothing to commit" បន្ទាប់ពី stashing។',
-    code: '# Stash current work\ngit stash\n\n# ... pull fix ...\n\n# Retrieve work\ngit stash pop',
-    filename: 'stash.sh',
-    terminal: 'git stash',
-    terminalOutput: 'Saved working directory and index state WIP on main: 8f2a4b1 Fix navigation\nHEAD is now at 8f2a4b1'
-  },
-  {
-    id: 'rebase', chapter: 'mastery',
-    title: 'Rebase Mastery', subtitle: 'ការសរសេរប្រវត្តិក្នុងស្រុកឡើងវិញ',
-    icon: RotateCcw, accent: '#f43f5e', bg: 'radial-gradient(circle at 90% 10%, rgba(244,63,94,0.1) 0%, transparent 60%)',
-    concepts: [
-      { label: 'Rebasing', desc: 'ការអនុវត្ត commits ឡើងវិញនៅលើកំពូលនៃ base tip ផ្សេងទៀត។ បង្កើតប្រវត្តិ (History) ដែលស្អាត និងមានលក្ខណៈបន្តបន្ទាប់គ្នា (Linear)។' },
-      { label: 'Interactive', desc: 'អនុញ្ញាតឱ្យអ្នក "Squash" commits តូចៗជាច្រើនឱ្យទៅជា feature commit ដ៏ស្អាតតែមួយ។' }
-    ],
-    tip: 'កុំធ្វើ Rebase លើ commits ដែលត្រូវបាន push ទៅកាន់ public repository រួចហើយឱ្យសោះ។',
-    lab: 'Rebase feature branch របស់អ្នកនៅលើកំពូលនៃ main។',
-    result: 'ប្រវត្តិ (History) មានលក្ខណៈត្រង់រលូន ដោយមិនមាន "merge commit" រញ៉េរញ៉ៃ។',
-    code: '# From your feature branch\ngit rebase main\n\n# Interactive (last 3 commits)\ngit rebase -i HEAD~3',
-    filename: 'rebase.sh',
-    terminal: 'git rebase main',
-    terminalOutput: 'First, rewinding head to replay your work on top of it...\nApplying: feat: User profile view\nApplying: fix: Profile layout\nSuccessfully rebased and updated refs/heads/feature/profile.'
+    tip: 'Label stash ជានិច្ច ។ Unnamed stash list វែង = confusing ។',
+    lab: 'Stash uncommitted work → switch branch → apply stash ត្រឡប់ ។',
+    result: 'Work ត្រឡប់បន្ទាប់ pop ។',
+    code: `git stash push -m "wip: login"\ngit stash list\ngit stash pop`,
+    filename: 'stash.sh', terminal: 'git stash list',
+    terminalOutput: `stash@{0}: On main: wip: login`
   }
 ];
 
-/* ─── SYNTAX HIGHLIGHTER ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   SYNTAX HIGHLIGHTER
+══════════════════════════════════════════════════════════════════ */
 
-const GIT_KW = new Set([
-  'git', 'commit', 'branch', 'checkout', 'switch', 'merge', 'rebase',
-  'pull', 'push', 'fetch', 'remote', 'add', 'status', 'log', 'init',
-  'config', 'clone', 'stash', 'pop', 'apply', 'restore', 'diff',
-  '--global', '--oneline', '-m', '-u', '-b', '-i', '--staged', '--list'
-]);
+const GIT_KW = new Set(['git','commit','branch','checkout','switch','merge','rebase','pull','push','fetch','remote','add','status','log','init','config','clone','stash','pop','apply','restore','diff','--global','--oneline','-m','-u','-b','-i','--staged','--list','--graph','--all','--force-with-lease','-c','--continue','-v','-p']);
 
-const HighlightedCode = ({ code }: { code: string }) => {
-  const tokenize = (line: string): React.ReactNode => {
-    if (/^\s*#/.test(line))
-      return <span style={{ color: '#6b7280', fontStyle: 'italic' }}>{line}</span>;
-
-    const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\B[a-z0-9/._-]+\B|\b\d+(?:\.\d+)?\b|\b[a-zA-Z_-]+\b)/g);
-    return parts.map((p, i) => {
-      if (!p) return null;
-      if (GIT_KW.has(p)) return <span key={i} style={{ color: '#f87171', fontWeight: 700 }}>{p}</span>;
-      if (p.startsWith('"') || p.startsWith("'")) return <span key={i} style={{ color: '#86efac' }}>{p}</span>;
-      if (/^\d/.test(p)) return <span key={i} style={{ color: '#c084fc' }}>{p}</span>;
-      if (p.startsWith('-')) return <span key={i} style={{ color: '#60a5fa' }}>{p}</span>;
-      if (p.includes('/')) return <span key={i} style={{ color: '#fbbf24' }}>{p}</span>;
-      return <span key={i} style={{ color: '#e2e8f0' }}>{p}</span>;
-    });
-  };
-
-  return (
-    <div className="font-mono text-[13px] leading-6 whitespace-pre"
-      style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace" }}>
-      {code.split('\n').map((line, i) => (
-        <div key={i} className="min-h-[1.5rem]">{tokenize(line)}</div>
-      ))}
-    </div>
-  );
+const tokenizeLine = (line: string): React.ReactNode[] => {
+  if (/^\s*#/.test(line)) return [<span key="c" style={{ color: '#4b5563', fontStyle: 'italic' }}>{line}</span>];
+  const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\B[a-z0-9/._-]+\B|\b[a-zA-Z_-]+\b)/g);
+  return parts.map((p, i) => {
+    if (!p) return null;
+    if (GIT_KW.has(p)) return <span key={i} style={{ color: '#f87171', fontWeight: 700 }}>{p}</span>;
+    if (p.startsWith('"') || p.startsWith("'")) return <span key={i} style={{ color: '#86efac' }}>{p}</span>;
+    if (/^\d/.test(p)) return <span key={i} style={{ color: '#c084fc' }}>{p}</span>;
+    if (p.startsWith('-')) return <span key={i} style={{ color: '#7dd3fc' }}>{p}</span>;
+    return <span key={i} style={{ color: '#fff' }}>{p}</span>;
+  });
 };
 
-/* ─── CODE PANEL ─────────────────────────────────────────────────── */
+const HighlightedCode = ({ code }: { code: string }) => (
+  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, lineHeight: 1.8, whiteSpace: 'pre' }}>
+    {code.split('\n').map((line, i) => <div key={i} style={{ minHeight: '1.8em' }}>{tokenizeLine(line)}</div>)}
+  </div>
+);
 
-const CodePanel = ({
-  code: initialCode, terminal, terminalOutput: initialOutput, accent, filename,
-}: {
+/* ══════════════════════════════════════════════════════════════════
+   CODE PANEL
+══════════════════════════════════════════════════════════════════ */
+
+const CodePanel = ({ code: initialCode, terminal, terminalOutput, accent, filename }: {
   code: string; terminal?: string; terminalOutput?: string; accent: string; filename: string;
 }) => {
   const [tab, setTab] = useState<'code' | 'terminal'>('terminal');
   const [code, setCode] = useState(initialCode);
-  const [output, setOutput] = useState(initialOutput);
   const [copied, setCopied] = useState(false);
   const [running, setRunning] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const hlRef = useRef<HTMLDivElement>(null);
-  const lines = code.split('\n');
 
-  useEffect(() => { setCode(initialCode); setOutput(initialOutput); }, [initialCode, initialOutput]);
+  useEffect(() => { setCode(initialCode); }, [initialCode]);
 
   const copy = () => {
-    navigator.clipboard.writeText(tab === 'code' ? code : (output || ''));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(tab === 'code' ? code : terminalOutput || '');
+    setCopied(true); setTimeout(() => setCopied(false), 2000);
   };
 
   const syncScroll = () => {
@@ -302,73 +228,57 @@ const CodePanel = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#07090f] rounded-2xl overflow-hidden border border-white/8 shadow-2xl">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 bg-[#0d1117] border-b border-white/5 flex-none">
-        <div className="flex items-center gap-1 p-1 bg-black/40 rounded-xl border border-white/5">
-          {(['code', 'terminal'] as const).map(t => (
-            <button key={t} onClick={() => setTab(t)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                tab === t ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300'
-              }`}>
-              {t === 'code' ? <Code2 className="w-3 h-3" /> : <Terminal className="w-3 h-3" />}
-              {t === 'code' ? 'ពាក្យបញ្ជា (Commands)' : 'ផ្ទាំងបញ្ជា (Shell)'}
-            </button>
-          ))}
+    <div style={{
+      display: 'flex', flexDirection: 'column', height: '100%',
+      background: '#06080f', borderRadius: 14, overflow: 'hidden',
+      border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+    }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '9px 13px', background: '#0a0e1a', borderBottom: '1px solid rgba(255,255,255,0.05)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', gap: 5 }}>
+            {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }}/>)}
+          </div>
+          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', borderRadius: 7, padding: 3, marginLeft: 6 }}>
+            {(['code','terminal'] as const).map(t => (
+              <button key={t} onClick={() => setTab(t)} style={{
+                padding: '4px 10px', borderRadius: 5, border: 'none', fontSize: 9.5, fontWeight: 800,
+                fontFamily: "'JetBrains Mono',monospace", background: tab === t ? 'rgba(255,255,255,0.08)' : 'transparent',
+                color: tab === t ? '#fff' : '#4b5563', transition: 'all 0.18s', textTransform: 'uppercase',
+              }}>{t}</button>
+            ))}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-           <button onClick={async () => {
-             setTab('terminal');
-             setRunning(true);
-             await new Promise(r => setTimeout(r, 800));
-             setRunning(false);
-           }}
-             disabled={running}
-             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-               running ? 'bg-zinc-800 text-zinc-500' : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
-             }`}>
-             <Play className={`w-3 h-3 ${running ? 'animate-pulse' : ''}`} />
-             {running ? 'កំពុងដំណើរការ...' : 'ដំណើរការ'}
-           </button>
-           <button onClick={copy} className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-             {copied ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-zinc-600 group-hover:text-white" />}
-           </button>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button onClick={async () => { setTab('terminal'); setRunning(true); await new Promise(r => setTimeout(r, 700)); setRunning(false); }} disabled={running} style={{
+            padding: '4px 10px', borderRadius: 5, border: 'none', fontSize: 9.5, fontWeight: 800,
+            fontFamily: "'JetBrains Mono',monospace", background: `${accent}15`, color: running ? '#4b5563' : accent,
+          }}>{running ? 'Running…' : 'Run'}</button>
+          <button onClick={copy} style={{ padding: 5, background: 'transparent', border: 'none', color: copied ? '#4ade80' : '#4b5563' }}>
+            {copied ? <CheckCircle2 size={13}/> : <Copy size={13}/>}
+          </button>
         </div>
       </div>
-
-      <div className="flex items-center gap-3 px-4 py-2 bg-[#0d1117]/60 border-b border-white/5 flex-none font-mono text-[10px]">
-        <div className="flex gap-1.5 mr-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/80" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]/80" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]/80" />
-        </div>
-        <span className="text-zinc-500 uppercase tracking-widest font-black">{tab === 'code' ? filename : 'zsh (terminal)'}</span>
+      <div style={{ padding: '4px 13px', background: 'rgba(10,14,26,0.7)', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: 9.5, color: '#4b5563', fontFamily: "'JetBrains Mono',monospace" }}>
+        ~/project/{tab === 'code' ? filename : 'zsh'}
       </div>
-
-      <div className="flex-1 relative overflow-hidden">
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         {tab === 'code' ? (
-          <div className="flex h-full overflow-hidden">
-            <div className="flex-none w-10 bg-[#07090f] border-r border-white/5 pt-4 flex flex-col items-end pr-3 select-none overflow-hidden text-zinc-700 font-mono text-[11px]">
-               {lines.map((_, i) => <div key={i} className="leading-6">{i + 1}</div>)}
+          <div style={{ display: 'flex', height: '100%' }}>
+            <div style={{ width: 40, background: '#06080f', borderRight: '1px solid rgba(255,255,255,0.04)', paddingTop: 14, textAlign: 'right', paddingRight: 9, fontSize: 10.5, color: 'rgba(255,255,255,0.1)', fontFamily: "'JetBrains Mono',monospace" }}>
+              {code.split('\n').map((_, i) => <div key={i} style={{ height: '1.8em' }}>{i + 1}</div>)}
             </div>
-            <div className="relative flex-1 overflow-hidden">
-               <div ref={hlRef} className="absolute inset-0 overflow-auto p-4 pointer-events-none">
-                 <HighlightedCode code={code} />
-               </div>
-               <textarea ref={taRef} value={code} onChange={e => setCode(e.target.value)} onScroll={syncScroll}
-                 className="absolute inset-0 w-full h-full bg-transparent text-transparent resize-none outline-none p-4 font-mono text-[13px] leading-6 border-none overflow-auto selection:bg-emerald-500/20"
-                 spellCheck={false} wrap="off" />
+            <div style={{ position: 'relative', flex: 1 }}>
+              <div ref={hlRef} style={{ position: 'absolute', inset: 0, padding: 14, overflow: 'auto', pointerEvents: 'none' }}><HighlightedCode code={code}/></div>
+              <textarea ref={taRef} value={code} onChange={e => setCode(e.target.value)} onScroll={syncScroll} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: 'transparent', color: 'transparent', resize: 'none', outline: 'none', padding: 14, fontFamily: "'JetBrains Mono',monospace", fontSize: 13, lineHeight: 1.8, border: 'none', caretColor: '#fff' }} spellCheck={false} wrap="off"/>
             </div>
           </div>
         ) : (
-          <div className="p-6 font-mono text-sm leading-relaxed overflow-auto h-full">
-            <div className="flex gap-2 text-zinc-500 mb-3">
-              <span style={{ color: accent }}>➜</span>
-              <span className="text-blue-400">~/git-project</span>
-              <span className="text-zinc-600 font-bold">$</span>
-              <span className="text-zinc-200">{terminal}</span>
-            </div>
-            {output ? <pre className="text-zinc-400 whitespace-pre-wrap">{output}</pre> : <div className="text-zinc-600 animate-pulse">Running...</div>}
+          <div style={{ padding: '14px 16px', fontFamily: "'JetBrains Mono',monospace", fontSize: 12.5, lineHeight: 1.9, overflow: 'auto', height: '100%' }}>
+            <div style={{ color: accent, marginBottom: 8 }}>❯ <span style={{ color: '#fff' }}>~/project $ {terminal}</span></div>
+            <pre style={{ color: '#ccc', whiteSpace: 'pre-wrap', margin: 0 }}>{terminalOutput || 'Running…'}</pre>
           </div>
         )}
       </div>
@@ -376,348 +286,232 @@ const CodePanel = ({
   );
 };
 
-/* ─── MAIN COMPONENT ─────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+══════════════════════════════════════════════════════════════════ */
 
 export default function GitSlides() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
   const chapterParam = searchParams.get('chapter') || 'foundations';
-  
-  const displaySlides = useMemo(() => {
-    return GIT_SLIDES.filter(s => s.chapter === chapterParam);
+
+  const displayPages = useMemo(() => {
+    const filtered = GIT_SLIDES.filter(s => s.chapter === chapterParam);
+    const result: (Slide & { subType: 'concept' | 'lab' })[] = [];
+    filtered.forEach(s => {
+      result.push({ ...s, subType: 'concept' });
+      result.push({ ...s, subType: 'lab' });
+    });
+    return result;
   }, [chapterParam]);
 
   const slideParam = searchParams.get('slide');
-  const initialSlide = slideParam ? Math.max(0, Math.min(parseInt(slideParam) - 1, displaySlides.length - 1)) : 0;
+  const initialSlide = slideParam ? Math.max(0, Math.min(parseInt(slideParam) - 1, displayPages.length - 1)) : 0;
 
   const [current, setCurrent] = useState(initialSlide);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const [notes, setNotes] = useState<any>({});
+  const [notes, setNotes] = useState<Record<string, string>>({});
   const [dir, setDir] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  useEffect(() => { setCurrent(initialSlide); }, [initialSlide, chapterParam]);
   useEffect(() => {
-    setCurrent(initialSlide);
-  }, [initialSlide, chapterParam]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('git_slide_notes');
-    if (saved) setNotes(JSON.parse(saved));
+    try {
+      const saved = localStorage.getItem('git_notes_v3');
+      if (saved) setNotes(JSON.parse(saved));
+    } catch {}
   }, []);
 
   const saveNote = (val: string) => {
-    const slideId = displaySlides[current]?.id || 'unknown';
-    const newNotes = { ...notes, [slideId]: val };
-    setNotes(newNotes);
-    localStorage.setItem('git_slide_notes', JSON.stringify(newNotes));
+    const key = displayPages[current]?.id || 'x';
+    const next = { ...notes, [key]: val };
+    setNotes(next);
+    localStorage.setItem('git_notes_v3', JSON.stringify(next));
   };
 
-  const slide = displaySlides[current] || displaySlides[0];
+  const slide = displayPages[current] ?? displayPages[0];
   const Icon = slide.icon;
-  const chapterInfo = CHAPTERS.find(c => c.id === chapterParam) || CHAPTERS[0];
-  const progress = ((current + 1) / displaySlides.length) * 100;
+  const ch = CHAPTERS.find(c => c.id === chapterParam) ?? CHAPTERS[0];
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    const newSlideVal = (current + 1).toString();
-    const currentSlideParam = params.get('slide');
-
-    if (current === 0) {
-      if (currentSlideParam) {
-        params.delete('slide');
-        router.replace(`?${params.toString()}`, { scroll: false });
-      }
-    } else if (currentSlideParam !== newSlideVal) {
-      params.set('slide', newSlideVal);
-      router.replace(`?${params.toString()}`, { scroll: false });
-    }
-  }, [current, router, searchParams]);
+    if (current === 0) params.delete('slide');
+    else params.set('slide', String(current + 1));
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [current]);
 
   const goTo = useCallback((idx: number, d: number) => {
     if (isAnimating) return;
-    setDir(d);
-    setIsAnimating(true);
-    setTimeout(() => {
-        setCurrent(idx);
-        setIsAnimating(false);
-    }, 280);
+    setDir(d); setIsAnimating(true);
+    setTimeout(() => { setCurrent(idx); setIsAnimating(false); }, 250);
   }, [isAnimating]);
 
-  const next = () => {
-    if (current < displaySlides.length - 1) {
-      goTo(current + 1, 1);
-    } else {
-      const chIdx = CHAPTERS.findIndex(c => c.id === chapterParam);
-      if (chIdx < CHAPTERS.length - 1) {
-        setDir(1);
-        const nextCh = CHAPTERS[chIdx + 1];
-        router.push(`?chapter=${nextCh.id}`);
-      }
-    }
-  };
+  const next = useCallback(() => {
+    if (current < displayPages.length - 1) { goTo(current + 1, 1); return; }
+    const ci = CHAPTERS.findIndex(c => c.id === chapterParam);
+    if (ci < CHAPTERS.length - 1) { setDir(1); router.push(`?chapter=${CHAPTERS[ci + 1].id}`); }
+  }, [current, displayPages.length, chapterParam, goTo]);
 
-  const prev = () => {
-    if (current > 0) {
-      goTo(current - 1, -1);
-    } else {
-      const chIdx = CHAPTERS.findIndex(c => c.id === chapterParam);
-      if (chIdx > 0) {
-        setDir(-1);
-        const prevCh = CHAPTERS[chIdx - 1];
-        const prevSlidesCount = GIT_SLIDES.filter(s => s.chapter === prevCh.id).length;
-        router.push(`?chapter=${prevCh.id}&slide=${prevSlidesCount}`);
-      }
+  const prev = useCallback(() => {
+    if (current > 0) { goTo(current - 1, -1); return; }
+    const ci = CHAPTERS.findIndex(c => c.id === chapterParam);
+    if (ci > 0) {
+      setDir(-1);
+      const pc = CHAPTERS[ci - 1];
+      const cnt = GIT_SLIDES.filter(s => s.chapter === pc.id).length * 2;
+      router.push(`?chapter=${pc.id}&slide=${cnt}`);
     }
-  };
+  }, [current, chapterParam, goTo]);
 
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
+    const handler = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).tagName === 'TEXTAREA') return;
       if (e.key === 'ArrowRight') next();
       if (e.key === 'ArrowLeft') prev();
     };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [current, displaySlides]);
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [next, prev]);
 
-  const variants = {
-    enter: (d: number) => ({ y: d > 0 ? 30 : -30, opacity: 0, scale: 0.98 }),
-    center: { y: 0, opacity: 1, scale: 1 },
-    exit: (d: number) => ({ y: d > 0 ? -30 : 30, opacity: 0, scale: 0.98 })
+  const V = {
+    enter: (d: number) => ({ x: d > 0 ? 32 : -32, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d > 0 ? -32 : 32, opacity: 0 }),
   };
 
   return (
-    <div className="min-h-screen bg-[#080c14] flex flex-col selecting-none overflow-hidden"
-       style={{ fontFamily: "'Inter','DM Sans',system-ui,sans-serif" }}>
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 pointer-events-none transition-all duration-1000" style={{ background: slide.bg }} />
-      <div className="fixed inset-0 pointer-events-none opacity-20"
-        style={{ backgroundImage: 'radial-gradient(#ffffff 0.5px, transparent 0.5px)', backgroundSize: '32px 32px' }} />
+    <div style={{ minHeight: '100vh', background: '#030509', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: "'Noto Sans Khmer','Hanuman',serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700;900&family=Hanuman:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+        button { cursor: pointer; border: none; outline: none; background: none; }
+      `}</style>
 
-      {/* ── HEADER ── */}
-      <header className="relative z-[60] flex items-center justify-between px-4 sm:px-6 py-4 border-b border-white/5 bg-black/60 backdrop-blur-2xl">
-        <div className="flex items-center gap-2 sm:gap-4">
-          <Link href="/courses/backend" 
-            className="group flex items-center gap-3 px-3 sm:px-4 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all active:scale-95 shadow-xl">
-            <ArrowLeft className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-white transition-colors hidden lg:block">ចាកចេញ</span>
-          </Link>
+      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse at 70% 50%, ${slide.accent}0a 0%, transparent 70%)` }}/>
 
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="group flex items-center gap-3 sm:gap-4 px-4 sm:px-5 h-12 rounded-xl bg-white/5 border border-white/10 hover:bg-white/12 hover:border-white/30 transition-all active:scale-95 shadow-2xl overflow-hidden max-w-[150px] sm:max-w-none">
-            <div className={`w-7 h-7 rounded-lg flex-none flex items-center justify-center transition-all duration-300 ${isMenuOpen ? 'bg-white text-black rotate-0' : 'bg-black/40 text-zinc-400 group-hover:text-white'}`}>
-              <AnimatePresence mode="wait">
-                {isMenuOpen ? (
-                  <motion.div key="x" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: 90 }}>
-                    <X className="w-3.5 h-3.5" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="menu" initial={{ scale: 0, rotate: 90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0, rotate: -90 }}>
-                    <Menu className="w-3.5 h-3.5" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="flex flex-col items-start leading-tight overflow-hidden text-left">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 hidden sm:block">ផែនទីមេរៀន</span>
-              <div className="flex items-center gap-2 overflow-hidden">
-                <span className="text-sm font-bold text-white tracking-tight truncate">{chapterInfo.label}</span>
-                <ChevronDown className={`w-3.5 h-3.5 text-zinc-600 flex-none transition-transform duration-500 ${isMenuOpen ? 'rotate-180 text-white' : ''}`} />
-              </div>
+      <header style={{ height: 58, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', background: 'rgba(3,5,9,0.8)', backdropFilter: 'blur(20px)', zIndex: 50 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Link href="/courses/backend" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, color: '#fff', textDecoration: 'none', fontSize: 11, fontWeight: 700 }}><ArrowLeft size={14}/> Back</Link>
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, color: '#fff' }}>
+            <div style={{ width: 22, height: 22, background: isMenuOpen ? ch.color : 'rgba(255,255,255,0.1)', color: isMenuOpen ? '#000' : '#4b5563', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{isMenuOpen ? <X size={12}/> : <Menu size={12}/>}</div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: 8, color: ch.color, fontWeight: 800, textTransform: 'uppercase' }}>Chapter {ch.num}</div>
+              <div style={{ fontSize: 12, fontWeight: 700 }}>{ch.label}</div>
             </div>
           </button>
         </div>
-
-        <div className="flex items-center gap-3 sm:gap-8">
-          <div className="hidden sm:flex flex-col items-end gap-1.5 min-w-[100px] md:min-w-[140px]">
-            <div className="flex items-center gap-2 text-[10px] font-mono">
-              <span className="text-zinc-500 uppercase tracking-widest font-black hidden lg:block">វឌ្ឍនភាពជំពូក</span>
-              <span className="text-white font-black bg-white/10 px-1.5 py-0.5 rounded-md">{Math.round(progress)}%</span>
-            </div>
-            <div className="w-24 md:w-44 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-              <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }}
-                className="h-full rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(255,255,255,0.2)]" 
-                style={{ background: chapterInfo.color }} />
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            {displayPages.map((_, i) => <button key={i} onClick={() => goTo(i, i > current ? 1 : -1)} style={{ width: i === current ? 18 : 6, height: 6, borderRadius: 3, background: i === current ? ch.color : 'rgba(255,255,255,0.1)', transition: 'all 0.3s' }}/>)}
+            <span style={{ marginLeft: 8, fontSize: 10, color: '#4b5563', fontFamily: "'JetBrains Mono',monospace" }}>{current + 1}/{displayPages.length}</span>
           </div>
-          <div className="h-10 w-px bg-white/10 hidden sm:block" />
-          <div className="flex items-center gap-1.5 sm:gap-3">
-            <button onClick={prev} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <div className="flex flex-col items-center min-w-[40px] sm:min-w-[45px]">
-               <span className="text-[9px] font-black text-zinc-600 uppercase tracking-tighter mb-0.5 hidden xs:block">Slide</span>
-               <span className="text-sm font-mono text-white font-bold">{current + 1}<span className="text-zinc-800 mx-1">/</span>{displaySlides.length}</span>
-            </div>
-            <button onClick={next} className="w-10 h-10 rounded-xl bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all active:scale-90 border border-white/5 flex items-center justify-center">
-              <ChevronRight className="w-5 h-5" />
-            </button>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button onClick={prev} style={{ padding: 8, borderRadius: 8, background: 'rgba(255,255,255,0.03)', color: '#fff' }}><ChevronLeft size={16}/></button>
+            <button onClick={next} style={{ padding: 8, borderRadius: 8, background: 'rgba(255,255,255,0.03)', color: '#fff' }}><ChevronRight size={16}/></button>
           </div>
         </div>
       </header>
 
-      {/* ── CHAPTER MENU ── */}
       <AnimatePresence>
         {isMenuOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 lg:p-10 pointer-events-none">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)} className="absolute inset-0 bg-black/95 backdrop-blur-md pointer-events-auto" />
-            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 30, opacity: 0 }}
-              className="relative w-full max-w-5xl max-h-full bg-[#0d1117] border border-white/10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] flex flex-col pointer-events-auto overflow-hidden">
-              <div className="flex-1 overflow-y-auto px-6 py-8 sm:p-12 scrollbar-none">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {CHAPTERS.map((ch, i) => {
-                    const isActive = ch.id === chapterParam;
-                    return (
-                      <button key={ch.id} onClick={() => {
-                          const params = new URLSearchParams();
-                          params.set('chapter', ch.id);
-                          router.push(`?${params.toString()}`);
-                          setIsMenuOpen(false);
-                        }}
-                        className={`group relative flex items-center gap-4 p-4 sm:p-5 rounded-2xl transition-all border ${
-                          isActive ? 'bg-white/5 border-white/20 shadow-xl' : 'bg-transparent border-transparent hover:bg-white/5'
-                        }`}>
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-black text-sm transition-all flex-none ${isActive ? 'scale-110' : 'opacity-60'}`}
-                          style={{ background: isActive ? ch.color : `${ch.color}25`, color: isActive ? '#000' : ch.color }}>{String(i + 1).padStart(2, '0')}</div>
-                        <div className="flex flex-col items-start leading-tight text-left truncate">
-                           <span className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: ch.color }}>វគ្គទី {i + 1}</span>
-                           <span className="text-sm sm:text-[15px] font-bold text-white truncate w-full">{ch.label.split('. ')[1]}</span>
-                        </div>
-                        {isActive && <div className="ml-auto w-2 h-2 rounded-full" style={{ background: ch.color, boxShadow: `0 0 10px ${ch.color}` }} />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="p-6 sm:px-12 sm:py-8 bg-black/20 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                 <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-zinc-400">Collaboration Engine Lifecycle</div>
-                 <div className="text-[10px] font-mono text-zinc-500 bg-white/5 px-3 py-1 rounded-lg">FULLSTACK ACADEMY • GIT MASTERCLASS</div>
-              </div>
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMenuOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 80, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}/>
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} style={{ position: 'fixed', top: 68, left: 20, width: 320, background: '#0a0e1a', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)', padding: 8, zIndex: 90, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
+              {CHAPTERS.map(c => (
+                <button key={c.id} onClick={() => { router.push(`?chapter=${c.id}`); setIsMenuOpen(false); }} style={{ width: '100%', padding: 10, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, background: c.id === chapterParam ? 'rgba(255,255,255,0.05)' : 'transparent' }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 8, background: c.id === chapterParam ? c.color : 'rgba(255,255,255,0.05)', color: c.id === chapterParam ? '#000' : c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>{c.num}</div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: 9, color: c.color, fontWeight: 800 }}>CHAPTER</div>
+                    <div style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{c.label}</div>
+                  </div>
+                </button>
+              ))}
             </motion.div>
-          </div>
+          </>
         )}
       </AnimatePresence>
 
-      {/* ── MAIN CONTENT ── */}
-      <main className="relative z-10 flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* LEFT: CONTENT */}
-        <AnimatePresence mode="wait" custom={dir}>
-          {!isAnimating && (
-            <motion.div key={`${chapterParam}-${slideParam}`} custom={dir} variants={variants}
-              initial="enter" animate="center" exit="exit"
-              transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-              className="flex-none lg:w-[45%] flex flex-col p-6 sm:p-10 xl:p-14 lg:border-r border-white/8 overflow-y-auto gap-8 justify-center min-h-0">
-              
-              <div className="space-y-8">
-                <div className="flex items-start gap-5">
-                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center border border-white/10 flex-none shadow-2xl"
-                    style={{ background: `${slide.accent}20` }}>
-                    <Icon className="w-7 h-7" style={{ color: slide.accent }} />
+      <main style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <div style={{ width: '42%', borderRight: '1px solid rgba(255,255,255,0.05)', padding: '30px 40px', overflowY: 'auto' }}>
+          <AnimatePresence mode="wait" custom={dir}>
+            {!isAnimating && (
+              <motion.div key={current} custom={dir} variants={V} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <span style={{ fontSize: 10, fontWeight: 800, color: ch.color, background: `${ch.color}15`, padding: '3px 8px', borderRadius: 4, textTransform: 'uppercase' }}>{ch.label}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: '#4b5563' }}>{slide.id}</span>
                   </div>
-                  <div className="min-w-0">
-                     <div className="flex items-center gap-2 mb-2 flex-wrap text-[10px] font-black uppercase tracking-widest">
-                        <span className="px-2.5 py-1 rounded-full border"
-                          style={{ color: chapterInfo.color, borderColor: `${chapterInfo.color}30`, background: `${chapterInfo.color}10` }}>
-                          {chapterInfo.label}
-                        </span>
-                        <span className="text-zinc-700">{slide.id}</span>
-                     </div>
-                     <h1 className="text-4xl sm:text-5xl xl:text-6xl font-black text-white leading-[0.88] tracking-tighter italic uppercase">
-                       {slide.title}
-                     </h1>
-                     <p className="text-[15px] font-bold text-white/40 tracking-widest mt-3 uppercase">{slide.subtitle}</p>
+                  <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 12, background: `${slide.accent}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: slide.accent }}><Icon size={24}/></div>
+                    <div>
+                      <h1 style={{ fontSize: 36, fontWeight: 800, color: '#f8fafc', lineHeight: 1.1 }}>{slide.subType === 'lab' ? `${slide.title} (Practice)` : slide.title}</h1>
+                      <p style={{ fontSize: 15, color: '#94a3b8', marginTop: 6 }}>{slide.subType === 'lab' ? 'អនុវត្តជាក់ស្តែងជាមួយ commands' : slide.subtitle}</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  {slide.concepts.map((c: any, i: number) => (
-                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 + i * 0.1 }}
-                      className="p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex flex-col gap-2">
-                      <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: slide.accent }}>{c.label}</span>
-                      <p className="text-sm text-zinc-400 leading-relaxed font-light">{c.desc}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="p-5 rounded-2xl border border-amber-500/20 bg-amber-500/5 flex gap-4">
-                   <Sparkles className="w-5 h-5 text-amber-500 flex-none mt-0.5" />
-                   <div className="text-sm">
-                      <span className="font-black text-amber-400 uppercase tracking-widest block mb-1 underline decoration-amber-500/30 underline-offset-4">Pro Insight</span>
-                      <p className="text-amber-200/70 leading-relaxed italic">{slide.tip}</p>
-                   </div>
-                </div>
-
-                <div className="space-y-3.5">
-                   <div className="p-5 rounded-2xl border border-white/10 bg-white/[0.03] flex gap-4 shadow-xl">
-                      <Play className="w-5 h-5 mt-1" style={{ color: slide.accent }} />
-                      <div className="text-sm">
-                         <p className="font-black uppercase tracking-widest mb-1 text-white/30 text-[10px]">Objective</p>
-                         <p className="text-white font-bold leading-relaxed">{slide.lab}</p>
+                {slide.subType === 'concept' ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    {slide.concepts.map((c, i) => (
+                      <div key={i} style={{ padding: 20, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                          <div style={{ width: 4, height: 4, borderRadius: '50%', background: slide.accent }}/>
+                          <div style={{ fontSize: 10, fontWeight: 800, color: slide.accent, textTransform: 'uppercase' }}>{c.label}</div>
+                        </div>
+                        <p style={{ fontSize: 16, color: '#fff', lineHeight: 1.6 }}>{c.desc}</p>
                       </div>
-                   </div>
-                   <div className="p-5 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 flex gap-4">
-                      <CheckCircle2 className="w-5 h-5 mt-1 text-emerald-400" />
-                      <div className="text-sm">
-                         <p className="font-black uppercase tracking-widest mb-1 text-emerald-400/30 text-[10px]">Expected Outcome</p>
-                         <p className="text-emerald-50/60 leading-relaxed font-semibold italic">{slide.result}</p>
-                      </div>
-                   </div>
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div style={{ padding: 20, background: 'rgba(251,191,36,0.03)', borderRadius: 16, border: '1px solid rgba(251,191,36,0.1)', borderLeft: '4px solid #fbbf24', display: 'flex', gap: 16 }}>
+                      <Sparkles size={20} style={{ color: '#fbbf24', flexShrink: 0 }}/>
+                      <p style={{ fontSize: 15, color: '#fff', fontStyle: 'italic', lineHeight: 1.6 }}>{slide.tip}</p>
+                    </div>
+                    <div style={{ padding: 20, background: 'rgba(255,255,255,0.02)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.05)', borderLeft: `4px solid ${slide.accent}` }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: slide.accent, textTransform: 'uppercase', marginBottom: 6 }}>Objective</div>
+                      <p style={{ fontSize: 15, color: '#fff' }}>{slide.lab}</p>
+                    </div>
+                    <div style={{ padding: 20, background: 'rgba(74,222,128,0.03)', borderRadius: 16, border: '1px solid rgba(74,222,128,0.1)', borderLeft: '4px solid #4ade80' }}>
+                      <div style={{ fontSize: 10, fontWeight: 800, color: '#4ade80', textTransform: 'uppercase', marginBottom: 6 }}>Expected Result</div>
+                      <p style={{ fontSize: 15, color: '#fff' }}>{slide.result}</p>
+                    </div>
+                  </div>
+                )}
 
-                <div className="flex items-center gap-4 pt-4">
-                   <button onClick={prev} className="flex-none w-14 h-14 rounded-2xl border border-white/10 bg-white/5 text-zinc-400 hover:text-white transition-all active:scale-95 flex items-center justify-center">
-                      <ChevronLeft className="w-6 h-6" />
-                   </button>
-                   <button onClick={next} className="flex-1 h-14 rounded-2xl font-black text-sm uppercase tracking-[0.2em] flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-2xl"
-                      style={{ background: slide.accent, color: '#000' }}>
-                      {current === displaySlides.length - 1 ? 'Go to Next Phase' : 'Next Step'}
-                      <ChevronRight className="w-5 h-5" />
-                   </button>
-                   <button onClick={() => setShowNotes(!showNotes)} 
-                      className={`w-14 h-14 rounded-2xl border transition-all flex items-center justify-center ${
-                        showNotes ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.1)]' : 'bg-white/5 border-white/5 text-zinc-600 hover:text-white'
-                      }`}>
-                      <StickyNote className="w-6 h-6" />
-                   </button>
+                <div style={{ display: 'flex', gap: 10, marginTop: 'auto', paddingBottom: 20 }}>
+                  <button onClick={prev} style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.03)', borderRadius: 12, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><ChevronLeft size={18}/></button>
+                  <button onClick={next} style={{ flex: 1, background: slide.accent, borderRadius: 12, color: '#000', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                    {current === displayPages.length - 1 ? 'Next Chapter' : slide.subType === 'concept' ? 'Start Practice' : 'Next Lesson'} <ChevronRight size={16}/>
+                  </button>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
-        {/* RIGHT: EDITOR */}
-        <div className="flex-1 flex flex-col p-4 sm:p-8 lg:p-14 overflow-hidden bg-black/40 relative">
-           <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
-           <CodePanel 
-              code={slide.code} 
-              terminal={slide.terminal} 
-              terminalOutput={slide.terminalOutput} 
-              accent={slide.accent} 
-              filename={slide.filename} 
-           />
+        <div style={{ flex: 1, padding: 24, background: 'rgba(0,0,0,0.2)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <Terminal size={12} style={{ color: '#4b5563' }}/>
+            <span style={{ fontSize: 9, fontWeight: 800, color: '#4b5563', textTransform: 'uppercase' }}>Terminal & Code Area</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.05)' }}/>
+          </div>
+          <CodePanel code={slide.code} terminal={slide.terminal} terminalOutput={slide.terminalOutput} accent={slide.accent} filename={slide.filename}/>
         </div>
       </main>
 
-      {/* NOTES SLIDE-IN */}
+      <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 100 }}>
+        <button onClick={() => setShowNotes(!showNotes)} style={{ width: 44, height: 44, background: showNotes ? '#fbbf24' : 'rgba(255,255,255,0.05)', color: showNotes ? '#000' : '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}><StickyNote size={20}/></button>
+      </div>
+
       <AnimatePresence>
         {showNotes && (
-          <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-            className="fixed inset-y-0 right-0 w-80 sm:w-96 bg-[#0d1117] border-l border-white/10 z-[100] p-10 pt-32 shadow-[0_0_100px_rgba(0,0,0,0.5)] flex flex-col">
-            <div className="mb-8">
-               <h3 className="text-amber-400 font-black uppercase tracking-[0.3em] text-xs underline decoration-amber-500/20 underline-offset-8">Field Notes</h3>
-               <p className="mt-4 text-[11px] text-zinc-600 font-bold uppercase">{slide.id} · {slide.title}</p>
-            </div>
-            <textarea className="flex-1 w-full bg-black/60 rounded-[2rem] p-8 text-base text-zinc-300 font-mono focus:outline-none border border-white/5 focus:border-amber-500/30 transition-all resize-none shadow-inner"
-              placeholder="Jot down commands, tips, or reminders..." value={notes[slide.id] || ''} onChange={(e) => saveNote(e.target.value)} />
-            <div className="mt-8 flex items-center justify-center gap-2 text-[10px] text-zinc-600 font-black uppercase tracking-widest">
-                <HardDrive className="w-3 h-3" />
-                Persistent Cloud Syncing
-            </div>
+          <motion.div initial={{ x: 300 }} animate={{ x: 0 }} exit={{ x: 300 }} style={{ position: 'fixed', top: 80, right: 20, bottom: 80, width: 300, background: '#0a0e1a', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', padding: 20, zIndex: 110, display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Field Notes</h3>
+            <textarea value={notes[slide.id] || ''} onChange={e => saveNote(e.target.value)} placeholder="កត់ត្រាចំណាំនៅទីនេះ..." style={{ flex: 1, background: 'rgba(255,255,255,0.03)', border: 'none', borderRadius: 12, padding: 12, color: '#fff', resize: 'none', outline: 'none', fontSize: 14 }}/>
           </motion.div>
         )}
       </AnimatePresence>
