@@ -83,7 +83,7 @@ const SLIDES: SlideData[] = [
   {
     num: "01", chapter: "Foundations", chapterColor: BLUE,
     tag: "Intro", tagColor: BLUE, icon: "🖥️",
-    title: "The PHP Ecosystem",
+    title: "What's PHP ? ",
     subtitle: "Server-side Processing · Hypertext Preprocessor · Backend Logic",
     body: `**PHP** is the engine of the web. មិនដូច JavaScript ដែលដើរលើ Browser, PHP ដំណើរការនៅលើ **Server** ។ វាទទួលយក Request, គណនា Logic, និងបង្កើតជា **HTML** ដើម្បីផ្ញើទៅកាន់ Browser វិញ។ នេះជាមូលដ្ឋានគ្រឹះនៃ Dynamic Website ។`,
     bullets: [
@@ -104,9 +104,9 @@ const SLIDES: SlideData[] = [
  * Level: Academic Overview
  */
 
-echo "PHP Version: " . PHP_VERSION . "\n";
-echo "Server Node: " . php_uname('n') . "\n";
-echo "Generated at: " . date("H:i:s") . " UTC\n";
+echo "PHP Version: " . PHP_VERSION . " ";
+echo "Server Node: " . php_uname('n') . " ";
+echo "Generated at: " . date("H:i:s") . " UTC";
 
 // This string is sent to the client as clean HTML
 echo "<h1>Hello from the Backend! 🚀</h1>";
@@ -286,15 +286,9 @@ $isPaid = true;     // boolean
 $items = ["A", "B"]; // array
 $none  = null;       // NULL
 
-// Type Casting (Manual conversion)
-$strNum = "100";
-$intNum = (int)$strNum; // Now it's 100 as integer
 
-echo gettype($price); // double
-var_dump($intNum);    // int(100)
 ?>`,
-    output: `double
-int(100)`,
+    output: ` `,
     syntax: `// ── Type Casting Syntax ───────────────────
 //
 //  (int)$v    : To Integer
@@ -447,16 +441,19 @@ $score = 85;
 if ($score >= 90) {
     echo "Grade: A 🏆";
 } elseif ($score >= 80) {
-    echo "Grade: B 🥈";
+    // Nested check (demonstration)
+    if ($score >= 80 && $score < 90) {
+        echo "Grade: B 🥈";
+    }
 } elseif ($score >= 70) {
     echo "Grade: C 🥉";
 } else {
     echo "Grade: F ❌";
 }
 
-// Inline check (Ternary)
+// Inline ternary check
 $status = ($score >= 50) ? "Passed" : "Failed";
-echo "Status: $status";
+echo "\nStatus: $status";
 ?>`,
     output: `Grade: B 🥈
 Status: Passed`,
@@ -542,7 +539,7 @@ OK`,
   {
     num: "08", chapter: "Operators & Flow", chapterColor: ORANGE,
     tag: "Iteration", tagColor: GREEN, icon: "🔄",
-    title: "Mastering Loops",
+    title: "Loops",
     subtitle: "For · While · Do-While · Breaking Control",
     body: `**Loop** ប្រើសម្រាប់អនុវត្តកូដដដែលៗ ។ ក្នុង PHP, **for** ស័ក្តិសមសម្រាប់ចំនួនជុំដែលដឹងមុន, ចំណែក **while** ស័ក្តិសមសម្រាប់លក្ខខណ្ឌដែលមិនច្បាស់លាស់ ។ យើងប្រើ **break** ដើម្បីឈប់ និង **continue** ដើម្បីរំលងជុំបច្ចុប្បន្ន។`,
     bullets: [
@@ -691,7 +688,7 @@ function calculateTotal(int $price, float $tax = 0.1): float {
 
 // Using the function
 $payable = calculateTotal(100); // Uses default tax
-echo "Total: $" . $payable . "\n";
+echo "Total: $" . $payable . " ";
 
 $custom = calculateTotal(200, 0.05); // Custom tax
 echo "Custom Total: $" . $custom;
@@ -763,8 +760,8 @@ $database = [
 $nums    = [1, 2, 3];
 $squared = array_map(fn($n) => $n ** 2, $nums); 
 
-echo "User: " . $profile['name'] . "\n";
-echo "DB Row 0: " . $database[0]['user'] . "\n";
+echo "User: " . $profile['name'] . " ";
+echo "DB Row 0: " . $database[0]['user'] . " ";
 var_dump($squared);
 ?>`,
     output: `User: Ratha Dev
@@ -793,7 +790,7 @@ array(3) { [0]=> int(1), [1]=> int(4), [2]=> int(9) }`,
   {
     num: "11", chapter: "Functions & Arrays", chapterColor: PINK,
     tag: "Practice", tagColor: GREEN, icon: "🧪",
-    title: "Lab: Array Masterclass",
+    title: "Lab: Array",
     subtitle: "Hands-on Data Processing · Associative Arrays · Loops",
     body: `ក្នុងលំហាត់នេះ យើងនឹងយកចំណេះដឹងពី **Arrays** និង **Foreach Loop** មកសរសេរជាកម្មវិធីគ្រប់គ្រងបញ្ជីឈ្មោះសិស្សសាមញ្ញមួយ។ គោលដៅគឺចេះបង្កើត, បន្ថែមទិន្នន័យ, និងបង្ហាញវាត្រឡប់មកវិញ។`,
     bullets: [
@@ -863,611 +860,6 @@ echo "Welcome to " . $data['app'];
     output: `Welcome to PHP Lab`,
     tip: "ចូរកុំភ្លេចប្រើ [] ជំនួសឱ្យ array_push() សម្រាប់បច្ចេកទេសសរសេរកូដបែបសម័យថ្មី (Modern PHP)!",
   },
-  {
-    num: "12", chapter: "Web & Forms", chapterColor: TEAL,
-    tag: "HTTP Protocol", tagColor: TEAL, icon: "🌐",
-    title: "GET vs POST Methods",
-    subtitle: "Data Transfer · URL Parameters · Request Body",
-    body: `Web apps ត្រូវបញ្ជូន Data ទៅកាន់ Server ។ PHP ផ្តល់នូវវិធីសាស្ត្រពីរគឺ **GET** (បញ្ជូនតាម URL) និង **POST** (បញ្ជូនតាម Request Body) ។ ការជ្រើសរើសបានត្រឹមត្រូវគឺជាមូលដ្ឋានគ្រឹះនៃ Security ។`,
-    bullets: [
-      { icon: "🌐", label: "$_GET", desc: "Data visible in URL. Used for searching/filtering. Max 2k chars." },
-      { icon: "📪", label: "$_POST", desc: "Data hidden in body. Used for sensitive info (Login/Register)." },
-      { icon: "⚡", label: "Superglobals", desc: "Built-in arrays available in every scope. Auto-populated." },
-      { icon: "🧼", label: "Sanitization", desc: "Never trust user input. Use htmlspecialchars() for safety." },
-    ],
-    explanation: [
-      { title: "The URL Method (GET)", desc: "ទិន្នន័យបញ្ជូនតាម query string (?id=1) ។ ងាយស្រួល Bookmark ប៉ុន្តែមិនមានសុវត្ថិភាពសម្រាប់ password ទេ ។" },
-      { title: "The Body Method (POST)", desc: "ទិន្នន័យបញ្ជូនលាក់ខាងក្នុង HTTP Request ។ អាចបញ្ជូន File បាន និងគ្មានដែនកំណត់ទំហំ (Unlimited size) ។" },
-      { title: "Auto-Population", desc: "PHP នឹងទាញទិន្នន័យទាំងនោះដាក់ក្នុង $_GET ឬ $_POST Array ដោយស្វ័យប្រវត្តិដើម្បីឱ្យយើងស្រួលប្រើ ។" }
-    ],
-    code: `<?php
-// 1. Handling GET request (?name=Guest)
-$name = $_GET['name'] ?? 'Guest';
-
-// 2. Handling POST from a Form
-$user = $_POST['user'] ?? null;
-
-echo "Greeting via GET: Hello, $name \n";
-
-if ($user) {
-    echo "Processing POST for user: $user \n";
-} else {
-    echo "Visit us via POST to see more!";
-}
-?>`,
-    output: `Greeting via GET: Hello, Guest
-Visit us via POST to see more!`,
-    syntax: `// ── Web Superglobals ───────────────────────
-//
-//  $_GET['key']    : Read from URL
-//  $_POST['key']   : Read from Form body
-//  $_REQUEST['k']  : Combines GET and POST
-//  $_SERVER['k']   : Header/Path info
-//
-// ──────────────────────────────────────────`,
-    tip: "ចូរប្រើ POST ជានិច្ចនៅពេលអ្នកចង់រក្សាទុក (Create) ឬកែប្រែ (Update) ទិន្នន័យក្នុង Database!",
-  },
-  {
-    num: "13", chapter: "Web & Forms", chapterColor: TEAL,
-    tag: "Integrations", tagColor: BLUE, icon: "📝",
-    title: "Processing Form Logic",
-    subtitle: "Validation · Error Handling · State Management",
-    body: `ការទទួលទិន្នន័យពី Form មិនគ្រាន់តែជាការ Echo ទេ ។ យើងត្រូវ **បែងចែក Logic** : ពិនិត្យមើលថាតើទិន្នន័យបានផ្ញើមកឬនៅ, ពិនិត្យភាពត្រឹមត្រូវ (Validation), និងផ្តល់ Feedback ទៅអ្នកប្រើវិញ។`,
-    bullets: [
-      { icon: "🛡️", label: "isset() Check", desc: "Always check if(isset($_POST['submit'])) before processing." },
-      { icon: "✅", label: "Validation", desc: "Check for empty fields, email format, and string length." },
-      { icon: "🎨", label: "Form UX", desc: "Keep user values in the form if an error occurs (Form persistence)." },
-      { icon: "🚀", label: "Redirect", desc: "Use header('Location: ...') to prevent double entry after success." },
-    ],
-    code: `<?php
-// Simple Form Processor Simulation
-if (isset($_POST['name'])) {
-    $name = trim($_POST['name']);
-    
-    if (empty($name)) {
-        echo "Error: Name is required! \n";
-    } else {
-        echo "Success: Welcome aboard, $name! \n";
-    }
-} else {
-    echo "Form not submitted yet.";
-}
-?>`,
-    output: `Form not submitted yet.`,
-    tip: "ចូរប្រើ trim() ដើម្បីសម្អាតចន្លោះទំនេរ (Space) ដែលអ្នកប្រើអាចនឹងវាយបញ្ចូលដោយអចេតនា!",
-  },
-  {
-    num: "14", chapter: "Web & Forms", chapterColor: TEAL,
-    tag: "File System", tagColor: GREEN, icon: "📂",
-    title: "File Handling: Uploading",
-    subtitle: "Security · Move Uploaded · Permissions",
-    body: `ការ Upload File ជាផ្នែកមួយយ៉ាងសំខាន់នៃ Web Apps (ឧទាហរណ៍: Profile Picture) ។ PHP ប្រើប្រាស់ superglobal **$_FILES** ដើម្បីគ្រប់គ្រងរាល់ទិន្នន័យរបស់ File ដែលបានបញ្ជូនមក។`,
-    bullets: [
-      { icon: "📤", label: "Multipart Form", desc: "Forms must use enctype='multipart/form-data' to send files." },
-      { icon: "📑", label: "$_FILES Array", desc: "Contains: name, type, size, tmp_name, and error status." },
-      { icon: "🔒", label: "File Validation", desc: "Check file extensions (png, jpg) and max size before saving." },
-      { icon: "🚚", label: "Moving File", desc: "Use move_uploaded_file() to save it to your uploads folder." },
-    ],
-    code: `<?php
-// File Upload Logic Mockup
-// 1. Inspect file info
-if (isset($_FILES['photo'])) {
-    $photo = $_FILES['photo'];
-    
-    echo "File Name: " . $photo['name'] . "\n";
-    echo "File Size: " . ($photo['size'] / 1024) . " KB \n";
-    
-    // 2. Validate (Simplified)
-    if ($photo['size'] > 5000000) {
-        echo "Error: File too large!";
-    } else {
-        echo "Ready to store in: uploads/" . $photo['name'];
-    }
-} else {
-    echo "No file selected.";
-}
-?>`,
-    output: "No file selected.",
-    tip: "អ្នកត្រូវតែប្រើ enctype=\"multipart/form-data\" ក្នុង <form> tag បើមិនដូច្នោះទេ $_FILES នឹងនៅទទេជានិច្ច!",
-  },
-  {
-    num: "14-L", chapter: "Web & Forms", chapterColor: TEAL,
-    tag: "Practice", tagColor: GREEN, icon: "🧪",
-    title: "Lab: Contact Form Pro",
-    subtitle: "Real-world Form Submission · Validation · Feedback",
-    body: `ក្នុងលំហាត់នេះ យើងនឹងរួមបញ្ចូលអ្វីៗគ្រប់យ៉ាងដែលបានរៀនពី **Chapter 04** ដើម្បីបង្កើត Contact Form មួយដែលមានពេញលេញ (Full features) មានទាំងការឆែក error និងការបង្ហាញលទ្ធផល។`,
-    bullets: [
-      { icon: "🏗️", label: "Skeleton", desc: "Build a form structure using HTML & PHP blocks." },
-      { icon: "🧹", label: "Cleanse", desc: "Sanitize user inputs to prevent XSS attacks." },
-      { icon: "🚦", label: "Rules", desc: "Apply logic rules (Min length 3, Email must contain @)." },
-      { icon: "🔄", label: "Feedback", desc: "Display clear success or error messages to the user." },
-    ],
-    lab: {
-      title: "Building a Validated Contact Form",
-      titleKh: "ការបង្កើត Contact Form ដែលមានការឆែកទិន្នន័យត្រឹមត្រូវ",
-      duration: "45 min",
-      objective: "Master POST processing, validation, and user feedback cycles.",
-      steps: [
-        "Create a script that checks if $_POST is submitted.",
-        "Sanitize the name and email fields using htmlspecialchars().",
-        "Validate if the name's length is at least 3 characters.",
-        "Verify the email field is not empty.",
-        "If all pass, echo a personalized success message."
-      ],
-      code: `<?php
-/**
- * LAB: CONTACT FORM PROCESSOR
- */
-$error = "";
-$success = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // 1. Get and Sanitize
-    $name = htmlspecialchars(trim($_POST['name'] ?? ''));
-    $email = htmlspecialchars(trim($_POST['email'] ?? ''));
-
-    // 2. Validate
-    if (empty($name) || strlen($name) < 3) {
-        $error = "Name must be at least 3 characters.";
-    } elseif (empty($email)) {
-        $error = "Email is required.";
-    } else {
-        $success = "Thanks $name! We will contact you at $email.";
-    }
-}
-
-// Result Display
-if ($error) echo "❌ $error";
-if ($success) echo "✅ $success";
-if (!$error && !$success) echo "Please submit the form.";
-?>`,
-      output: `Please submit the form.`
-    },
-    code: `<?php
-// Test your validation logic here
-$email = "user@example.com";
-echo str_contains($email, "@") ? "Valid Email" : "Invalid Email";
-?>`,
-    output: `Valid Email`,
-    tip: "ចូរប្រើ htmlspecialchars() រាល់ពេលដែលអ្នកបង្ហាញ (Echo) ទិន្នន័យដែលសិស្ស/អ្នកប្រើប្រាស់បានវាយបញ្ចូលវិញ ដើម្បីសុវត្ថិភាព!",
-  },
-  {
-    num: "15", chapter: "Database & CRUD", chapterColor: PURPLE,
-    tag: "Persistent Data", tagColor: PURPLE, icon: "💾",
-    title: "Intro to SQLite & PDO",
-    subtitle: "Database Connectivity · SQL Introduction · PDO Drivers",
-    body: `Variable នឹងបាត់បង់ទិន្នន័យរាល់ពេល Refresh ទំព័រ ។ ដើម្បីរក្សាទិន្នន័យបានយូរអង្វែង យើងត្រូវប្រើ **Database** ។ យើងនឹងប្រើ **SQLite** (Database ក្នុង File តែមួយ) និង **PDO** (បច្ចេកវិទ្យាទំនើបសម្រាប់ភ្ជាប់ PHP ទៅ DB) ។`,
-    bullets: [
-      { icon: "📁", label: "SQLite", desc: "Serverless database stored in a single file. Zero configuration." },
-      { icon: "🔌", label: "PDO", desc: "PHP Data Objects. A secure, consistent way to talk to any DB." },
-      { icon: "🛡️", label: "PreparedStatement", desc: "The #1 defense against SQL Injection. Essential security." },
-      { icon: "🏗️", label: "Migration", desc: "PHP code that sets up your DB tables automatically." },
-    ],
-    explanation: [
-      { title: "Connection", desc: "យើងបង្កើត Object ថ្មីមួយ (new PDO) ដែលតំណាងឱ្យការតភ្ជាប់ទៅកាន់ Database File ។" },
-      { title: "Query vs Exec", desc: "Exec ប្រើសម្រាប់ប្តូររចនាសម្ព័ន្ធ (Create table) រីឯ Query ប្រើសម្រាប់ទាញទិន្នន័យ (Selection) ។" },
-      { title: "Universal Driver", desc: "ចំណុចល្អរបស់ PDO គឺយើងអាចប្តូរពី SQLite ទៅ MySQL បានដោយគ្រាន់តែដូរ Connection String តែមួយប៉ុណ្ណោះ ។" }
-    ],
-    code: `<?php
-// 1. Connect to SQLite
-$pdo = new PDO('sqlite:database.db');
-
-// 2. Create Table (Schema)
-$sql = "CREATE TABLE IF NOT EXISTS students (
-    id INTEGER PRIMARY KEY,
-    name TEXT,
-    email TEXT
-)";
-$pdo->exec($sql);
-
-echo "Database Connected & Table Ready!";
-?>`,
-    output: `Database Connected & Table Ready!`,
-    syntax: `// ── PDO Connection Patterns ─────────────────
-//
-//  new PDO('sqlite:db.sqlite')    : SQLite
-//  new PDO('mysql:host=localhost') : MySQL
-//  $pdo->exec($sql)               : For CREATE/DROP
-//  $pdo->query($sql)              : For SELECT
-//
-// ──────────────────────────────────────────`,
-    tip: "SQLite គឺល្អបំផុតសម្រាប់បរិបទរៀនដំបូង និង Project តូចៗ ព្រោះអ្នកមិនចាំបាច់តម្លើង MySQL Server ឡើយ!",
-  },
-  {
-    num: "16", chapter: "Database & CRUD", chapterColor: PURPLE,
-    tag: "Data Manipulation", tagColor: GREEN, icon: "➕",
-    title: "SQL: INSERT & SELECT",
-    subtitle: "Adding Records · Querying Data · Fetching Results",
-    body: `នៅពេលមាន Table ហើយ យើងត្រូវចេះ **INSERT** (បញ្ចូល) និង **SELECT** (ទាញយក) ។ ក្នុង PHP យើងប្រើ **Prepared Statements** ដើម្បីបញ្ជូនទិន្នន័យទៅកាន់ Database ដោយសុវត្ថិភាពបំផុត។`,
-    bullets: [
-      { icon: "✍️", label: "INSERT INTO", desc: "SQL command to add new rows. Use placeholders (?) for security." },
-      { icon: "🔍", label: "SELECT *", desc: "Command to read data. Filter with WHERE and order with BY." },
-      { icon: "📦", label: "Fetch Modes", desc: "PDO::FETCH_ASSOC returns data as a clean associative array." },
-      { icon: "🔒", label: "bindValue", desc: "Assigns your PHP variables to SQL placeholders securely." },
-    ],
-    code: `<?php
-/**
- * SECURE DATABASE INTEGRATION
- */
-$pdo = new PDO('sqlite:demo.db');
-
-// 1. Insert securely (Example)
-$stmt = $pdo->prepare("INSERT INTO users (name) VALUES (?)");
-$stmt->execute(["Ratha"]);
-
-// 2. Read back
-$results = $pdo->query("SELECT * FROM users");
-foreach ($results as $row) {
-    echo "ID: " . $row['id'] . " | Name: " . $row['name'] . "\n";
-}
-?>`,
-    output: `ID: 1 | Name: Ratha`,
-    tip: "កុំដាក់ Variable ផ្ទាល់ក្នុង SQL string! ត្រូវប្រើ ? ជានិច្ចដើម្បីរារាំង Hacker មិនឱ្យលួចទិន្នន័យបាន (SQL Injection)!",
-  },
-  {
-    num: "17", chapter: "Database & CRUD", chapterColor: PURPLE,
-    tag: "Core CRUD 🔥", tagColor: PINK, icon: "🛠️",
-    title: "UPDATE & DELETE",
-    subtitle: "Modifying Records · Removing Data · Row Identification",
-    body: `CRUD តំណាងឱ្យ **Create, Read, Update, Delete** ។ ក្នុងមេរៀននេះ យើងនឹងបញ្ចប់វដ្តជីវិតរបស់ទិន្នន័យដោយការរៀនកែប្រែ (UPDATE) និងលុបទិន្នន័យ (DELETE) ចេញពីគ្រឹះទិន្នន័យ។`,
-    bullets: [
-      { icon: "📝", label: "UPDATE", desc: "Modify existing rows. NEVER forget the WHERE clause!" },
-      { icon: "🗑️", label: "DELETE", desc: "Remove rows permanently. Again, check your WHERE conditions." },
-      { icon: "🆔", label: "Primary Key", desc: "Use unique IDs (id = 5) to target specific records precisely." },
-      { icon: "📊", label: "Row Count", desc: "Use rowCount() to see how many rows were actually changed." },
-    ],
-    code: `<?php
-$pdo = new PDO('sqlite:demo.db');
-
-// 1. Update name where id = 1
-$upd = $pdo->prepare("UPDATE users SET name = ? WHERE id = ?");
-$upd->execute(["Dara", 1]);
-
-// 2. Delete where id = 2
-$del = $pdo->prepare("DELETE FROM users WHERE id = ?");
-$del->execute([2]);
-
-echo "Rows updated: " . $upd->rowCount();
-?>`,
-    output: `Rows updated: 1`,
-    tip: "ការលុបទិន្នន័យ (Delete) គឺមិនអាចយកមកវិញបានទេ! ជួនកាល developers ប្រើ 'Deleted_at' column ជំនួសវិញ (Soft Delete)។",
-  },
-  {
-    num: "17-L", chapter: "Database & CRUD", chapterColor: PURPLE,
-    tag: "Practice", tagColor: GREEN, icon: "🧪",
-    title: "Lab: Core CRUD App",
-    subtitle: "Build a Persistent Student Registry",
-    body: `ក្នុងមន្ទីរពិសោធន៍នេះ យើងនឹងបង្កើត Backend ចម្បងសម្រាប់កម្មវិធីគ្រប់គ្រងសិស្ស។ យើងនឹងប្រើ SQLite ដើម្បីរក្សាទុកឈ្មោះសិស្ស ទោះបីជាយើងបិទ Browser ក៏ព័ត៌មានមិនបាត់បង់ដែរ។`,
-    bullets: [
-      { icon: "🏗️", label: "DB Boot", desc: "Set up the student table using PHP exec()." },
-      { icon: "📥", label: "Mock Enrollment", desc: "Insert 3 sample students into the database." },
-      { icon: "🔄", label: "Sync", desc: "Fetch all records and display them in a neat list." },
-      { icon: "🔧", label: "Maintenance", desc: "Update a student's name and verify the change." },
-    ],
-    lab: {
-      title: "Building the Final CRUD System",
-      titleKh: "ការបង្កើតប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ (CRUD) ពេញលេញ",
-      duration: "60 min",
-      objective: "Full mastery of PHP and Database interaction cycle.",
-      steps: [
-        "Initialize SQLite PDO connection.",
-        "Create a 'students' table with 'id' and 'name'.",
-        "Add 3 students using prepared statements.",
-        "Fetch all students using a while loop and display them.",
-        "Change the name of student #1 to 'Pro Master'.",
-        "Delete student #2 from the database."
-      ],
-      code: `<?php
-/**
- * FINAL CORE CRUD LAB
- */
-$db = new PDO('sqlite:app.db');
-$db->exec("CREATE TABLE IF NOT EXISTS students (id INTEGER PRIMARY KEY, name TEXT)");
-
-// 1. Create
-$ins = $db->prepare("INSERT INTO students (name) VALUES (?)");
-$ins->execute(["Student A"]);
-$ins->execute(["Student B"]);
-
-// 2. Read
-echo "Before Update:\n";
-$rows = $db->query("SELECT * FROM students")->fetchAll(PDO::FETCH_ASSOC);
-foreach($rows as $r) echo "- " . $r['name'] . "\n";
-
-// 3. Update
-$db->prepare("UPDATE students SET name = ? WHERE id = 1")->execute(["Pro Master"]);
-
-// 4. Delete
-$db->prepare("DELETE FROM students WHERE id = 2")->execute();
-
-echo "\nAfter Maintenance:\n";
-$final = $db->query("SELECT * FROM students")->fetchAll(PDO::FETCH_ASSOC);
-foreach($final as $r) echo "✓ " . $r['name'] . "\n";
-?>`,
-      output: `Before Update:
-- Student A
-- Student B
-
-After Maintenance:
-✓ Pro Master`
-    },
-    code: `<?php
-// SQL Sandbox: Run any SELECT query here
-echo "SQL Ready to process...";
-?>`,
-    output: `SQL Ready to process...`,
-    tip: "ចូរប្រើ fetchAll(PDO::FETCH_ASSOC) ដើម្បីទទួលបាន Array ដែលមានឈ្មោះ Key ស្រដៀងនឹងឈ្មោះ Column ក្នុង Database!",
-  },
-  {
-    num: "18", chapter: "Sessions & Security", chapterColor: ORANGE,
-    tag: "State Management", tagColor: ORANGE, icon: "🔑",
-    title: "Sessions & Authentication",
-    subtitle: "Persistent Login · Cookies · Server-side Storage",
-    body: `HTTP គឺជា **Stateless** protocol (វាមិនចងចាំថាអ្នកជាអ្នកណាទេ) ។ ដើម្បីធ្វើឱ្យ User អាច Login ជាប់ យើងត្រូវប្រើ **Sessions** ។ Session អនុញ្ញាតឱ្យយើងរក្សាទុកទិន្នន័យ User នៅលើ Server និងប្រើប្រាស់បានគ្រប់ទំព័រ។`,
-    bullets: [
-      { icon: "🏁", label: "session_start()", desc: "The first line required to use sessions. Initializes the engine." },
-      { icon: "📦", label: "$_SESSION", desc: "Global array to store user data (e.g. user_id, role)." },
-      { icon: "🍪", label: "Cookies", desc: "Small files on client PC that store the Session ID." },
-      { icon: "🚪", label: "Logout", desc: "Clearing sessions using session_destroy() and unset()." },
-    ],
-    code: `<?php
-session_start();
-
-// 1. Simulate Login
-$_SESSION['user'] = "Ratha";
-$_SESSION['is_logged_in'] = true;
-
-echo "User " . $_SESSION['user'] . " is now logged in! \n";
-
-// 2. Access in another part of app
-if ($_SESSION['is_logged_in']) {
-    echo "Welcome back to the Dashboard.";
-}
-?>`,
-    output: `User Ratha is now logged in! 
-Welcome back to the Dashboard.`,
-    tip: "អ្នកត្រូវតែហៅ session_start() នៅមុនគេបង្អស់ មុននឹងមានការ echo អ្វីទាំងអស់ បើមិនដូច្នោះទេវានឹងមាន Error!",
-  },
-  {
-    num: "19", chapter: "Sessions & Security", chapterColor: ORANGE,
-    tag: "Protection", tagColor: RED, icon: "🛡️",
-    title: "Security Essentials",
-    subtitle: "XSS · SQL Injection · CSRF Protection",
-    body: `ការសរសេរកូដឱ្យដើរគឺងាយស្រួល ប៉ុន្តែការសរសេរកូដឱ្យមានសុវត្ថិភាពគឺសំខាន់ជាង ។ យើងត្រូវការពារកម្មវិធីពីការវាយប្រហារចម្បងៗដែល Hacker ប្រើប្រាស់ជាប្រចាំ។`,
-    bullets: [
-      { icon: "🧼", label: "XSS Defense", desc: "Cross-Site Scripting. Always use htmlspecialchars() on output." },
-      { icon: "💉", label: "SQL Injection", desc: "Always use Prepared Statements. NEVER concat variables into SQL." },
-      { icon: "🔑", label: "Password Hashing", desc: "Use password_hash() and password_verify(). NEVER store plain text." },
-      { icon: "🚫", label: "Validation", desc: "Double-check inputs on the server side, not just frontend." },
-    ],
-    code: `<?php
-// 1. Secure Password Hashing
-$password = "secret123";
-$hash = password_hash($password, PASSWORD_BCRYPT);
-
-echo "Hashed: " . substr($hash, 0, 30) . "... \n";
-
-// 2. Verify Login
-if (password_verify("secret123", $hash)) {
-    echo "Access Granted!";
-}
-?>`,
-    output: `Hashed: $2y$10$8Kj...
-Access Granted!`,
-    tip: "ចូរចងចាំថា: 'Never trust user input'. ទិន្នន័យដែលមកពីអ្នកប្រើប្រាស់គឺជាប្រភពនៃគ្រោះថ្នាក់បំផុត!",
-  },
-  {
-    num: "20", chapter: "Sessions & Security", chapterColor: ORANGE,
-    tag: "Design Patterns", tagColor: BLUE, icon: "🏢",
-    title: "Intro to MVC Structure",
-    subtitle: "Model · View · Controller · Prep for Laravel",
-    body: `នៅពេលកម្មវិធីរីកធំ យើងមិនអាចសរសេរអ្វីៗគ្រប់យ៉ាងក្នុង File តែមួយបានទេ ។ **MVC** គឺជាការបែងចែកកូដជា ៣ ផ្នែកដើម្បីងាយស្រួលគ្រប់គ្រង និងត្រៀមខ្លួនសម្រាប់រៀន **Laravel Framework**។`,
-    bullets: [
-      { icon: "📊", label: "Model", desc: "Handles Data and Database logic (PDO stuff)." },
-      { icon: "🎮", label: "Controller", desc: "Handles logic and links Model to View." },
-      { icon: "🖼️", label: "View", desc: "Handles HTML and what the user sees." },
-      { icon: "🗺️", label: "Routing", desc: "Deciding which controller to run based on the URL." },
-    ],
-    code: `<?php
-// simplified MVC structure example
-// 1. Model (Data)
-$model = ["title" => "PHP Course", "students" => 150];
-
-// 2. Controller (Logic)
-$pageTitle = strtoupper($model['title']);
-
-// 3. View (Display)
-echo "<h1> $pageTitle </h1>";
-echo "<p> Total Students: " . $model['students'] . "</p>";
-?>`,
-    output: `<h1> PHP COURSE </h1>
-<p> Total Students: 150 </p>`,
-    tip: "Laravel ប្រើប្រាស់ MVC យ៉ាងសុទ្ធសាធ! បើអ្នកយល់ពី MVC ក្នុងមេរៀននេះ អ្នកនឹងរៀន Laravel លឿនជាងគេ ៥០%!",
-  },
-  {
-    num: "20-L", chapter: "Sessions & Security", chapterColor: ORANGE,
-    tag: "Practice", tagColor: GREEN, icon: "🧪",
-    title: "Lab: Secure Auth System",
-    subtitle: "Password Hashing · Session Login · Protection",
-    body: `ក្នុងមន្ទីរពិសោធន៍ចុងក្រោយនេះ យើងនឹងបង្កើត Backend ចម្បងសម្រាប់ប្រព័ន្ធ Login ដែលមានសុវត្ថិភាព ប្រើទាំងការ Hash Password និងការចងចាំ Session។`,
-    bullets: [
-      { icon: "🔐", label: "Registration", desc: "Create a hashed password for a new user." },
-      { icon: "🛡️", label: "Verification", desc: "Check login attempts against the hashed password." },
-      { icon: "🎫", label: "Session Issue", desc: "Set $_SESSION variables upon successful login." },
-      { icon: "🚪", label: "Guard", desc: "Create a mock dashboard that only displays if logged in." },
-    ],
-    lab: {
-      title: "Building a Secure Password Guard",
-      titleKh: "ការបង្កើតប្រព័ន្ធការពារ Password ដែលមានសុវត្ថិភាព",
-      duration: "60 min",
-      objective: "Understand the professional flow of User Authentication.",
-      steps: [
-        "Create a script that hashes a password using password_hash().",
-        "Implement a login check using password_verify().",
-        "If correct, start session and store 'user_id'.",
-        "Create a 'Profile' logic that only echoes if session exists.",
-        "Implement a 'Logout' button logic that clears sessions."
-      ],
-      code: `<?php
-/**
- * SECURE AUTH LAB
- */
-session_start();
-
-$stored_hash = password_hash("12345", PASSWORD_DEFAULT);
-
-// 1. Simulate Login Request
-$input_pass = "12345"; 
-
-if (password_verify($input_pass, $stored_hash)) {
-    $_SESSION['auth'] = true;
-    $_SESSION['username'] = "Ratha";
-    echo "Login successful!\n";
-}
-
-// 2. Guarded Content
-if (isset($_SESSION['auth'])) {
-    echo "Welcome to your Secure Profile, " . $_SESSION['username'];
-} else {
-    echo "Access Denied. Please Login.";
-}
-?>`,
-      output: `Login successful!
-Welcome to your Secure Profile, Ratha`
-    },
-    code: `<?php
-// Security Sandbox: Test your password hashing here
-$p = "mypassword";
-echo "Hash size: " . strlen(password_hash($p, PASSWORD_DEFAULT)) . " chars";
-?>`,
-    output: `Hash size: 60 chars`,
-    tip: "ចូរកុំប្រើ md5() ឬ sha1() សម្រាប់ Password ឱ្យសោះ ព្រោះវាមិនមានសុវត្ថិភាពទៀតទេ! ត្រូវប្រើ password_hash() ជានិច្ច!",
-  },
-  {
-    num: "21", chapter: "Final Projects", chapterColor: BLUE,
-    tag: "Application", tagColor: GREEN, icon: "🎓",
-    title: "Project 01: Auth System",
-    subtitle: "Login · Register · User Sessions",
-    body: `ក្នុង Project នេះ យើងនឹងបញ្ចូលគ្នាបញ្ចូលគ្នានូវគ្រប់ចំណេះដឹងដែលបានរៀន ។ គោលដៅគឺអនុញ្ញាតឱ្យ User បង្កើត Account និង Login ចូលទៅកាន់ Content ដែលត្រូវបានការពារ។`,
-    bullets: [
-      { icon: "📝", label: "Register", desc: "Form that takes user names and passwords, then hashes and stores them." },
-      { icon: "🔑", label: "Login", desc: "Querying the DB and verifying password hashes to start sessions." },
-      { icon: "🛡️", label: "Access Guard", desc: "Checking for active sessions before showing private pages." },
-      { icon: "📤", label: "Logout", desc: "Safely clearing session data and redirecting to public home." },
-    ],
-    explanation: [
-      { title: "User Flow", desc: "Hacker មិនអាចទស្សន៍ទាយ password បានទេ ព្រោះយើងប្រើ password_hash() ។" },
-      { title: "Session Security", desc: "យើងប្រើ session_regenerate_id() ដើម្បីការពារការលួច Session ID ។" },
-      { title: "UX", desc: "បង្ហាញ Error message ឱ្យចំចំណុចនៅពេល User វាយ Password ខុស ។" }
-    ],
-    code: `<?php
-/**
- * PROJECT: MINI AUTH SERVICE
- */
-$users = []; // Mock DB
-
-// 1. Sign Up
-$pass = "password123";
-$users['ratha'] = password_hash($pass, PASSWORD_DEFAULT);
-
-// 2. Login Logic
-$login_user = 'ratha';
-$login_pass = 'password123';
-
-if (isset($users[$login_user]) && password_verify($login_pass, $users[$login_user])) {
-    echo "Welcome back, $login_user! \n";
-} else {
-    echo "Invalid Credentials.";
-}
-?>`,
-    output: `Welcome back, ratha!`,
-    tip: "ចូរប្រើ password_verify() ព្រោះវាការពារពី 'Timing Attacks' ដែល Hacker អាចប្រើដើម្បីលួច Password!",
-  },
-  {
-    num: "22", chapter: "Final Projects", chapterColor: BLUE,
-    tag: "Data Driven", tagColor: PINK, icon: "📰",
-    title: "Project 02: Simple Blog",
-    subtitle: "CRUD Operations · Database Listing · Content Management",
-    body: `Blog គឺជា Project ដ៏ល្អបំផុតសម្រាប់រៀន CRUD ។ យើងនឹងរៀនពីរបៀបបង្ហាញព័ត៌មានពី Database ទៅកាន់ Screen និងរបៀបបង្កើតព័ត៌មានថ្មីៗ។`,
-    bullets: [
-      { icon: "📜", label: "Read Posts", desc: "SELECT * FROM posts and display them as a list." },
-      { icon: "✍️", label: "Write Posts", desc: "Form that captures Title and Content into the Database." },
-      { icon: "🖼️", label: "Images", desc: "Allow users to upload featured images for their blogs." },
-      { icon: "💬", label: "Comments", desc: "Linking comments to a specific post_id (One-to-Many)." },
-    ],
-    code: `<?php
-// Blog Engine Schema Mock
-$posts = [
-    ["id" => 1, "title" => "PHP 8.3 is great!", "author" => "Ratha"],
-    ["id" => 2, "title" => "Why learn Laravel?", "author" => "Admin"]
-];
-
-echo "<h3> Latest Blogs </h3>";
-foreach ($posts as $p) {
-    echo "- " . $p['title'] . " by " . $p['author'] . "\n";
-}
-?>`,
-    output: `<h3> Latest Blogs </h3>
-- PHP 8.3 is great! by Ratha
-- Why learn Laravel? by Admin`,
-    tip: "ចង់ឱ្យ Blog មានជំនាញ? ត្រូវបន្ថែម Column 'Created_at' ដើម្បីតម្រៀប Blog តាមពេលវេលា!",
-  },
-  {
-    num: "23", chapter: "Final Projects", chapterColor: BLUE,
-    tag: "Commerce", tagColor: ORANGE, icon: "🛒",
-    title: "Project 03: E-Commerce",
-    subtitle: "Product Catalog · Cart Logic · Order Processing",
-    body: `E-Commerce គឺជាកម្មវិធីស្មុគស្មាញបំផុតដែលត្រូវការការគ្រប់គ្រងទិន្នន័យបានល្អបំផុត ។ យើងនឹងផ្តោតលើការបង្ហាញទំនិញ និងការគ្រប់គ្រងចំនួនទំនិញ (Stock)។`,
-    bullets: [
-      { icon: "🛍️", label: "Catalog", desc: "Displaying products with names, prices, and stock counts." },
-      { icon: "🛒", label: "Cart Session", desc: "Using $_SESSION['cart'] to remember items chosen by user." },
-      { icon: "💳", label: "Checkout", desc: "Processing the total cost and saving the order in Database." },
-      { icon: "📊", label: "Admin Panel", desc: "A place for admins to update prices and stock levels." },
-    ],
-    code: `<?php
-// E-commerce logic: Cart Simulator
-session_start();
-$products = [
-    "MacBook" => 1200,
-    "iPhone"  => 800
-];
-
-// Add to cart
-$_SESSION['cart'][] = "MacBook";
-$_SESSION['cart'][] = "iPhone";
-
-$total = 0;
-foreach($_SESSION['cart'] as $item) {
-    $total += $products[$item];
-}
-
-echo "Items in Cart: " . count($_SESSION['cart']) . "\n";
-echo "Total Bill: $" . $total;
-?>`,
-    output: `Items in Cart: 2
-Total Bill: $2000`,
-    tip: "ចូរប្រើ Decimal(10,2) សម្រាប់តម្លៃលុយក្នុង Database ដើម្បីភាពត្រឹមត្រូវបំផុត!",
-  },
-  {
-    num: "24", chapter: "Final Projects", chapterColor: BLUE,
-    tag: "Review", tagColor: BLUE, icon: "🎯",
-    title: "Project Roadmap",
-    subtitle: "Choosing your project · Coding Standards · Optimization",
-    body: `យើងបានរៀនបានច្រើនណាស់ហើយ! ជំហានបន្ទាប់គឺការរើស Project មួយដែលអ្នកចូលចិត្តជាងគេ ហើយសរសេរវាឱ្យចប់សព្វគ្រប់។ ចូរប្រកាន់ខ្ជាប់នូវស្តង់ដារកូដល្អៗ។`,
-    bullets: [
-      { icon: "🎯", label: "Focus", desc: "Start small, then add features. Don't try to build Facebook in 1 day." },
-      { icon: "🧹", label: "Refactoring", desc: "Keep your functions small. Don't repeat yourself (DRY)." },
-      { icon: "📂", label: "Structure", desc: "Organize your files: /assets, /inc, /pages, /config." },
-      { icon: "🚀", label: "To Laravel", desc: "Once you master these, you are 100% ready for Laravel!" },
-    ],
-    code: `<?php
-echo "Final Achievement Unlocked: PHP Master Level 1! \n";
-echo "Roadmap to Laravel: GET -> DB -> SESSIONS -> MVC -> SUCCESS!";
-?>`,
-    output: `Final Achievement Unlocked: PHP Master Level 1! 
-Roadmap to Laravel: GET -> DB -> SESSIONS -> MVC -> SUCCESS!`,
-    tip: "កុំឈប់ត្រឹមនេះ! ចូរចាប់ផ្តើមជាមួយ Laravel ដើម្បីបង្កើត Project ឱ្យបានលឿន និងមានសុវត្ថិភាពខ្ពស់!",
-  },
 ];
 
 
@@ -1476,10 +868,6 @@ const CHAPTERS: ChapterData[] = [
   { name: "Foundations", color: BLUE, nums: ["01", "02", "03", "04", "04-L"], icon: "🧱" },
   { name: "Operators & Flow", color: ORANGE, nums: ["05", "06", "07", "08", "08-L"], icon: "⚙️" },
   { name: "Functions & Arrays", color: PINK, nums: ["09", "10", "11"], icon: "📦" },
-  { name: "Web & Forms", color: TEAL, nums: ["12", "13", "14", "14-L"], icon: "🌐" },
-  { name: "Database & CRUD", color: PURPLE, nums: ["15", "16", "17", "17-L"], icon: "💾" },
-  { name: "Sessions & Security", color: ORANGE, nums: ["18", "19", "20", "20-L"], icon: "🔒" },
-  { name: "Final Projects", color: BLUE, nums: ["21", "22", "23", "24"], icon: "🎯" },
 ];
 
 // ── SYNTAX HIGHLIGHTER ────────────────────────────────────────
