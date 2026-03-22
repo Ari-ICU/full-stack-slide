@@ -383,6 +383,62 @@ Created: database/migrations/2026_01_01_create_products_table.php`,
     project: null,
   },
   {
+    id: "m02b", num: "02B", section: "Section 2 (cont.)", hours: "1.5h",
+    title: "Docker Fundamentals for Backend",
+    titleKh: "មូលដ្ឋានគ្រឹះ Docker សម្រាប់ Backend",
+    goal: "Set up a professional Docker environment and understand containerization basics",
+    goalKh: "តំឡើង Docker Environment និងយល់ពីមូលដ្ឋានគ្រឹះនៃ Containerization",
+    color: "#4d9fff",
+    badge: "DEVOPS",
+    topics: [
+      { en: "Docker Desktop Setup (Mac/Windows)", kh: "ការតំឡើង Docker Desktop" },
+      { en: "Images vs Containers — the 'Class vs Object' analogy", kh: "ស្វែងយល់ពី Images និង Containers" },
+      { en: "VirtioFS & Resource Settings for Performance", kh: "ការកំណត់ Resource ដើម្បីបង្កើនល្បឿន Docker" },
+      { en: "Docker Dashboard — monitoring logs and stats", kh: "ការគ្រប់គ្រង Containers តាមរយៈ Dashboard" },
+    ],
+    lab: {
+      title: "Preparing the Docker Engine",
+      titleKh: "ការរៀបចំ Docker Engine",
+      duration: "45 min",
+      objective: "Install Docker and run your first generic container to verify setup",
+      steps: [
+        "Download and install Docker Desktop (macOS/Windows)",
+        "Enable 'VirtioFS' in Settings -> General for 5x faster file access",
+        "Allocate at least 4GB RAM and 4 CPUs to Docker",
+        "Open terminal and run: docker --version",
+        "Pull and run a test: docker run hello-world",
+        "Inspect the running container in the Docker Desktop UI",
+      ],
+      code: `// ── 1. Check if Docker is healthy ──────────────
+docker --version
+docker info  // Detailed system information
+
+// ── 2. Run your first container (The 'Class' → 'Object' flow) ──
+docker pull hello-world    // Download the image (The Class)
+docker run hello-world     // Create a container (The Object)
+
+// ── 3. Essential Docker CLI ────────────────────
+docker ps       // List running containers
+docker ps -a    // List ALL containers (including stopped)
+docker images   // List downloaded images
+docker stop [id] // Stop a container
+docker rm [id]   // Delete a container record`,
+      output: `docker --version
+Docker version 27.2.0, build 3f42231
+
+docker run hello-world
+Hello from Docker!
+This message shows that your installation appears to be working correctly.`,
+    },
+    concepts: [
+      { term: "Docker Image", def: "A read-only template that contains the instructions for creating a Docker container. Think of it as a 'snapshot' of a tiny OS with PHP installed." },
+      { term: "Docker Container", def: "A runnable instance of an image. You can have 10 containers running from the same 1 image simultaneously." },
+      { term: "VirtioFS", def: "A modern file system for Docker Desktop on macOS that drastically speeds up the communication between your code folder and the container." },
+    ],
+    tip: "Docker consumes a lot of power. Always quit Docker Desktop when you are finished developing to save your battery life and free up your RAM.",
+    project: null,
+  },
+  {
     id: "m03", num: "03", section: "Section 3", hours: "1.5h",
     title: "Docker & Laravel Sail",
     titleKh: "Docker & Laravel Sail",
@@ -403,51 +459,36 @@ Created: database/migrations/2026_01_01_create_products_table.php`,
       objective: "Spin up PHP + MySQL + Redis using Sail and connect the database",
       steps: [
         "Install Docker Desktop and make sure it is running",
-        "Run: cp .env.example .env  (create your environment file)",
-        "Run: php artisan key:generate  (generate APP_KEY)",
-        "Run: composer require laravel/sail --dev",
-        "Run: php artisan sail:install  (select mysql, redis, mailpit)",
-        "Run: ./vendor/bin/sail up -d  (start all containers)",
         "Verify: docker ps — now see 4 Sail containers running",
         "Run: ./vendor/bin/sail artisan migrate",
       ],
-      code: `# ── STEP 1: Environment setup (ALWAYS do this first!) ────────
-cp .env.example .env
-php artisan key:generate
-# → Application key set successfully.
-# APP_KEY=base64:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      code: `# ── STEP 1: Fast installation (Docker PATH) ────────
+curl -s "https://laravel.build/my-shop" | bash
+# This automatically creates the folder, .env, and Sail config!
 
-# ── STEP 2: Install Sail ──────────────────────────────────────
-composer require laravel/sail --dev
-
-# Interactive service selection
-php artisan sail:install
-# Choose: mysql, redis, mailpit
-
-# ── STEP 3: Start all containers ─────────────────────────────
+# ── STEP 2: Start all containers ─────────────────────────────
+cd my-shop
 ./vendor/bin/sail up -d
+# If your machine is fast, this takes < 30 seconds.
 
-# Verify 4 containers are running (NOT just your k8s cluster)
-docker ps
+# ── Useful tip: Alias Sail ──────────────────────────────────
+alias sail="./vendor/bin/sail"
+# Now you can just use 'sail artisan' instead of the long path
+
+# ── STEP 3: Verify Running Services ─────────────────────────
+sail ps
 # CONTAINER ID   IMAGE              STATUS
-# abc123         sail-8.4/app       Up 2 minutes  ← PHP
-# def456         mysql/mysql-server Up 2 minutes  ← Database
-# ghi789         redis:alpine       Up 2 minutes  ← Cache/Queue
-# jkl012         axllent/mailpit    Up 2 minutes  ← Mail trap
+# abc123         sail-8.4/app       Up 2 minutes  ← PHP 8.4
+# def456         mysql/mysql-server Up 2 minutes  ← MySQL 8.0
+# ghi789         redis:alpine       Up 2 minutes  ← Redis Cache
+# jkl012         axllent/mailpit    Up 2 minutes  ← Mail Testing
 
-# ── Common Troubleshooting ────────────────────────────────────
-# If Sail says "not running" → you forgot step 3 above!
-# If port conflict on 3306 → edit DB_PORT in .env to 3307
-# If port conflict on 80   → edit APP_PORT in .env to 8080
-
-# ── STEP 4: Run migrations inside container ───────────────────
-./vendor/bin/sail artisan migrate
-
-# ── Other useful Sail commands ────────────────────────────────
-./vendor/bin/sail artisan tinker
-./vendor/bin/sail composer require package/name
-./vendor/bin/sail shell          # open bash inside PHP container
-./vendor/bin/sail down           # stop all containers`,
+# ── STEP 4: Common Commands ─────────────────────────────────
+sail artisan migrate    # Migrate inside container
+sail artisan tinker     # Test PHP logic inside container
+sail composer require   # Install packages inside container
+sail npm run dev        # Build Frontend inside container
+sail down               # STOP and DELETE all containers`,
       output: `# After cp .env.example .env && php artisan key:generate:
 INFO  Application key set successfully.
 
@@ -478,6 +519,75 @@ jkl012         mailpit         Up 2 minutes`,
       { term: ".env is required first", def: "Always run: cp .env.example .env && php artisan key:generate BEFORE sail up. Without APP_KEY set, Laravel refuses to start inside the container." },
     ],
     tip: "Screen-share the docker ps output during class. Seeing 4 running containers is a powerful moment — it makes abstract concepts concrete instantly.",
+    project: null,
+  },
+  {
+    id: "m03b", num: "03B", section: "Section 3 (cont.)", hours: "1.5h",
+    title: "Advanced Sail & Customizations",
+    titleKh: "ការកំណត់ Sail & Docker កម្រិតខ្ពស់",
+    goal: "Customize your stack — adding services and changing port mappings",
+    goalKh: "ប្តូរការកំណត់ Docker Stack — បន្ថែម Services និងផ្លាស់ប្តូរ Port Mappings",
+    color: "#4d9fff",
+    badge: "DEVOPS",
+    topics: [
+      { en: "Inside docker-compose.yml — structure and syntax", kh: "ស្វែងយល់ពី docker-compose.yml" },
+      { en: "Port Mappings — dealing with 3306 conflicts", kh: "ការប្តូរ Port Mappings ដើម្បីបញ្ចៀសការជាន់គ្នា" },
+      { en: "Docker Volumes — where your DB data is stored", kh: "Docker Volumes — កន្លែងផ្ទុកទិន្នន័យ Database" },
+      { en: "Customizing PHP Version and Runtime", kh: "ការប្តូរជំនាន់ PHP និង Runtime" },
+    ],
+    lab: {
+      title: "Customizing your Cluster",
+      titleKh: "ការប្តូរការកំណត់ក្នុង Cluster",
+      duration: "60 min",
+      objective: "Change the default MySQL port and persist DB data across restarts",
+      steps: [
+        "Open docker-compose.yml and find the 'mysql' service",
+        "Change the external port from 3306 to 3307 in .env",
+        "Add 'Meilisearch' to your stack using artisan sail:add",
+        "Inspect the 'sail-mysql' volume in the Docker Dashboard",
+        "Switch PHP version from 8.4 to 8.2 in the runtime section",
+        "Run: sail build --no-cache after changing versions",
+      ],
+      code: `// ── 1. Changing Ports (Avoid "Port already in use") ──
+// Open .env file:
+FORWARD_DB_PORT=3307  // Local machine port 3307 → Docker 3306
+APP_PORT=8080         // Local machine port 8080 → Docker 80
+
+// ── 2. The Power of volumes ────────────────────────
+// Inside docker-compose.yml:
+services:
+  mysql:
+    volumes:
+      - 'sail-mysql:/var/lib/mysql' // This spans restarts!
+
+// ── 3. Changing PHP Versions ──────────────────────
+// Open docker-compose.yml, change the 'context':
+build:
+    context: ./vendor/laravel/sail/runtimes/8.2 // Change to 8.2
+
+// Then run:
+sail build --no-cache
+sail up -d`,
+      output: `sail artisan sail:add
+Which services would you like to install? [mysql]:
+  [0] mysql
+  [1] pgsql
+  [2] mariadb
+  [3] redis
+  [4] memcached
+  [5] meilisearch
+  [6] typesense
+  [7] minio
+  [8] mailpit
+  [9] selenium
+ > 5`,
+    },
+    concepts: [
+      { term: "Port Forwarding", def: "Mapping a port on your physical computer (Host) to a port inside the virtual container (Guest). Standard for DB is 3306:3306." },
+      { term: "Docker Volume", def: "A special folder managed by Docker that survives even if you delete the container. It is essential for database files; otherwise, all data is lost when you stop the container." },
+      { term: "docker-compose.yml", def: "The 'Blueprint' file. It tells Docker exactly which images to use and how they should talk to each other." },
+    ],
+    tip: "If your MySQL data disappears, you likely deleted your Docker Volume accidentally. Always use 'sail down --volumes' with caution!",
     project: null,
   },
   {
@@ -614,7 +724,7 @@ Route::resource('products', ProductController::class);
 // ── Dynamic URL Parameters ─────────────────────
 Route::get('/category/{slug}', function (string $slug) {
     return "Viewing category: {$slug}";
-})->where('slug', '[a-z\-]+'); // only lowercase + dashes
+})->where('slug', '[a-z\\-]+'); // only lowercase + dashes
 
 // ── Route Groups with Middleware ───────────────
 Route::middleware(['auth'])->prefix('admin')->group(function () {
@@ -661,92 +771,175 @@ public function show(Product $product)
   },
   {
     id: "m06", num: "06", section: "Section 6", hours: "1.5h",
-    title: "Database Design & Migrations",
-    titleKh: "Database Design & Migrations",
-    goal: "Design your database schema using version-controlled migrations",
-    goalKh: "ចម្លង Database Schema ដោយ Migrations — version control សម្រាប់ Database",
-    color: "#4d9fff",
+    title: "Migrations & Schema Master",
+    titleKh: "ការគ្រប់គ្រង Database តាមរយៈ Migrations",
+    goal: "Master the full lifecycle of version-controlled database schemas in Laravel 12",
+    goalKh: "ស្ទាត់ជំនាញលើការគ្រប់គ្រង Database Schema ជាមួយ Migrations",
+    color: "#46a1ff",
     badge: "DATABASE",
     topics: [
-      { en: "Migration lifecycle — up(), down(), rollback", kh: "Migration — up(), down(), rollback, fresh" },
-      { en: "Schema Builder — column types, indexes, defaults", kh: "Schema Builder — Column Types, Indexes, Defaults" },
-      { en: "Foreign Keys & Database Relationships", kh: "Foreign Keys & Relationship ក្នុង Database" },
-      { en: "Seeders & Factories — realistic fake data", kh: "Seeders & Factories — ការបង្កើតទិន្នន័យ Fake" },
+      { en: "Anonymous Migrations (Laravel 12 standard)", kh: "Anonymous Migrations (ស្តង់ដារ Laravel 12)" },
+      { en: "Column Types — from simple strings to JSON & UUIDs", kh: "ប្រភេទ Column — ពី String ធម្មតា ដល់ JSON & UUID" },
+      { en: "Database Indexes — Primary, Unique, and Composite", kh: "ការបង្កើត Index — Primary, Unique, និង Composite" },
+      { en: "Migration Lifecycle — fresh, refresh, status, and rollback", kh: "Lifecycle នៃ Migration — fresh, refresh, status, rollback" },
+      { en: "Artisan CLI Master — status, reset, refresh, monitor", kh: "ស្ទាត់ជំនាញ Artisan CLI សម្រាប់គ្រប់គ្រង Database" },
     ],
     lab: {
-      title: "Shop Database Schema Design",
-      titleKh: "ការរចនា Schema សម្រាប់ Shop",
+      title: "Designing the Master Schema",
+      titleKh: "ការរចនា Schema មេសម្រាប់ Shop",
       duration: "60 min",
-      objective: "Create products and categories tables with foreign key relationships",
+      objective: "Build a multi-table schema with complex column types and constraints",
       steps: [
-        "Run: php artisan make:migration create_categories_table",
-        "Run: php artisan make:migration create_products_table",
-        "Define columns including the foreign key category_id",
-        "Run: php artisan migrate",
-        "Create a CategoryFactory and ProductFactory",
-        "Run: php artisan db:seed to populate 50 products",
+        "Create an anonymous migration for the categories table",
+        "Add a slug column with a unique index: $table->string('slug')->unique()",
+        "Create the products table with decimal(10,2) and boolean defaults",
+        "Use migrate:status to check the version history",
+        "Practice a partial rollback with migrate:rollback --step=1",
+        "Reset the entire database with migrate:fresh --seed",
       ],
-      code: `// database/migrations/create_categories_table.php
-public function up(): void
-{
-    Schema::create('categories', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('slug')->unique();
-        $table->text('description')->nullable();
-        $table->boolean('active')->default(true);
-        $table->timestamps();
-    });
-}
+      code: `// Laravel 12 Anonymous Migration style
+use Illuminate\\Database\\Migrations\\Migration;
+use Illuminate\\Database\\Schema\\Blueprint;
+use Illuminate\\Support\\Facades\\Schema;
 
-// database/migrations/create_products_table.php
-public function up(): void
-{
-    Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('category_id')
-              ->constrained()        // references categories.id
-              ->cascadeOnDelete();   // delete products if category deleted
-        $table->string('name');
-        $table->string('slug')->unique();
-        $table->text('description')->nullable();
-        $table->decimal('price', 10, 2);
-        $table->integer('stock')->default(0);
-        $table->string('image')->nullable();
-        $table->boolean('active')->default(true);
-        $table->timestamps();
-        $table->softDeletes();       // adds deleted_at column
-    });
-}
+return new class extends Migration {
+    public function up(): void {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id(); // BigIncrements ('id')
+            
+            // Relational Keys
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            
+            // Core Data
+            $table->string('sku')->unique();
+            $table->string('name');
+            $table->decimal('price', 12, 2)->default(0.00);
+            $table->integer('stock_level')->default(0);
+            
+            // Advanced Types
+            $table->json('attributes')->nullable(); // Store dynamic features
+            $table->boolean('is_featured')->default(false)->index();
+            
+            $table->timestamps();
+            $table->softDeletes(); // Adds deleted_at
+        });
+    }
 
-// database/factories/ProductFactory.php
-public function definition(): array
-{
-    return [
-        'category_id' => Category::factory(),
-        'name'        => fake()->words(3, true),
-        'slug'        => fake()->unique()->slug(),
-        'price'       => fake()->randomFloat(2, 5, 999),
-        'stock'       => fake()->numberBetween(0, 200),
-        'active'      => true,
-    ];
-}`,
+    public function down(): void {
+        Schema::dropIfExists('products');
+    }
+};
+
+// ── Artisan CLI Masterclass ───────────────────────
+php artisan make:migration create_users_table # Local Path
+sail artisan make:migration create_users_table # Docker Path (✓)
+
+php artisan migrate         # Run all pending migrations
+sail artisan migrate         # → Run INSIDE Docker container
+
+php artisan migrate:status   # View Ran/Pending/Batch history
+sail artisan migrate:status  # → View history within Docker cluster`,
       output: `INFO  Running migrations.
-  2026_01_01_create_categories_table .... 12ms DONE
-  2026_01_01_create_products_table ...... 18ms DONE
-
-php artisan db:seed
-  Database\\Seeders\\DatabaseSeeder running
-  ✓ 10 categories created
-  ✓ 50 products created`,
+  2026_01_01_000001_create_categories_table ... 14ms DONE
+  2026_01_01_000002_create_products_table ..... 21ms DONE
+  
+php artisan migrate:status
++------+-------------------------------------------+-------+
+| Ran? | Migration                                 | Batch |
++------+-------------------------------------------+-------+
+| Yes  | 2026_01_01_000001_create_categories_table | 1     |
+| Yes  | 2026_01_01_000002_create_products_table   | 1     |
++------+-------------------------------------------+-------+`,
     },
     concepts: [
-      { term: "Migration", def: "A PHP class describing one schema change. Run forward with migrate, undo with migrate:rollback. Your schema has a complete history." },
-      { term: "foreignId()", def: "$table->foreignId('category_id')->constrained() is shorthand for creating a FK column + constraint to the categories table." },
-      { term: "Soft Deletes", def: "softDeletes() adds a deleted_at column. Product::delete() sets it, not removes the row. Product::withTrashed() includes them in queries." },
-      { term: "Factory", def: "A class that generates fake but realistic model data for seeding and testing. fake()->name() gives a fake person's name." },
+      { term: "Anonymous Migration", def: "A feature that returns an anonymous class instance. It prevents class name collisions if you have multiple migrations with the same name (e.g. adding columns to the same table twice)." },
+      { term: "migrate:fresh", def: "A destructive but useful command in local dev. It drops all tables and reruns everything from scratch. Always run with --seed to repopulate your test data." },
+      { term: "Schema Builder", def: "A fluent interface provided by Laravel to interact with the database engine without writing raw SQL. It works across MySQL, PostgreSQL, SQLite, and SQL Server." },
+      { term: "Batching", def: "Every time you run 'migrate', Laravel groups those migrations into a 'batch'. A rollback will undo the entire last batch, not just one file." },
     ],
-    tip: "Design the full ERD on the whiteboard before opening a code editor. The 20 minutes spent planning the schema saves hours of painful migrations later.",
+    tip: "Always use nullable() for columns that aren't strictly required. Changing a column to nullable later via another migration is much harder than doing it right the first time.",
+    project: null,
+  },
+  {
+    id: "m06b", num: "06B", section: "Section 6 (cont.)", hours: "1.5h",
+    title: "Advanced Schema & Seeding",
+    titleKh: "Schema កម្រិតខ្ពស់ និងការ Seeding",
+    goal: "Implement data integrity strategies and automate the generation of massive datasets",
+    goalKh: "អនុវត្តយុទ្ធសាស្ត្រទិន្នន័យ និងការបង្កើតទិន្នន័យគំរូយ៉ាងច្រើនដោយស្វ័យប្រវត្តិ",
+    color: "#46a1ff",
+    badge: "DATABASE",
+    topics: [
+      { en: "Foreign Key constraints & Cascade strategies", kh: "Foreign Key constraints & Cascade strategies" },
+      { en: "Composite Indexes for Query Optimization", kh: "Composite Indexes ដើម្បីបង្កើនល្បឿន Query" },
+      { en: "Model Factories — generating 1,000s of realistic records", kh: "Model Factories — ការបង្កើតទិន្នន័យ Fake រាប់ពាន់" },
+      { en: "Database Seeders — planning the initial app state", kh: "Database Seeders — ការរៀបចំទិន្នន័យដំបូងសម្រាប់ App" },
+    ],
+    lab: {
+      title: "Industrial-Strength Seeding",
+      titleKh: "ការបង្កើតទិន្នន័យ Fake កម្រិតអាជីព",
+      duration: "60 min",
+      objective: "Connect products to random users with realistic names and realistic timestamps",
+      steps: [
+        "Customize UserFactory to generate specific role-based users",
+        "Scaffold with make:factory then define attributes using fake()",
+        "Use the sequence() method to create alternating data types",
+        "Set up DatabaseSeeder to call multiple specific seeders",
+        "Run migrations and seeding in a single command",
+        "Verify the new data in a DB manager (TablePlus or phpMyAdmin)",
+      ],
+      code: `// 1. Advanced Factory with Relationships
+// database/factories/ProductFactory.php
+public function definition(): array {
+    return [
+        'category_id' => Category::factory(), // Auto-creates a category!
+        'name'        => fake()->unique()->sentences(1, true),
+        'sku'         => 'PROD-' . fake()->unique()->postcode(),
+        'price'       => fake()->randomFloat(2, 5, 2000),
+        'stock_level' => fake()->numberBetween(0, 500),
+        'attributes'  => ['color' => fake()->safeColorName()],
+        'created_at'  => fake()->dateTimeBetween('-1 year', 'now'),
+    ];
+}
+
+// 2. Seeding Strategy
+// database/seeders/DatabaseSeeder.php
+public function run(): void {
+    // a. Create Fixed Data (for dev testing)
+    Category::create(['name' => 'Laptops', 'slug' => 'laptops']);
+    
+    // b. Create Dynamic Volume
+    Category::factory(10)->create()->each(function ($cat) {
+        Product::factory(20)->create([
+            'category_id' => $cat->id
+        ]);
+    });
+}
+
+// ── Artisan Generation & Seeding ──────────────────
+# 1. Scaffolding
+sail artisan make:factory ProductFactory
+sail artisan make:seeder CategorySeeder
+
+# 2. Executing
+sail artisan db:seed                        # Run DatabaseSeeder
+sail artisan db:seed --class=UserSeeder    # Run specific seeder
+sail artisan migrate:fresh --seed         # THE DAILY RESET (Wipe, Migrate, Seed)`,
+      output: `php artisan migrate:fresh --seed
+INFO  Dropping all tables.
+INFO  Running migrations.
+INFO  Seeding database.
+  √ Categories Table Seeded (10 records)
+  √ Products Table Seeded (200 records)
+  
+Database seeding completed successfully.`,
+    },
+    concepts: [
+      { term: "Consolidation", def: "Grouping your seeding logic. DatabaseSeeder should be the orchestrator that calls other specific seeders using $this->call()." },
+      { term: "Faker Library", def: "A massive PHP library integrated into Laravel that generates realistic names, addresses, credit cards, images, and long-form text (fake() helper)." },
+      { term: "Factory Sequencing", def: "Using Product::factory()->count(10)->sequence(['active' => true], ['active' => false]) to alternate states during generation." },
+      { term: "Composite Index", def: "$table->index(['status', 'created_at']) — An index that spans two columns. Crucial for performance when you filter by status AND sort by date." },
+    ],
+    tip: "Artisan crafts the 'shell' of your factories with make:factory, but it's YOUR job to manually define the logic in the definition() method. Think of Artisan as the architect and Faker as the artist who paints the data.",
     project: null,
   },
   {
