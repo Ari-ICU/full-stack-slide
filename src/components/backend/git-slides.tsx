@@ -1,639 +1,697 @@
-"use client";
-
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useSearchParams, useRouter } from 'next/navigation';
-import {
-  GitBranch, Terminal, Code2, ChevronLeft, ChevronRight,
-  ArrowLeft, Menu, X, ChevronDown, Sparkles, Play,
-  RefreshCw, Layers, Share2, Shield, GitMerge,
-  GitPullRequest, Globe, Lock, HardDrive, Copy,
-  CheckCircle2, RotateCcw, Box, StickyNote, BookOpen
+'use client';
+import { useState, useCallback } from 'react';
+import { 
+  Sprout, Settings, RefreshCcw, Search, GitBranch, 
+  Globe, RotateCcw, EyeOff, Beaker, Calendar, 
+  BookOpen, Monitor, Lightbulb, CheckCircle2,
+  LucideIcon 
 } from 'lucide-react';
 
-/* ══════════════════════════════════════════════════════════════════
-   TYPES
-══════════════════════════════════════════════════════════════════ */
-
-interface Concept { label: string; desc: string }
-interface Slide {
-  id: string; chapter: string; title: string; subtitle: string;
-  section?: string;
-  icon: React.ElementType; accent: string;
-  concepts: Concept[];
-  variables?: Concept[];
-  tip: string; lab: string; result: string;
-  code: string; filename: string; terminal: string; terminalOutput: string;
+// ─── TYPES ────────────────────────────────────────────────────
+interface Command {
+  cmd: string;
+  desc: string;
+  output: string;
 }
 
-type DisplayPage = Slide & { subType: 'concept' | 'variables' | 'lab' };
+interface FlowItem {
+  step: string;
+  cmd: string;
+  label: string;
+  desc: string;
+  color: string;
+}
 
-const CHAPTERS = [
-  { id: 'foundations', label: 'គ្រឹះ Git',         num: '01', color: '#4ade80' },
-  { id: 'branching',   label: 'Branch Management', num: '02', color: '#38bdf8' },
-  { id: 'merging',     label: 'Merge & Conflict',  num: '03', color: '#fb923c' },
-  { id: 'remotes',     label: 'Remote & PR Flow',  num: '04', color: '#e879f9' },
-  { id: 'mastery',     label: 'Advanced Git',      num: '05', color: '#f87171' },
+interface GitSection {
+  id: string;
+  num: string;
+  label: string;
+  icon: LucideIcon;
+  color: string;
+  title: string;
+  khmer: string;
+  subtitle: string;
+  desc: string;
+  concept?: {
+    without: string[];
+    with: string[];
+  };
+  objectives?: string[];
+  commands?: Command[];
+  flow?: FlowItem[];
+  tip?: string;
+  ignoreContent?: string;
+  steps?: { n: number; task: string; cmd: string }[];
+  assignment?: { title: string; items: string[] };
+  schedule?: { time: string; type: string; icon: LucideIcon; items: string[] }[];
+  next?: string[];
+  integration?: { stack: string; desc: string }[];
+}
+
+// ─── GLOBAL STYLES ────────────────────────────────────────────
+const G = `
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Khmer:wght@400;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --ink:#000000;
+  --paper:#ffffff;
+  --cream:#f5f5f5;
+  --warm:#f8f9fa;
+  --rule:rgba(0,0,0,0.15);
+  --faint:rgba(0,0,0,0.05);
+  --ghost:rgba(0,0,0,0.02);
+  --red:#c0392b;
+  --green:#16a34a;
+  --blue:#0284c7;
+  --amber:#d97706;
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'Courier Prime',Courier,monospace;
+  --khmer:'Noto Sans Khmer',sans-serif;
+}
+body{background:var(--paper);color:var(--ink);}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--rule);}
+button{cursor:pointer;border:none;outline:none;background:none;font-family:var(--mono);}
+
+/* Dotted grid paper texture */
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle, #c8b89840 1px, transparent 1px);
+  background-size:24px 24px;
+}
+
+@keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes stamp{0%{transform:rotate(-2deg) scale(1.2);opacity:0}100%{transform:rotate(-2deg) scale(1);opacity:1}}
+
+.section-card{transition:border-color 0.2s,box-shadow 0.2s;}
+.section-card:hover{box-shadow:4px 4px 0 var(--rule)!important;}
+.cmd-line:hover{background:var(--faint)!important;}
+.nav-tab:hover{background:var(--warm)!important;}
+.nav-tab.active{background:var(--ink)!important;color:var(--paper)!important;}
+`;
+
+// ─── DATA ─────────────────────────────────────────────────────
+const SECTIONS: GitSection[] = [
+  {
+    id:'intro',
+    num:'01',
+    label:'What is Git?',
+    icon:Sprout,
+    color:'var(--green)',
+    title:'What is Git?',
+    khmer:'Git ជាអ្វី?',
+    subtitle:'Version Control System',
+    desc:'Git = Version Control System ─ ប្រព័ន្ធ track ការផ្លាស់ប្តូរ code ─ Save history ─ undo mistakes ─ collaborate with teams ─ industry standard tool used worldwide',
+    concept:{
+      without:[
+        'project-final.zip',
+        'project-final-v2.zip',
+        'project-REAL-final.zip',
+        'project-final-real-final-v2.zip 😅',
+      ],
+      with:[
+        'git log → clean history ✔',
+        'git diff → see changes ✔',
+        'git revert → undo safely ✔',
+        'git branch → parallel work ✔',
+      ],
+    },
+    objectives:[
+      'Understand version control concepts',
+      'Track code changes professionally',
+      'Collaborate with teammates via Git',
+      'Use Git + GitHub together',
+    ],
+    tip:'Git ≠ GitHub ─ Git is the tool on your machine ─ GitHub is the cloud platform that hosts your repos',
+  },
+  {
+    id:'setup',
+    num:'02',
+    label:'Install & Setup',
+    icon:Settings,
+    color:'var(--blue)',
+    title:'Install & Setup',
+    khmer:'ការដំឡើង',
+    subtitle:'Configure Git on your machine',
+    desc:'ដំឡើង Git ម្តងក្នុងម្តង computer ─ Configure identity ─ Git uses your name + email for every commit ─ shows in history forever',
+    commands:[
+      {cmd:'git --version',             desc:'Check if Git is installed',                  output:'git version 2.43.0'},
+      {cmd:'git config --global user.name "Your Name"', desc:'Set your display name',     output:'(no output = success)'},
+      {cmd:'git config --global user.email "you@email.com"',desc:'Set your email',        output:'(no output = success)'},
+      {cmd:'git config --list',         desc:'Verify your settings',                       output:'user.name=Your Name\nuser.email=you@email.com'},
+    ],
+    tip:'Use the same email as your GitHub account ─ Git links commits to your GitHub profile',
+  },
+  {
+    id:'workflow',
+    num:'03',
+    label:'Basic Workflow',
+    icon:RefreshCcw,
+    color:'var(--red)',
+    title:'The Core Workflow',
+    khmer:'ការប្រើប្រាស់មូលដ្ឋាន',
+    subtitle:'init → add → commit',
+    desc:'Git workflow = 3 states ─ Working Directory (edit) → Staging Area (select) → Repository (save) ─ understand this = master Git',
+    flow:[
+      {step:'1',cmd:'git init',             label:'Initialize',  desc:'Create .git/ folder',         color:'var(--green)'},
+      {step:'2',cmd:'git add .',            label:'Stage',       desc:'Mark files for commit',        color:'var(--amber)'},
+      {step:'3',cmd:'git commit -m "msg"',  label:'Commit',      desc:'Save snapshot to history',     color:'var(--blue)'},
+    ],
+    commands:[
+      {cmd:'git init',                    desc:'Start a new Git repository',          output:'Initialized empty Git repository in .git/'},
+      {cmd:'git add .',                   desc:'Stage ALL changed files',              output:'(files added to staging)'},
+      {cmd:'git add index.php',           desc:'Stage ONE specific file',             output:'(file staged)'},
+      {cmd:'git commit -m "First commit"',desc:'Save with a message',                 output:'[main (root-commit) a3f9c12] First commit\n 1 file changed, 1 insertion(+)'},
+    ],
+    tip:'Write clear commit messages ─ "feat: add login page" not "update stuff" ─ your future self will thank you',
+  },
+  {
+    id:'inspect',
+    num:'04',
+    label:'Status & History',
+    icon:Search,
+    color:'var(--amber)',
+    title:'Status & History',
+    khmer:'ពិនិត្យ Code',
+    subtitle:'log · status · diff',
+    desc:'ពិនិត្យ repository state ─ git status = what changed ─ git log = full history ─ git diff = exact line changes ─ use these constantly',
+    commands:[
+      {cmd:'git status',              desc:'See what files changed',         output:'On branch main\nChanges not staged for commit:\n  modified: index.php'},
+      {cmd:'git log',                 desc:'Full commit history',             output:'commit e4f8a21 (HEAD -> main)\nAuthor: Dara <dara@email.com>\nDate:   Mon Mar 21 2026\n\n    First commit'},
+      {cmd:'git log --oneline',       desc:'Compact one-line history',       output:'e4f8a21 (HEAD -> main) First commit\na3f9c12 Add login form\nb1e8a24 Initial setup'},
+      {cmd:'git diff',                desc:'See unstaged line changes',       output:'diff --git a/index.php b/index.php\n-echo "Hello";\n+echo "Hello World";'},
+    ],
+    tip:'git log --oneline --graph --all ─ best view of your full history with branches visualized',
+  },
+  {
+    id:'branching',
+    num:'05',
+    label:'Branching',
+    icon:GitBranch,
+    color:'var(--green)',
+    title:'Branching',
+    khmer:'ការបំបែក Branch',
+    subtitle:'Work safely in parallel',
+    desc:'Branch = pointer ទៅ commit ─ cheap to create ─ isolate features ─ never break main code ─ 1 feature = 1 branch ─ professional workflow',
+    commands:[
+      {cmd:'git branch',                      desc:'List all branches',                output:'* main\n  feature-login'},
+      {cmd:'git branch feature-login',        desc:'Create a new branch',              output:'(branch created)'},
+      {cmd:'git checkout feature-login',      desc:'Switch to that branch',            output:"Switched to branch 'feature-login'"},
+      {cmd:'git checkout -b feature-login',   desc:'Create AND switch (shortcut)',     output:"Switched to a new branch 'feature-login'"},
+      {cmd:'git checkout main',               desc:'Switch back to main',              output:"Switched to branch 'main'"},
+      {cmd:'git merge feature-login',         desc:'Merge feature into main',          output:'Updating a3f9c12..e4f8a21\nFast-forward\n login.php | 10 +++++'},
+    ],
+    tip:'1 feature = 1 branch ─ short-lived ─ merge and delete ─ NEVER work directly on main',
+  },
+  {
+    id:'github',
+    num:'06',
+    label:'GitHub',
+    icon:Globe,
+    color:'var(--blue)',
+    title:'Connect to GitHub',
+    khmer:'ភ្ជាប់ GitHub',
+    subtitle:'Push · Pull · Clone',
+    desc:'GitHub = cloud hosting for Git repos ─ share code ─ collaborate ─ portfolio ─ open source ─ industry standard ─ free for students',
+    commands:[
+      {cmd:'git remote add origin https://github.com/user/repo.git', desc:'Link to GitHub repo',         output:'(remote added)'},
+      {cmd:'git push -u origin main',      desc:'Upload code to GitHub (first time)',  output:'Branch main set up to track remote\nTo https://github.com/user/repo.git\n * [new branch] main → main'},
+      {cmd:'git push',                     desc:'Push after -u is set',               output:'Everything up-to-date'},
+      {cmd:'git pull',                     desc:'Download team changes',              output:'Already up to date.'},
+      {cmd:'git clone https://github.com/user/repo.git', desc:'Download a project',   output:"Cloning into 'repo'...\nDone."},
+    ],
+    tip:'git push -u origin main only once ─ after that just type git push ─ the -u sets the upstream tracking',
+  },
+  {
+    id:'undo',
+    num:'07',
+    label:'Undo Changes',
+    icon:RotateCcw,
+    color:'var(--red)',
+    title:'Undo Changes',
+    khmer:'លប់ចោល',
+    subtitle:'Recover from mistakes safely',
+    desc:'Git អាច undo បាន ─ unstage files ─ discard file changes ─ undo commits ─ SAFE undo preserves history ─ always use revert on public branches',
+    commands:[
+      {cmd:'git restore index.php',        desc:'Discard file changes (⚠️ permanent)',  output:'(changes gone)'},
+      {cmd:'git restore --staged index.php',desc:'Unstage a file (safe)',               output:'(file unstaged, changes kept)'},
+      {cmd:'git reset --soft HEAD~1',      desc:'Undo last commit, keep changes',      output:'(commit undone, files still staged)'},
+      {cmd:'git reset --mixed HEAD~1',     desc:'Undo commit + unstage',               output:'(commit undone, files in working dir)'},
+      {cmd:'git revert HEAD',              desc:'Safe undo ─ creates new commit',      output:"[main abc1234] Revert 'bad feature'\n 1 file changed"},
+    ],
+    tip:'git revert = SAFE (creates new commit) ─ git reset = LOCAL only ─ never reset --hard on pushed commits',
+  },
+  {
+    id:'ignore',
+    num:'08',
+    label:'.gitignore',
+    icon:EyeOff,
+    color:'var(--amber)',
+    title:'.gitignore',
+    khmer:'ឯកសារ .gitignore',
+    subtitle:'Exclude files from tracking',
+    desc:'.gitignore = list of files Git should ignore ─ node_modules ─ .env (secrets!) ─ vendor/ ─ build files ─ create at project root ─ add before first commit',
+    ignoreContent:`# Dependencies
+node_modules/
+vendor/
+
+# Environment secrets
+.env
+.env.local
+
+# Build outputs
+/dist
+/build
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Laravel specific
+storage/
+bootstrap/cache/
+*.log`,
+    tip:'.env MUST be in .gitignore ─ never commit passwords or API keys ─ add .gitignore before first git add',
+  },
+  {
+    id:'lab',
+    num:'09',
+    label:'Lab Exercise',
+    icon:Beaker,
+    color:'var(--green)',
+    title:'Lab Exercise',
+    khmer:'លំហាត់ Lab',
+    subtitle:'Hands-on practice',
+    desc:'Complete this lab during class ─ 60 minutes ─ each step builds on previous ─ ask if stuck ─ real workflow you will use every day',
+    steps:[
+      {n:1, task:'Create a folder and init a Git repo',               cmd:'mkdir my-project && cd my-project && git init'},
+      {n:2, task:'Create index.php with a simple echo statement',     cmd:'echo "<?php echo \'Hello Git!\'; ?>" > index.php'},
+      {n:3, task:'Stage and commit the file',                         cmd:'git add index.php && git commit -m "feat: add index page"'},
+      {n:4, task:'Check history with git log',                        cmd:'git log --oneline'},
+      {n:5, task:'Create a feature branch',                           cmd:'git checkout -b feature-about'},
+      {n:6, task:'Add about.php and commit on the branch',            cmd:'echo "<?php echo \'About\'; ?>" > about.php && git add . && git commit -m "feat: add about page"'},
+      {n:7, task:'Merge feature branch into main',                    cmd:'git checkout main && git merge feature-about'},
+      {n:8, task:'Push to your GitHub repository',                    cmd:'git remote add origin <URL> && git push -u origin main'},
+    ],
+    assignment:{
+      title:'Homework Assignment',
+      items:[
+        'Create a Git repo for your PHP or Laravel project',
+        'Make at least 5 meaningful commits',
+        'Create 1 feature branch and merge it',
+        'Add a README.md with project description',
+        'Push to GitHub — submit your repo URL',
+      ],
+    },
+  },
+  {
+    id:'plan',
+    num:'10',
+    label:'Class Plan',
+    icon:Calendar,
+    color:'var(--blue)',
+    title:'Teaching Plan',
+    khmer:'ផែនការបង្រៀន',
+    subtitle:'Lecture → Demo → Lab → Assignment',
+    desc:'Class structure ─ 2 hours total ─ theory first ─ live demo ─ hands-on lab ─ real project integration ─ next lesson: Pull Requests & Collaboration',
+    schedule:[
+      {time:'0:00–0:30', type:'Lecture',   icon:BookOpen, items:['Git concept & why it matters','Workflow: init → add → commit','Core commands overview']},
+      {time:'0:30–1:00', type:'Live Demo', icon:Monitor, items:['Init a real repo','Make commits & view log','Create branch & merge']},
+      {time:'1:00–2:00', type:'Lab',       icon:Beaker, items:['Students follow step-by-step','Create repo from scratch','Push to GitHub']},
+    ],
+    next:[
+      'Pull Requests (PR)',
+      'Conflict resolution',
+      'GitHub collaboration workflow',
+      'Git + Laravel API project',
+      'Git + React frontend',
+    ],
+    integration:[
+      {stack:'Git + Laravel API',  desc:'Version control your backend'},
+      {stack:'Git + React',        desc:'Track frontend changes'},
+      {stack:'Git + Docker',       desc:'Containerized projects'},
+      {stack:'Git + GitHub Actions',desc:'Automated deployment'},
+    ],
+  },
 ];
 
-/* ══════════════════════════════════════════════════════════════════
-   SLIDE DATA
-══════════════════════════════════════════════════════════════════ */
-
-const GIT_SLIDES: Slide[] = [
-  {
-    id: 'intro', chapter: 'foundations',
-    section: '1. Basic Git',
-    title: 'Version Control', subtitle: 'ការស្វែងយល់ពី Version Control System',
-    icon: GitBranch, accent: '#4ade80',
-    concepts: [
-      { label: 'VCS គឺជាអ្វី?', desc: 'Version Control System ជាប្រព័ន្ធដែលកត់ត្រារាល់ការផ្លាស់ប្ដូរ (change) ចំពោះ file តាមពេលវេលា ។ ឱ្យអ្នកអាច revert ទៅ version ណាមួយក្នុងអតីតកាល, compare changes, ឬ collaborate ជាមួយ team ។' },
-      { label: 'Snapshot Model', desc: 'Git ខុសពី VCS ផ្សេង — វា snapshot ប្រព័ន្ធ file ទាំងមូលគ្រប់ commit ។ File ដែលមិនផ្លាស់ប្ដូរ Git គ្រាន់ link ទៅ snapshot មុន ដើម្បី efficient ។' }
-    ],
-    variables: [
-      { label: '.git/', desc: 'The hidden folder where Git stores all repository metadata and history.' },
-      { label: 'Initial', desc: 'The very first commit in history, often called the "Root Commit".' }
-    ],
-    tip: 'Git ត្រូវបានសរសេរដោយ Linus Torvalds ក្នុង ១០ ថ្ងៃ ក្នុងឆ្នាំ ២០០៥ ដើម្បីគ្រប់គ្រង source code របស់ Linux kernel ។',
-    lab: 'Initialize repository ថ្មីមួយ ហើយ inspect state ដំបូងរបស់វា ។',
-    result: 'Terminal បង្ហាញ "Initialized empty Git repository" — repository ស្អាត ready ។',
-    code: `git init\ngit status`,
-    filename: 'init.sh', terminal: 'git init && git status',
-    terminalOutput: `Initialized empty Git repository in /project/.git/\n\nOn branch main\nnothing to commit`
-  },
-  {
-    id: 'config', chapter: 'foundations',
-    section: '1. Basic Git',
-    title: 'Config & Identity', subtitle: 'ការ Setup Global Configuration',
-    icon: Lock, accent: '#4ade80',
-    concepts: [
-      { label: 'Identitiy', desc: 'Git attach ឈ្មោះ និង email ទៅ commit ។ Setup ម្ដង global — apply ទៅ repository ទាំងអស់ក្នុង machine ។' },
-      { label: 'Config Layers', desc: 'Git មាន ៣ levels: system, global (~/.gitconfig), និង local (.git/config) ។' }
-    ],
-    variables: [
-      { label: '--global', desc: 'Flag indicating the setting applies to all repositories for the current OS user.' },
-      { label: 'user.name', desc: 'The public display name attached to every code change you commit.' }
-    ],
-    tip: 'Email ត្រូវ match ជាមួយ GitHub account ដើម្បី contribution graph track បានត្រូវ ។',
-    lab: 'Set global user.name និង user.email ហើយ verify ជាមួយ git config --list ។',
-    result: 'List បង្ហាញ user.name, user.email ត្រូវតាម input ។',
-    code: `git config --global user.name "Dara Sok"\ngit config --global user.email "dara@example.com"`,
-    filename: 'config.sh', terminal: 'git config --list',
-    terminalOutput: `user.name=Dara Sok\nuser.email=dara@example.com`
-  },
-  {
-    id: 'staging', chapter: 'foundations',
-    section: '2. Life-cycle',
-    title: 'Three States', subtitle: 'Working Directory · Staging Area · Repository',
-    icon: Layers, accent: '#4ade80',
-    concepts: [
-      { label: 'Working Directory', desc: 'កន្លែង edit file ។ Git ដឹង file ត្រូវ modify ប៉ុន្ដែ មិន track change ដោយ auto ។' },
-      { label: 'Staging Area', desc: 'Draft commit ។ git add ដាក់ snapshot នៃ change ចូល index ។ git commit យក index ទៅ permanent history ។' }
-    ],
-    variables: [
-      { label: 'Index', desc: 'Another technical name for the Staging Area; the binary snapshot ready for commit.' },
-      { label: 'SHA-1 Hash', desc: 'The unique 40-character ID Git generates for every snapshot logic.' }
-    ],
-    tip: 'Staging area ជា superpower — ឱ្យអ្នក craft atomic commit — stage file ដែល related ជាមួយ ។',
-    lab: 'Create file → git add → git commit → inspect log ។',
-    result: 'git log --oneline បង្ហាញ commit hash, author, date, message ត្រូវ ។',
-    code: `git add .\ngit commit -m "feat: add initial files"\ngit log --oneline`,
-    filename: 'staging.sh', terminal: 'git log --oneline',
-    terminalOutput: `a3f9c12 (HEAD -> main) feat: add initial files`
-  },
-  {
-    id: 'gitignore', chapter: 'foundations',
-    title: 'Ignoring Files', subtitle: 'ការប្រើ .gitignore ដើម្បីដក file មិនចាំបាច់',
-    icon: Shield, accent: '#4ade80',
-    concepts: [
-      { label: '.gitignore គឺជាអ្វី?', desc: 'ជា file ដែលប្រាប់ Git ថា file ឬ directory ណាខ្លះមិនបាច់ track ។ សំខាន់សម្រាប់ node_modules ឬ secrets ។' },
-      { label: 'Pattern Rules', desc: 'ប្រើ wildcard (*) ដូចជា *.log ដើម្បី ignore files ទាំងអស់ដែលមាន extension .log ។' }
-    ],
-    tip: 'កុំ commit របស់ធំៗ ឬ secrets ឱ្យសោះ ។ ប្រើ .gitignore ជានិច្ចតាំងពី start project ។',
-    lab: 'បង្កើត file .gitignore ហើយដាក់ pattern ដើម្បី ignore log files ។',
-    result: 'File ដែល ignore នឹងមិនបង្ហាញក្នុង staging area ពេលប្រើ git status ឡើយ ។',
-    code: `echo "node_modules/" >> .gitignore\necho "*.log" >> .gitignore`,
-    filename: '.gitignore', terminal: 'git status',
-    terminalOutput: `On branch main\nUntracked files: .gitignore`
-  },
-  {
-    id: 'diff', chapter: 'foundations',
-    title: 'Git Diff', subtitle: 'ពិនិត្យមើល Changes line-by-line',
-    icon: Code2, accent: '#4ade80',
-    concepts: [
-      { label: 'diff command', desc: 'git diff បង្ហាញភាពខុសគ្នារវាង working directory និង staging area ។' },
-      { label: 'Staged Diff', desc: 'ប្រើ --staged ដើម្បីមើលអ្វីដែលបាន add ចូល staging area រួចហើយ ។' }
-    ],
-    tip: 'មុននឹង commit, ប្រើ git diff ជានិច្ច ដើម្បីប្រាកដថាអ្នកមិនបានដាក់ code trash ចូលទៅក្នុង repository ។',
-    lab: 'កែប្រែ file រួចប្រើ git diff ដើម្បីមើល changes មុននឹង git add ។',
-    result: 'Terminal បង្ហាញបន្ទាត់បន្ថែម (+) ពណ៌បៃតង និងបន្ទាត់លុប (-) ពណ៌ក្រហម ។',
-    code: `git diff\ngit diff --staged`,
-    filename: 'diff.sh', terminal: 'git diff',
-    terminalOutput: `--- a/app.js\n+++ b/app.js\n-console.log("Old");\n+console.log("New");`
-  },
-  {
-    id: 'history', chapter: 'foundations',
-    title: 'History Review', subtitle: 'បច្ចេកទេសក្នុង​ការមើល Log',
-    icon: BookOpen, accent: '#4ade80',
-    concepts: [
-      { label: 'git log', desc: 'បង្ហាញ list នៃ commits ក្នុង branch បច្ចុប្បន្ន ។ រួមមាន hash, author, date, និង message ។' },
-      { label: 'Compact View', desc: '--oneline បង្ហាញក្នុង ១ ជួរ ។ --graph បង្ហាញ branch structure ជា visual ។' }
-    ],
-    tip: 'Git log ជា source of truth របស់ project ។ ប្រើ "git log -p" ដើម្បីមើល patch របស់ commit នីមួយៗ ។',
-    lab: 'ប្រើ options ផ្សេងៗរបស់ git log ដើម្បី explore project history ។',
-    result: 'ឃើញ graph និង timeline នៃ commits ច្បាស់លាស់ ។',
-    code: `git log --oneline --graph --all --decorate\ngit log -p -3`,
-    filename: 'log.sh', terminal: 'git log --oneline --graph',
-    terminalOutput: `* a3f9c12 (HEAD -> main) feat: add initial project files\n* 7e2b102 chore: initial commit`
-  },
-  {
-    id: 'branch-intro', chapter: 'branching',
-    title: 'Branch Model', subtitle: 'ការអភិវឌ្ឍ Parallel ជាមួយ Branch',
-    icon: Share2, accent: '#38bdf8',
-    concepts: [
-      { label: 'Branch = Pointer', desc: 'Branch ក្នុង Git គ្រាន់តែជា lightweight pointer ទៅ commit ។ Switch branch instant ។' },
-      { label: 'Parallel Dev', desc: 'Branch ឱ្យ developer ធ្វើ feature, bugfix ដោយ isolate ពី production code ។' }
-    ],
-    tip: 'Create branches ឱ្យបានច្រើន, ញឹកញាប់ ។ ១ task = ១ branch ។',
-    lab: 'Create feature/auth branch ហើយ switch ទៅ branch នោះ ។',
-    result: 'git branch បង្ហាញ asterisk (*) នៅ branch ថ្មី ។',
-    code: `git switch -c feature/auth\ngit branch`,
-    filename: 'branch.sh', terminal: 'git branch',
-    terminalOutput: `* feature/auth\n  main`
-  },
-  {
-    id: 'moving-changes', chapter: 'branching',
-    title: 'Switch & Restore', subtitle: 'Modern Commands ជំនួស checkout',
-    icon: RefreshCw, accent: '#38bdf8',
-    concepts: [
-      { label: 'git switch', desc: 'Command dedicated សម្រាប់ change branch ។ ច្បាស់ជាង git checkout ដែល overloaded ។' },
-      { label: 'git restore', desc: 'Discard changes ក្នុង working directory ឬ unstage file ។ ជំនួស git checkout -- <file> ។' }
-    ],
-    tip: 'Git 2.23 (2019) ណែនាំ switch + restore ដើម្បី split checkout functionality ។',
-    lab: 'Restore file ដែល accidentally modified ហើយ switch ត្រឡប់ main ។',
-    result: 'File ត្រឡប់ content committed ។ git status clean ។',
-    code: `git restore profile.php\ngit restore --staged README.md\ngit switch main`,
-    filename: 'restore.sh', terminal: 'git switch main',
-    terminalOutput: `Switched to branch 'main'`
-  },
-  {
-    id: 'merge-basics', chapter: 'merging',
-    title: 'Merge Strategies', subtitle: 'Fast-Forward vs Three-Way Merge',
-    icon: GitMerge, accent: '#fb923c',
-    concepts: [
-      { label: 'Fast-Forward', desc: 'Git move pointer ទៅ ahead — history ត្រង់ (linear) ។' },
-      { label: 'Three-Way Merge', desc: 'ប្រើពេល branches diverge ។ បង្កើត merge commit ។' }
-    ],
-    tip: 'Resolve conflicts ក្នុង feature branch មុននឹង merge ចូល main branch ។',
-    lab: 'Merge feature/auth ចូល main ។ Inspect history ជាមួយ --graph ។',
-    result: 'Log បង្ហាញ "Fast-forward" ឬ merge commit node ក្នុង graph ។',
-    code: `git switch main\ngit merge feature/auth`,
-    filename: 'merge.sh', terminal: 'git merge feature/auth',
-    terminalOutput: `Updating a3f9c12..e7b4d91\nFast-forward`
-  },
-  {
-    id: 'conflict', chapter: 'merging',
-    title: 'Conflict Resolution', subtitle: 'ការដោះស្រាយ Merge Conflict',
-    icon: Shield, accent: '#fb923c',
-    concepts: [
-      { label: 'Markers', desc: 'Git inject markers ទៅ conflicted file: <<<<<<<, =======, >>>>>>> ។' },
-      { label: 'Resolution', desc: 'Edit file → delete markers → git add <file> → git merge --continue ។' }
-    ],
-    tip: 'Conflict គ្មានអ្វីខ្លាចទេ — Git សួរ "version ណាត្រូវ?" ។ Small frequent merges = conflicts តិច ។',
-    lab: 'Trigger conflict ដោយ edit line តែមួយ ក្នុង ២ branches → merge → resolve ។',
-    result: 'Repo state clean ។ git log show resolved merge commit ។',
-    code: `git status\ngit add styles.css\ngit merge --continue`,
-    filename: 'conflict.sh', terminal: 'git merge feature/ui',
-    terminalOutput: `CONFLICT (content): Merge conflict in styles.css\nAutomatic merge failed; fix conflicts.`
-  },
-  {
-    id: 'remote-intro', chapter: 'remotes',
-    title: 'Remotes & Push', subtitle: 'Sync ជាមួយ GitHub / GitLab',
-    icon: Globe, accent: '#e879f9',
-    concepts: [
-      { label: 'origin', desc: '"origin" ជា alias convention សម្រាប់ remote URL ។ git clone auto-set origin ។' },
-      { label: 'fetch vs pull', desc: 'git fetch download changes ប៉ុន្ដែមិន merge ។ git pull = fetch + merge ។' }
-    ],
-    tip: 'git remote -v ជា habit ។ Always verify remote URL មុន push ។',
-    lab: 'Add remote origin ហើយ push main branch ទៅ GitHub ។',
-    result: 'Branch live on GitHub ។',
-    code: `git remote add origin https://github.com/user/repo.git\ngit push -u origin main`,
-    filename: 'remote.sh', terminal: 'git remote -v',
-    terminalOutput: `origin  https://github.com/dara/repo.git (fetch)\norigin  https://github.com/dara/repo.git (push)`
-  },
-  {
-    id: 'prs', chapter: 'remotes',
-    title: 'PR Workflow', subtitle: 'Professional Code Review Process',
-    icon: GitPullRequest, accent: '#e879f9',
-    concepts: [
-      { label: 'Pull Request', desc: 'PR ជា formal request ឱ្យ teammates review code មុន merge ។' },
-      { label: 'Code Review', desc: 'Review ≠ personal attack — review = technical feedback ។' }
-    ],
-    tip: 'PR < ៤០០ lines ទទួល review ២០x លឿន ។ "One PR = One concern" ។',
-    lab: 'Pull latest main → merge ចូល feature → push feature branch ។',
-    result: 'Feature branch updated ។ Ready to open PR ។',
-    code: `git pull origin main\ngit switch feature/dashboard\ngit merge main\ngit push origin feature/dashboard`,
-    filename: 'pr.sh', terminal: 'git pull origin main',
-    terminalOutput: `From github.com/dara/git-demo\n* branch main -> FETCH_HEAD`
-  },
-  {
-    id: 'stash', chapter: 'mastery',
-    title: 'Git Stash', subtitle: 'Context Switching ដោយ​មិន Commit',
-    icon: Box, accent: '#f87171',
-    concepts: [
-      { label: 'Stash Stack', desc: 'git stash save work-in-progress ទៅ temporary stack ។ Working directory ក្លាយ clean ។' },
-      { label: 'Named Stashes', desc: 'git stash push -m "label" ឱ្យ label stash entry ដើម្បីងាយចំណាំ ។' }
-    ],
-    tip: 'Label stash ជានិច្ច ។ Unnamed stash list វែង = confusing ។',
-    lab: 'Stash uncommitted work → switch branch → apply stash ត្រឡប់ ។',
-    result: 'Work ត្រឡប់បន្ទាប់ pop ។',
-    code: `git stash push -m "wip: login"\ngit stash list\ngit stash pop`,
-    filename: 'stash.sh', terminal: 'git stash list',
-    terminalOutput: `stash@{0}: On main: wip: login`
-  }
-];
-
-/* ══════════════════════════════════════════════════════════════════
-   SYNTAX HIGHLIGHTER
-══════════════════════════════════════════════════════════════════ */
-
-const GIT_KW = new Set(['git','commit','branch','checkout','switch','merge','rebase','pull','push','fetch','remote','add','status','log','init','config','clone','stash','pop','apply','restore','diff','--global','--oneline','-m','-u','-b','-i','--staged','--list','--graph','--all','--force-with-lease','-c','--continue','-v','-p']);
-
-const tokenizeLine = (line: string): React.ReactNode[] => {
-  if (/^\s*#/.test(line)) return [<span key="c" style={{ color: '#4b5563', fontStyle: 'italic' }}>{line}</span>];
-  const parts = line.split(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\B[a-z0-9/._-]+\B|\b[a-zA-Z_-]+\b)/g);
-  return parts.map((p, i) => {
+// ─── SYNTAX HIGHLIGHT ─────────────────────────────────────────
+function hlCmd(line: string) {
+  const parts = line.split(/(\b(?:git|echo|mkdir|cd)\b|"[^"]*"|'[^']*'|--\w[\w-]*|-\w|<[^>]+>)/g);
+  return parts.map((p,i) => {
     if (!p) return null;
-    if (GIT_KW.has(p)) return <span key={i} style={{ color: '#f87171', fontWeight: 700 }}>{p}</span>;
-    if (p.startsWith('"') || p.startsWith("'")) return <span key={i} style={{ color: '#86efac' }}>{p}</span>;
-    if (/^\d/.test(p)) return <span key={i} style={{ color: '#c084fc' }}>{p}</span>;
-    if (p.startsWith('-')) return <span key={i} style={{ color: '#7dd3fc' }}>{p}</span>;
-    return <span key={i} style={{ color: '#fff' }}>{p}</span>;
+    if (['git','echo','mkdir','cd'].includes(p))    return <span key={i} style={{color:'var(--red)',fontWeight:700}}>{p}</span>;
+    if (p.startsWith('"')||p.startsWith("'"))       return <span key={i} style={{color:'var(--green)'}}>{p}</span>;
+    if (p.startsWith('--')||p.startsWith('-'))      return <span key={i} style={{color:'var(--blue)'}}>{p}</span>;
+    if (p.startsWith('<'))                          return <span key={i} style={{color:'var(--amber)',fontStyle:'italic'}}>{p}</span>;
+    return <span key={i} style={{color:'var(--ink)'}}>{p}</span>;
   });
-};
+}
 
-const HighlightedCode = ({ code }: { code: string }) => (
-  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 13, lineHeight: 1.8, whiteSpace: 'pre' }}>
-    {code.split('\n').map((line, i) => <div key={i} style={{ minHeight: '1.8em' }}>{tokenizeLine(line)}</div>)}
-  </div>
-);
-
-/* ══════════════════════════════════════════════════════════════════
-   CODE PANEL
-══════════════════════════════════════════════════════════════════ */
-
-const CodePanel = ({ code: initialCode, terminal, terminalOutput, accent, filename, subType }: {
-  code: string; terminal?: string; terminalOutput?: string; accent: string; filename: string;
-  subType: 'concept' | 'variables' | 'lab';
-}) => {
-  const [tab, setTab] = useState<'code' | 'terminal'>('code');
-  const [code, setCode] = useState(initialCode);
-  const [copied, setCopied] = useState(false);
-  const [running, setRunning] = useState(false);
-  const taRef = useRef<HTMLTextAreaElement>(null);
-  const hlRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setCode(initialCode);
-    setTab(subType === 'lab' ? 'code' : 'terminal');
-  }, [initialCode, subType]);
-
-  const copy = () => {
-    navigator.clipboard.writeText(tab === 'code' ? code : terminalOutput || '');
-    setCopied(true); setTimeout(() => setCopied(false), 2000);
-  };
-
-  const syncScroll = () => {
-    if (taRef.current && hlRef.current) {
-      hlRef.current.scrollTop = taRef.current.scrollTop;
-      hlRef.current.scrollLeft = taRef.current.scrollLeft;
-    }
-  };
-
+// ─── COMMAND BLOCK ─────────────────────────────────────────────
+function CmdBlock({cmd, desc, output}: Command) {
+  const [showOut, setShowOut] = useState(false);
   return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', height: '100%',
-      background: '#06080f', borderRadius: 14, overflow: 'hidden',
-      border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-    }}>
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '9px 13px', background: '#0a0e1a', borderBottom: '1px solid rgba(255,255,255,0.05)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ display: 'flex', gap: 5 }}>
-            {['#ff5f57','#febc2e','#28c840'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }}/>)}
-          </div>
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.03)', borderRadius: 7, padding: 3, marginLeft: 6 }}>
-            {(['code','terminal'] as const).map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{
-                padding: '4px 10px', borderRadius: 5, border: 'none', fontSize: 9.5, fontWeight: 800,
-                fontFamily: "'JetBrains Mono',monospace", background: tab === t ? 'rgba(255,255,255,0.08)' : 'transparent',
-                color: tab === t ? '#fff' : '#4b5563', transition: 'all 0.18s', textTransform: 'uppercase',
-              }}>{t}</button>
-            ))}
-          </div>
+    <div className="cmd-line" onClick={()=>setShowOut(v=>!v)}
+      style={{borderBottom:'1px dashed var(--rule)',padding:'10px 14px',cursor:'pointer',transition:'background 0.15s'}}>
+      <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
+        <span style={{fontFamily:'var(--mono)',fontSize:11,color:'var(--amber)',flexShrink:0,paddingTop:2}}>$</span>
+        <div style={{flex:1}}>
+          <pre style={{fontFamily:'var(--mono)',fontSize:12.5,fontWeight:700,margin:0,color:'var(--ink)',whiteSpace:'pre-wrap'}}>
+            {hlCmd(cmd)}
+          </pre>
+          <div style={{fontFamily:'var(--mono)',fontSize:11,color:'#6a5840',marginTop:3}}>↳ {desc}</div>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          <button onClick={async () => { setTab('terminal'); setRunning(true); await new Promise(r => setTimeout(r, 700)); setRunning(false); }} disabled={running} style={{
-            padding: '4px 10px', borderRadius: 5, border: 'none', fontSize: 9.5, fontWeight: 800,
-            fontFamily: "'JetBrains Mono',monospace", background: `${accent}15`, color: running ? '#4b5563' : accent,
-          }}>{running ? 'Running…' : 'Run'}</button>
-          <button onClick={copy} style={{ padding: 5, background: 'transparent', border: 'none', color: copied ? '#4ade80' : '#4b5563' }}>
-            {copied ? <CheckCircle2 size={13}/> : <Copy size={13}/>}
-          </button>
+        <span style={{fontFamily:'var(--mono)',fontSize:9,color:'var(--rule)',paddingTop:4}}>{showOut?'▲':'▼'}</span>
+      </div>
+      {showOut&&output&&(
+        <div style={{marginTop:8,marginLeft:24,padding:'8px 12px',background:'var(--ink)',fontFamily:'var(--mono)',fontSize:11,color:'#a8d8a8',lineHeight:1.7,whiteSpace:'pre-wrap'}}>
+          {output}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── SECTION RENDERERS ────────────────────────────────────────
+function SectionIntro({s}: {s: GitSection}) {
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:20,animation:'fadeSlide 0.3s ease'}}>
+      {/* Without/With comparison */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+        <div style={{border:'2px dashed var(--red)',padding:'16px 18px'}}>
+          <div style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,color:'var(--red)',letterSpacing:'0.1em',marginBottom:10}}>WITHOUT GIT</div>
+          {s.concept?.without.map((l,i)=>(
+            <div key={i} style={{fontFamily:'var(--mono)',fontSize:12,color:'#6a3828',padding:'4px 0',borderBottom:'1px dotted var(--rule)'}}>{l}</div>
+          ))}
+        </div>
+        <div style={{border:'2px solid var(--green)',padding:'16px 18px',background:'rgba(42,107,58,0.04)'}}>
+          <div style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,color:'var(--green)',letterSpacing:'0.1em',marginBottom:10}}>WITH GIT</div>
+          {s.concept?.with.map((l,i)=>(
+            <div key={i} style={{fontFamily:'var(--mono)',fontSize:12,color:'var(--green)',padding:'4px 0',borderBottom:'1px dotted var(--rule)'}}>{l}</div>
+          ))}
         </div>
       </div>
-      <div style={{ padding: '4px 13px', background: 'rgba(10,14,26,0.7)', borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: 9.5, color: '#4b5563', fontFamily: "'JetBrains Mono',monospace" }}>
-        ~/project/{tab === 'code' ? filename : 'zsh'}
-      </div>
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        {tab === 'code' ? (
-          <div style={{ display: 'flex', height: '100%' }}>
-            <div style={{ width: 40, background: '#06080f', borderRight: '1px solid rgba(255,255,255,0.04)', paddingTop: 14, textAlign: 'right', paddingRight: 9, fontSize: 10.5, color: 'rgba(255,255,255,0.1)', fontFamily: "'JetBrains Mono',monospace" }}>
-              {code.split('\n').map((_, i) => <div key={i} style={{ height: '1.8em' }}>{i + 1}</div>)}
-            </div>
-            <div style={{ position: 'relative', flex: 1 }}>
-              <div ref={hlRef} style={{ position: 'absolute', inset: 0, padding: 14, overflow: 'auto', pointerEvents: 'none' }}><HighlightedCode code={code}/></div>
-              <textarea ref={taRef} value={code} onChange={e => setCode(e.target.value)} onScroll={syncScroll} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', background: 'transparent', color: 'transparent', resize: 'none', outline: 'none', padding: 14, fontFamily: "'JetBrains Mono',monospace", fontSize: 13, lineHeight: 1.8, border: 'none', caretColor: '#fff' }} spellCheck={false} wrap="off"/>
-            </div>
+      {/* Objectives */}
+      <div style={{border:'1px solid var(--rule)',padding:'18px 20px'}}>
+        <div style={{fontFamily:'var(--serif)',fontSize:13,fontWeight:700,color:'var(--blue)',letterSpacing:'0.04em',textTransform:'uppercase',marginBottom:12,display:'flex',alignItems:'center',gap:8}}>
+          <CheckCircle2 size={16} /> Learning Objectives
+        </div>
+        {s.objectives?.map((o,i)=>(
+          <div key={i} style={{display:'flex',gap:10,padding:'6px 0',borderBottom:'1px dotted var(--faint)',alignItems:'flex-start'}}>
+            <span style={{color:'var(--green)',fontWeight:700,fontFamily:'var(--mono)',flexShrink:0}}>0{i+1}</span>
+            <span style={{fontFamily:'var(--khmer)',fontSize:13,color:'var(--ink)',lineHeight:1.55}}>{o}</span>
           </div>
-        ) : (
-          <div style={{ padding: '14px 16px', fontFamily: "'JetBrains Mono',monospace", fontSize: 12.5, lineHeight: 1.9, overflow: 'auto', height: '100%' }}>
-            <div style={{ color: accent, marginBottom: 8 }}>❯ <span style={{ color: '#fff' }}>~/project $ {terminal}</span></div>
-            <pre style={{ color: '#ccc', whiteSpace: 'pre-wrap', margin: 0 }}>{terminalOutput || 'Running…'}</pre>
-          </div>
-        )}
+        ))}
       </div>
     </div>
   );
-};
+}
 
-/* ══════════════════════════════════════════════════════════════════
-   MAIN COMPONENT
-══════════════════════════════════════════════════════════════════ */
+function SectionSetup({s}: {s: GitSection}) {
+  return (
+    <div style={{border:'1px solid var(--rule)',animation:'fadeSlide 0.3s ease'}}>
+      {s.commands?.map((c,i)=><CmdBlock key={i} {...c}/>)}
+    </div>
+  );
+}
 
-export default function GitSlides() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const chapterParam = searchParams.get('chapter') || 'foundations';
+function SectionWorkflow({s}: {s: GitSection}) {
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:16,animation:'fadeSlide 0.3s ease'}}>
+      {/* Flow diagram */}
+      <div style={{display:'flex',alignItems:'center',gap:0,border:'1px solid var(--rule)',overflow:'hidden'}}>
+        {s.flow?.map((f: FlowItem, i: number)=>(
+          <div key={i} style={{flex:1,padding:'14px 16px',borderRight:i<(s.flow?.length || 0)-1?'1px solid var(--rule)':'none',background:i%2===0?'var(--paper)':'var(--cream)'}}>
+            <div style={{fontFamily:'var(--mono)',fontSize:9,fontWeight:700,color:f.color,letterSpacing:'0.12em',marginBottom:4}}>STEP {f.step}</div>
+            <div style={{fontFamily:'var(--mono)',fontSize:13,fontWeight:700,color:'var(--ink)',marginBottom:4}}>{f.cmd}</div>
+            <div style={{fontFamily:'var(--mono)',fontSize:10,color:'var(--amber)'}}>{f.label}</div>
+            <div style={{fontFamily:'var(--mono)',fontSize:10,color:'#8a7060',marginTop:2}}>{f.desc}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{border:'1px solid var(--rule)'}}>
+        {s.commands?.map((c,i)=><CmdBlock key={i} {...c}/>)}
+      </div>
+    </div>
+  );
+}
 
-  const displayPages = useMemo(() => {
-    const filtered = GIT_SLIDES.filter(s => s.chapter === chapterParam);
-    const result: DisplayPage[] = [];
-    filtered.forEach(s => {
-      result.push({ ...s, subType: 'concept' });
-      if (s.variables && s.variables.length > 0) {
-        result.push({ ...s, subType: 'variables' });
-      }
-      result.push({ ...s, subType: 'lab' });
-    });
-    return result.length > 0 ? result : [{ ...GIT_SLIDES[0], subType: 'concept' }];
-  }, [chapterParam]);
+function SectionIgnore({s}: {s: GitSection}) {
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:16,animation:'fadeSlide 0.3s ease'}}>
+      <div style={{border:'1px solid var(--rule)',overflow:'hidden'}}>
+        <div style={{padding:'8px 14px',background:'var(--ink)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <span style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,color:'#a8c8d8',letterSpacing:'0.08em'}}>.gitignore</span>
+          <span style={{fontFamily:'var(--mono)',fontSize:9,color:'#4a6070'}}>project root</span>
+        </div>
+        <pre style={{padding:'16px',fontFamily:'var(--mono)',fontSize:12,lineHeight:1.85,color:'var(--ink)',background:'var(--paper)',margin:0}}>
+          {s.ignoreContent?.split('\n').map((line,i)=>{
+            const isComment = line.startsWith('#');
+            return (
+              <div key={i} style={{color:isComment?'#8a7060':'var(--ink)',fontStyle:isComment?'italic':'normal'}}>
+                {line||'\u00A0'}
+              </div>
+            );
+          })}
+        </pre>
+      </div>
+      <div style={{padding:'12px 16px',background:'rgba(139,98,0,0.06)',border:'1px solid var(--amber)',fontFamily:'var(--mono)',fontSize:12,color:'var(--amber)',lineHeight:1.7}}>
+        ⚠️ &nbsp;Add .gitignore BEFORE your first git add ─ once committed, files are hard to remove from history
+      </div>
+    </div>
+  );
+}
 
-  const slideParam = searchParams.get('slide');
-  const initialSlide = slideParam ? Math.max(0, Math.min(parseInt(slideParam) - 1, displayPages.length - 1)) : 0;
+function SectionLab({s}: {s: GitSection}) {
+  const [done, setDone] = useState<Record<number, boolean>>({});
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:20,animation:'fadeSlide 0.3s ease'}}>
+      {/* Steps */}
+      <div style={{border:'1px solid var(--rule)'}}>
+        <div style={{padding:'10px 16px',background:'var(--ink)',fontFamily:'var(--mono)',fontSize:10,fontWeight:700,color:'#a8d8a8',letterSpacing:'0.1em'}}>
+          STEP-BY-STEP ─ Click to mark complete
+        </div>
+        {s.steps?.map((st,i)=>(
+          <div key={i} onClick={()=>setDone(d=>({...d,[i]:!d[i]}))}
+            style={{display:'flex',gap:14,padding:'12px 16px',borderBottom:'1px dashed var(--rule)',cursor:'pointer',background:done[i]?'rgba(42,107,58,0.05)':'transparent',transition:'background 0.2s'}}>
+            <div style={{width:24,height:24,border:`2px solid ${done[i]?'var(--green)':'var(--rule)'}`,background:done[i]?'var(--green)':'transparent',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:'var(--mono)',fontSize:11,fontWeight:700,flexShrink:0,transition:'all 0.2s'}}>
+              {done[i]?'✓':st.n}
+            </div>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:'var(--khmer)',fontSize:13,color:done[i]?'var(--green)':'var(--ink)',lineHeight:1.5,textDecoration:done[i]?'line-through':'none',marginBottom:4}}>{st.task}</div>
+              <pre style={{fontFamily:'var(--mono)',fontSize:11,color:'var(--amber)',margin:0,whiteSpace:'pre-wrap'}}>{hlCmd(st.cmd)}</pre>
+            </div>
+          </div>
+        ))}
+        <div style={{padding:'10px 16px',background:'var(--warm)',fontFamily:'var(--mono)',fontSize:11,color:'var(--green)'}}>
+          ✓ {Object.values(done).filter(Boolean).length} / {s.steps?.length || 0} steps complete
+        </div>
+      </div>
+      {/* Assignment */}
+      <div style={{border:'2px solid var(--ink)',padding:'20px 22px'}}>
+        <div style={{fontFamily:'var(--serif)',fontStyle:'italic',fontSize:15,fontWeight:700,color:'var(--ink)',marginBottom:14,display:'flex',alignItems:'center',gap:10}}>
+          <BookOpen size={18} /> {s.assignment?.title}
+        </div>
+        {s.assignment?.items.map((item,i)=>(
+          <div key={i} style={{display:'flex',gap:10,padding:'7px 0',borderBottom:'1px dotted var(--rule)',alignItems:'flex-start'}}>
+            <span style={{fontFamily:'var(--mono)',fontSize:11,color:'var(--red)',flexShrink:0}}>→</span>
+            <span style={{fontFamily:'var(--khmer)',fontSize:13,color:'var(--ink)',lineHeight:1.5}}>{item}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-  const [current, setCurrent] = useState(initialSlide);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showNotes, setShowNotes] = useState(false);
-  const [notes, setNotes] = useState<Record<string, string>>({});
-  const [dir, setDir] = useState(1);
-  const [isAnimating, setIsAnimating] = useState(false);
+function SectionPlan({s}: {s: GitSection}) {
+  return (
+    <div style={{display:'flex',flexDirection:'column',gap:16,animation:'fadeSlide 0.3s ease'}}>
+      {/* Schedule */}
+      <div style={{display:'flex',flexDirection:'column',gap:1}}>
+        {s.schedule?.map((block,i)=>(
+          <div key={i} style={{display:'flex',gap:0,border:'1px solid var(--rule)',overflow:'hidden'}}>
+            <div style={{width:90,background:'var(--ink)',padding:'12px 10px',display:'flex',flexDirection:'column',justifyContent:'center'}}>
+              <div style={{fontFamily:'var(--mono)',fontSize:9,color:'#4a6070'}}>TIME</div>
+              <div style={{fontFamily:'var(--mono)',fontSize:10,color:'var(--paper)',fontWeight:700}}>{block.time}</div>
+            </div>
+            <div style={{flex:1,padding:'12px 16px',background:i%2===0?'var(--paper)':'var(--cream)'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                <block.icon size={16} strokeWidth={2.5} style={{color:'var(--blue)'}}/>
+                <span style={{fontFamily:'var(--mono)',fontSize:11,fontWeight:700,color:'var(--blue)',letterSpacing:'0.06em'}}>{block.type.toUpperCase()}</span>
+              </div>
+              <div style={{display:'flex',flexWrap:'wrap',gap:'4px 16px'}}>
+                {block.items.map((item,j)=>(
+                  <span key={j} style={{fontFamily:'var(--khmer)',fontSize:12,color:'var(--ink)'}}>• {item}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* Next lesson + integration */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+        <div style={{border:'1px solid var(--blue)',padding:'16px 18px'}}>
+          <div style={{fontFamily:'var(--serif)',fontStyle:'italic',fontSize:13,fontWeight:700,color:'var(--blue)',marginBottom:10}}>🚀 Next Lesson</div>
+          {s.next?.map((n,i)=>(
+            <div key={i} style={{fontFamily:'var(--khmer)',fontSize:12,color:'var(--blue)',padding:'4px 0',borderBottom:'1px dotted var(--faint)'}}>→ {n}</div>
+          ))}
+        </div>
+        <div style={{border:'1px solid var(--green)',padding:'16px 18px'}}>
+          <div style={{fontFamily:'var(--serif)',fontStyle:'italic',fontSize:13,fontWeight:700,color:'var(--green)',marginBottom:10}}>🔥 Real-World Stack</div>
+          {s.integration?.map((itg,i)=>(
+            <div key={i} style={{padding:'4px 0',borderBottom:'1px dotted var(--faint)'}}>
+              <div style={{fontFamily:'var(--mono)',fontSize:11,fontWeight:700,color:'var(--green)'}}>{itg.stack}</div>
+              <div style={{fontFamily:'var(--mono)',fontSize:10,color:'#6a8070'}}>{itg.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    const s = slideParam ? parseInt(slideParam) - 1 : 0;
-    if (s !== current) {
-      setCurrent(Math.max(0, Math.min(s, displayPages.length - 1)));
-    }
-  }, [chapterParam, slideParam, displayPages.length]);
+function GenericSection({s}: {s: GitSection}) {
+  return (
+    <div style={{border:'1px solid var(--rule)',animation:'fadeSlide 0.3s ease'}}>
+      {s.commands?.map((c,i)=><CmdBlock key={i} {...c}/>)}
+    </div>
+  );
+}
 
-  const goTo = useCallback((idx: number, d: number) => {
-    if (isAnimating) return;
-    setDir(d); setIsAnimating(true);
-    
-    // Update URL manually during interaction
-    const params = new URLSearchParams(searchParams.toString());
-    if (idx === 0) params.delete('slide');
-    else params.set('slide', String(idx + 1));
-    router.push(`?${params.toString()}`, { scroll: false });
+// ─── MAIN ─────────────────────────────────────────────────────
+export default function GitLesson() {
+  const [active, setActive] = useState('intro');
+  const sect = SECTIONS.find(s=>s.id===active) || SECTIONS[0];
 
-    setTimeout(() => { setCurrent(idx); setIsAnimating(false); }, 250);
-  }, [isAnimating, router, searchParams]);
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem('git_notes_v3');
-      if (saved) setNotes(JSON.parse(saved));
-    } catch {}
-  }, []);
+  const prevSect = useCallback(()=>{
+    const i = SECTIONS.findIndex(s=>s.id===active);
+    if (i>0) setActive(SECTIONS[i-1].id);
+  },[active]);
+  const nextSect = useCallback(()=>{
+    const i = SECTIONS.findIndex(s=>s.id===active);
+    if (i<SECTIONS.length-1) setActive(SECTIONS[i+1].id);
+  },[active]);
 
-  const saveNote = (val: string) => {
-    const key = displayPages[current]?.id || 'x';
-    const next = { ...notes, [key]: val };
-    setNotes(next);
-    localStorage.setItem('git_notes_v3', JSON.stringify(next));
-  };
+  const idx = SECTIONS.findIndex(s=>s.id===active);
 
-  const slide = displayPages[current] ?? displayPages[0];
-  const Icon = slide.icon;
-  const ch = CHAPTERS.find(c => c.id === chapterParam) ?? CHAPTERS[0];
-
-  const next = useCallback(() => {
-    if (current < displayPages.length - 1) goTo(current + 1, 1);
-    else {
-      const ci = CHAPTERS.findIndex(c => c.id === chapterParam);
-      if (ci < CHAPTERS.length - 1) {
-        setDir(1);
-        router.push(`?chapter=${CHAPTERS[ci + 1].id}`);
-      }
-    }
-  }, [current, displayPages.length, chapterParam, goTo, router]);
-
-  const prev = useCallback(() => {
-    if (current > 0) goTo(current - 1, -1);
-    else {
-      const ci = CHAPTERS.findIndex(c => c.id === chapterParam);
-      if (ci > 0) {
-        setDir(-1);
-        const prevChId = CHAPTERS[ci - 1].id;
-        const prevSlidesCount = (GIT_SLIDES.filter(s => s.chapter === prevChId).length * 2) || 1;
-        router.push(`?chapter=${prevChId}&slide=${prevSlidesCount}`);
-      }
-    }
-  }, [current, chapterParam, goTo, router]);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).tagName === 'TEXTAREA') return;
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft') prev();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [next, prev]);
-
-  const V = {
-    enter: (d: number) => ({ x: d > 0 ? 32 : -32, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -32 : 32, opacity: 0 }),
-  };
+  function renderContent() {
+    if (active==='intro')    return <SectionIntro s={sect}/>;
+    if (active==='setup')    return <SectionSetup s={sect}/>;
+    if (active==='workflow') return <SectionWorkflow s={sect}/>;
+    if (active==='ignore')   return <SectionIgnore s={sect}/>;
+    if (active==='lab')      return <SectionLab s={sect}/>;
+    if (active==='plan')     return <SectionPlan s={sect}/>;
+    return <GenericSection s={sect}/>;
+  }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#030509', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: "'Noto Sans Khmer','Hanuman',serif" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700;900&family=Hanuman:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-        button { cursor: pointer; border: none; outline: none; background: none; }
-      `}</style>
+    <div style={{minHeight:'100vh',background:'var(--paper)',color:'var(--ink)',position:'relative',zIndex:1}}>
+      <style>{G}</style>
 
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', background: `radial-gradient(ellipse at 70% 50%, ${slide.accent}0a 0%, transparent 70%)` }}/>
-
-      <header style={{ height: 58, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', background: 'rgba(3,5,9,0.8)', backdropFilter: 'blur(20px)', zIndex: 50 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Link href="/courses/backend" style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, color: '#fff', textDecoration: 'none', fontSize: 11, fontWeight: 700 }}><ArrowLeft size={14}/> Back</Link>
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, color: '#fff' }}>
-            <div style={{ width: 22, height: 22, background: isMenuOpen ? ch.color : 'rgba(255,255,255,0.1)', color: isMenuOpen ? '#000' : '#4b5563', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{isMenuOpen ? <X size={12}/> : <Menu size={12}/>}</div>
-            <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: 8, color: ch.color, fontWeight: 800, textTransform: 'uppercase' }}>Chapter {ch.num}</div>
-              <div style={{ fontSize: 12, fontWeight: 700 }}>{ch.label}</div>
+      {/* ── TOPBAR ── */}
+      <header style={{position:'sticky',top:0,zIndex:50,background:'var(--ink)',borderBottom:'3px solid var(--amber)'}}>
+        <div style={{maxWidth:1000,margin:'0 auto',padding:'0 20px',display:'flex',alignItems:'center',justifyContent:'space-between',height:52}}>
+          {/* Brand */}
+          <div style={{display:'flex',alignItems:'center',gap:12}}>
+            <div style={{fontFamily:'var(--serif)',fontStyle:'italic',fontSize:22,fontWeight:700,color:'var(--paper)',letterSpacing:'-0.01em'}}>
+              Git<span style={{color:'var(--amber)'}}>.</span>
             </div>
-          </button>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            {displayPages.map((_, i) => <button key={i} onClick={() => goTo(i, i > current ? 1 : -1)} style={{ width: i === current ? 18 : 6, height: 6, borderRadius: 3, background: i === current ? ch.color : 'rgba(255,255,255,0.1)', transition: 'all 0.3s' }}/>)}
-            <span style={{ marginLeft: 8, fontSize: 10, color: '#4b5563', fontFamily: "'JetBrains Mono',monospace" }}>{current + 1}/{displayPages.length}</span>
+            <div style={{width:1,height:18,background:'rgba(255,255,255,0.15)'}}/>
+            <div style={{fontFamily:'var(--mono)',fontSize:9,fontWeight:700,color:'#6a7a8a',letterSpacing:'0.12em',textTransform:'uppercase'}}>
+              University Lesson ─ Beginner
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button onClick={prev} style={{ padding: 8, borderRadius: 8, background: 'rgba(255,255,255,0.03)', color: '#fff' }}><ChevronLeft size={16}/></button>
-            <button onClick={next} style={{ padding: 8, borderRadius: 8, background: 'rgba(255,255,255,0.03)', color: '#fff' }}><ChevronRight size={16}/></button>
+          {/* Progress */}
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <div style={{display:'flex',gap:3}}>
+              {SECTIONS.map((s,i)=>(
+                <div key={s.id} onClick={()=>setActive(s.id)} style={{width:i===idx?20:5,height:5,background:i===idx?'var(--amber)':i<idx?'#4a6070':'rgba(255,255,255,0.1)',transition:'all 0.3s',cursor:'pointer'}}/>
+              ))}
+            </div>
+            <span style={{fontFamily:'var(--mono)',fontSize:9,color:'#4a6070'}}>{idx+1}/{SECTIONS.length}</span>
+          </div>
+          {/* Nav */}
+          <div style={{display:'flex',gap:6}}>
+            <button onClick={prevSect} disabled={idx===0} style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,padding:'5px 12px',border:'1px solid rgba(255,255,255,0.15)',color:idx===0?'#2a3a4a':'var(--paper)',letterSpacing:'0.06em'}}>← PREV</button>
+            <button onClick={nextSect} disabled={idx===SECTIONS.length-1} style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,padding:'5px 12px',border:'1px solid var(--amber)',background:'var(--amber)',color:'var(--ink)',letterSpacing:'0.06em'}}>NEXT →</button>
           </div>
         </div>
       </header>
 
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMenuOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 80, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}/>
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} style={{ position: 'fixed', top: 68, left: 20, width: 320, background: '#0a0e1a', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)', padding: 8, zIndex: 90, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
-              {CHAPTERS.map(c => (
-                <button key={c.id} onClick={() => { router.push(`?chapter=${c.id}`); setIsMenuOpen(false); }} style={{ width: '100%', padding: 10, borderRadius: 10, display: 'flex', alignItems: 'center', gap: 12, background: c.id === chapterParam ? 'rgba(255,255,255,0.05)' : 'transparent' }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: c.id === chapterParam ? c.color : 'rgba(255,255,255,0.05)', color: c.id === chapterParam ? '#000' : c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>{c.num}</div>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: 9, color: c.color, fontWeight: 800 }}>CHAPTER</div>
-                    <div style={{ fontSize: 13, color: '#fff', fontWeight: 600 }}>{c.label}</div>
-                  </div>
-                </button>
-              ))}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <div style={{maxWidth:1000,margin:'0 auto',display:'flex',position:'relative',zIndex:1}}>
 
-      <main style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        <div style={{ width: '42%', borderRight: '1px solid rgba(255,255,255,0.05)', padding: '30px 40px', overflowY: 'auto' }}>
-          <AnimatePresence mode="wait" custom={dir}>
-            {!isAnimating && (
-              <motion.div key={current} custom={dir} variants={V} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* ── SIDEBAR ── */}
+        <aside style={{width:190,flexShrink:0,borderRight:'1px solid var(--rule)',minHeight:'calc(100vh - 52px)',position:'sticky',top:52,height:'calc(100vh - 52px)',overflowY:'auto',background:'var(--paper)'}}>
+          <div style={{padding:'16px 0'}}>
+            <div style={{fontFamily:'var(--mono)',fontSize:8,fontWeight:700,letterSpacing:'0.18em',color:'var(--rule)',padding:'0 14px',marginBottom:12}}>SECTIONS</div>
+            {SECTIONS.map((s,i)=>(
+              <button key={s.id} className={`nav-tab ${active===s.id?'active':''}`} onClick={()=>setActive(s.id)}
+                style={{width:'100%',textAlign:'left',padding:'9px 14px',display:'flex',gap:8,alignItems:'center',borderLeft:active===s.id?`3px solid ${s.color}`:'3px solid transparent',background:active===s.id?'var(--ink)':'transparent',transition:'all 0.15s'}}>
+                <s.icon size={16} strokeWidth={2.5} style={{color:active===s.id?s.color:'#666'}} />
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                    <span style={{ fontSize: 10, fontWeight: 800, color: ch.color, background: `${ch.color}15`, padding: '3px 8px', borderRadius: 4, textTransform: 'uppercase' }}>{ch.label}</span>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: '#4b5563' }}>{slide.id}</span>
-                  </div>
-                  {slide.section && (
-                    <div style={{ fontSize: 9, fontWeight: 900, color: slide.accent, background: `${slide.accent}14`, padding: '4px 10px', borderRadius: 6, display: 'inline-block', marginBottom: 12, letterSpacing: '0.1em', textTransform: 'uppercase', border: `1px solid ${slide.accent}20` }}>{slide.section}</div>
-                  )}
-                  <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-                    <div style={{ width: 64, height: 64, borderRadius: 16, background: `${slide.accent}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: slide.accent, flexShrink: 0 }}><Icon size={32}/></div>
-                    <div>
-                      <h1 style={{ fontSize: 42, fontWeight: 800, color: '#fff', lineHeight: 1.1 }}>{slide.subType === 'lab' ? `${slide.title} (Practice)` : slide.title}</h1>
-                      <p style={{ fontSize: 18, color: '#94a3b8', marginTop: 8, fontWeight: 500 }}>{slide.subType === 'lab' ? 'អនុវត្តជាក់ស្តែងជាមួយ commands' : slide.subtitle}</p>
-                    </div>
-                  </div>
+                  <div style={{fontFamily:'var(--mono)',fontSize:8,color:active===s.id?'rgba(255,255,255,0.4)':'var(--rule)',letterSpacing:'0.1em'}}>{s.num}</div>
+                  <div style={{fontFamily:'var(--mono)',fontSize:11,fontWeight:600,color:active===s.id?'var(--paper)':'var(--ink)',lineHeight:1.3}}>{s.label}</div>
                 </div>
-
-                {slide.subType === 'concept' ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    {slide.concepts.map((c, i) => (
-                      <div key={i} style={{ padding: '24px 28px', background: 'rgba(255,255,255,0.03)', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                          <div style={{ width: 6, height: 6, borderRadius: '50%', background: slide.accent }}/>
-                          <div style={{ fontSize: 12, fontWeight: 800, color: slide.accent, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{c.label}</div>
-                        </div>
-                        <p style={{ fontSize: 20, color: '#fff', lineHeight: 1.6, fontWeight: 500 }}>{c.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : slide.subType === 'variables' ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    <div style={{ fontSize: 14, fontWeight: 900, color: '#94a3b8', marginBottom: 12, letterSpacing: '0.15em' }}>REPOSITORY DICTIONARY</div>
-                    {slide.variables?.map((v, i) => (
-                      <div key={i} style={{ padding: '24px 28px', background: 'rgba(255,255,255,0.03)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <div style={{ color: slide.accent, fontWeight: 900, fontSize: 22, fontFamily: "'JetBrains Mono', monospace", marginBottom: 6 }}>{v.label}</div>
-                        <div style={{ fontSize: 18, color: '#fff', fontWeight: 500 }}>{v.desc}</div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                    <div style={{ padding: '24px 28px', background: 'rgba(251,191,36,0.05)', borderRadius: 20, border: '1px solid rgba(251,191,36,0.15)', borderLeft: '6px solid #fbbf24', display: 'flex', gap: 20 }}>
-                      <Sparkles size={24} style={{ color: '#fbbf24', flexShrink: 0 }}/>
-                      <p style={{ fontSize: 18, color: '#fcd34d', fontStyle: 'italic', lineHeight: 1.6, fontWeight: 500 }}>{slide.tip}</p>
-                    </div>
-                    <div style={{ padding: '24px 28px', background: 'rgba(255,255,255,0.03)', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', borderLeft: `6px solid ${slide.accent}` }}>
-                      <div style={{ fontSize: 14, fontWeight: 900, color: slide.accent, textTransform: 'uppercase', marginBottom: 10, letterSpacing: '0.1em' }}>Objective</div>
-                      <p style={{ fontSize: 24, color: '#fff', fontWeight: 700 }}>{slide.lab}</p>
-                    </div>
-                    <div style={{ padding: '24px 28px', background: 'rgba(74,222,128,0.05)', borderRadius: 20, border: '1px solid rgba(74,222,128,0.15)', borderLeft: '6px solid #4ade80' }}>
-                      <div style={{ fontSize: 14, fontWeight: 900, color: '#4ade80', textTransform: 'uppercase', marginBottom: 10, letterSpacing: '0.1em' }}>Expected Result</div>
-                      <p style={{ fontSize: 18, color: '#fff', fontWeight: 500 }}>{slide.result}</p>
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', gap: 10, marginTop: 'auto', paddingBottom: 20 }}>
-                  <button onClick={prev} style={{ width: 44, height: 44, background: 'rgba(255,255,255,0.03)', borderRadius: 12, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><ChevronLeft size={18}/></button>
-                  <button onClick={next} style={{ flex: 1, background: slide.accent, borderRadius: 12, color: '#000', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                    {current === displayPages.length - 1 ? 'Next Chapter' : slide.subType === 'concept' ? 'Start Practice' : 'Next Lesson'} <ChevronRight size={16}/>
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <div style={{ flex: 1, padding: 24, background: 'rgba(0,0,0,0.2)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <Terminal size={12} style={{ color: '#4b5563' }}/>
-            <span style={{ fontSize: 9, fontWeight: 800, color: '#4b5563', textTransform: 'uppercase' }}>Terminal & Code Area</span>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.05)' }}/>
+              </button>
+            ))}
           </div>
-          <CodePanel
-            code={slide.code}
-            terminal={slide.terminal}
-            terminalOutput={slide.terminalOutput}
-            accent={slide.accent}
-            filename={slide.filename}
-            subType={slide.subType as 'concept' | 'variables' | 'lab'}
-          />
-        </div>
-      </main>
+        </aside>
 
-      <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 100 }}>
-        <button onClick={() => setShowNotes(!showNotes)} style={{ width: 44, height: 44, background: showNotes ? '#fbbf24' : 'rgba(255,255,255,0.05)', color: showNotes ? '#000' : '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}><StickyNote size={20}/></button>
+        {/* ── MAIN CONTENT ── */}
+        <main style={{flex:1,padding:'32px 28px',minWidth:0}}>
+
+          {/* Section header */}
+          <div style={{marginBottom:28,paddingBottom:20,borderBottom:'2px solid var(--ink)'}}>
+            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:16,flexWrap:'wrap'}}>
+              <div>
+                <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:10}}>
+                  <div style={{fontFamily:'var(--mono)',fontSize:9,fontWeight:700,letterSpacing:'0.14em',color:'rgba(0,0,0,0.3)'}}>{sect.num}</div>
+                  <div style={{fontFamily:'var(--mono)',fontSize:9,fontWeight:700,color:sect.color,letterSpacing:'0.1em',padding:'2px 8px',border:`1px solid ${sect.color}`,background:sect.color==='var(--green)'?'rgba(42,107,58,0.06)':sect.color==='var(--blue)'?'rgba(30,61,107,0.06)':sect.color==='var(--red)'?'rgba(184,50,40,0.06)':'rgba(139,98,0,0.06)'}}>
+                    {sect.subtitle}
+                  </div>
+                </div>
+                <h1 style={{fontFamily:'var(--serif)',fontSize:'clamp(28px,4vw,44px)',fontWeight:900,lineHeight:1.1,color:'var(--ink)',letterSpacing:'-0.02em',display:'flex',alignItems:'center',gap:16}}>
+                  <sect.icon size={44} strokeWidth={2.5} style={{color:sect.color}} /> {sect.title}
+                </h1>
+                <div style={{fontFamily:'var(--khmer)',fontSize:14,color:'var(--amber)',fontWeight:700,marginTop:6}}>{sect.khmer}</div>
+              </div>
+              {/* Stamp */}
+              <div style={{fontFamily:'var(--serif)',fontStyle:'italic',fontSize:11,color:'var(--rule)',border:'2px solid var(--rule)',padding:'6px 12px',transform:'rotate(-2deg)',animation:'stamp 0.4s ease',flexShrink:0}}>
+                Lesson {sect.num}<br/>of {SECTIONS.length}
+              </div>
+            </div>
+            <p style={{fontFamily:'var(--khmer)',fontSize:13.5,color:'#4a3c28',lineHeight:1.75,marginTop:14,maxWidth:600}}>{sect.desc}</p>
+          </div>
+
+          {/* Section body */}
+          {renderContent()}
+
+          {/* Pro tip */}
+          {sect.tip&&(
+            <div style={{marginTop:20,display:'flex',gap:12,padding:'14px 18px',background:'rgba(139,98,0,0.06)',border:'1px solid var(--amber)',borderLeft:'4px solid var(--amber)'}}>
+              <Lightbulb size={24} style={{color:'var(--amber)',flexShrink:0}} />
+              <div>
+                <div style={{fontFamily:'var(--mono)',fontSize:9,fontWeight:700,color:'var(--amber)',letterSpacing:'0.1em',marginBottom:5}}>PRO TIP</div>
+                <p style={{fontFamily:'var(--khmer)',fontSize:13,color:'#6a4a00',lineHeight:1.65}}>{sect.tip}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom nav */}
+          <div style={{marginTop:32,paddingTop:20,borderTop:'1px dashed var(--rule)',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <button onClick={prevSect} disabled={idx===0} style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,padding:'8px 18px',border:'1px solid var(--rule)',color:idx===0?'var(--faint)':'var(--ink)',letterSpacing:'0.06em',background:'transparent'}}>← PREV</button>
+            <div style={{display:'flex',gap:4}}>
+              {SECTIONS.map((s,i)=>(
+                <button key={s.id} onClick={()=>setActive(s.id)} style={{width:i===idx?18:6,height:6,padding:0,background:i===idx?'var(--ink)':i<idx?'var(--rule)':'var(--faint)',transition:'all 0.3s'}}/>
+              ))}
+            </div>
+            <button onClick={nextSect} disabled={idx===SECTIONS.length-1} style={{fontFamily:'var(--mono)',fontSize:10,fontWeight:700,padding:'8px 18px',border:'2px solid var(--ink)',color:'var(--paper)',background:'var(--ink)',letterSpacing:'0.06em'}}>NEXT →</button>
+          </div>
+        </main>
       </div>
-
-      <AnimatePresence>
-        {showNotes && (
-          <motion.div initial={{ x: 300 }} animate={{ x: 0 }} exit={{ x: 300 }} style={{ position: 'fixed', top: 80, right: 20, bottom: 80, width: 300, background: '#0a0e1a', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)', padding: 20, zIndex: 110, display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 12 }}>Field Notes</h3>
-            <textarea value={notes[slide.id] || ''} onChange={e => saveNote(e.target.value)} placeholder="កត់ត្រាចំណាំនៅទីនេះ..." style={{ flex: 1, background: 'rgba(255,255,255,0.03)', border: 'none', borderRadius: 12, padding: 12, color: '#fff', resize: 'none', outline: 'none', fontSize: 14 }}/>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

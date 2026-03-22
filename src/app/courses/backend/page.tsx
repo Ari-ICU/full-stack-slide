@@ -9,7 +9,7 @@ import {
   ChevronRight, Layers, Globe, Terminal, GitBranch,
   MousePointer2, ArrowLeft, Search, RotateCcw, Lock,
   Layout, RefreshCw, Sparkles, Rocket,
-  Grid, Send, Shield, Trophy,
+  Grid, Send, Shield, Trophy, Box, List,
 } from "lucide-react";
 
 /* ─── MODULE DATA ────────────────────────────────────────────────── */
@@ -29,58 +29,32 @@ interface Module {
 }
 
 const modules: Module[] = [
-  // STAGE 1: CORE PHP FOUNDATIONS
+  // STAGE 1: PHP CORE
   {
-    href: "/courses/backend/lessons/php?chapter=intro",
-    num: "01", label: "PHP Mastery: Foundations", tag: "Stage 1",
-    description: "The Engine: Mastering syntax, variables, complex data orchestration, and custom logic.",
-    color: "#10b981", dimColor: "rgba(16,185,129,0.12)", icon: Code,
-    weeks: "Weeks 1-3", lessons: 15, skills: ["Logic", "Data Types", "Arrays", "Functions"],
-    lessonsList: ["Foundations", "Logic Ops", "Array Mastery"]
+    href: "/courses/backend/lessons/php",
+    num: "01", label: "PHP Mastery", tag: "The Core Language",
+    description: "From foundations to advanced OOP architecture. Mastering modern PHP 8.x logic, types, and enterprise data structures.",
+    color: "#a78bfa", dimColor: "rgba(167,139,250,0.12)", icon: Terminal,
+    weeks: "Weeks 1-9", lessons: 17, skills: ["Foundations", "Control Flow", "Functions", "OOP Architecture"],
+    lessonsList: ["Language Core", "Functions & Types", "Arrays & Data", "OOP Design Patterns"]
   },
-  {
-    href: "/courses/backend/lessons/php?chapter=mysql",
-    num: "02", label: "Advanced PHP & SQL", tag: "Stage 1",
-    description: "The Architecture: OOP, PDO Database connections, Security (XSS/SQLi), and Session management.",
-    color: "#6366f1", dimColor: "rgba(99,102,241,0.12)", icon: Database,
-    weeks: "Weeks 4-6", lessons: 12, skills: ["OOP", "SEC", "PDO", "State Management"],
-    lessonsList: ["OOP", "PDO Core", "Sec Ops"]
-  },
-
-  // STAGE 2: VERSION CONTROL
+  // STAGE 2: GIT WORKFLOW
   {
     href: "/courses/backend/lessons/git",
-    num: "03", label: "Git & Team Workflow", tag: "Stage 2",
-    description: "The Collaboration: Professional branching strategies, merge conflict resolution, and PR reviews.",
-    color: "#f59e0b", dimColor: "rgba(245,158,11,0.12)", icon: GitBranch,
-    weeks: "Week 7", lessons: 5, skills: ["Git", "PRs", "Branching", "Stashed Flow"],
-    lessonsList: ["Branching", "Merging", "Collaboration"]
+    num: "02", label: "Git & Teamwork", tag: "Development Workflow",
+    description: "Professional team collaboration, branching strategies, and merge conflict operations for real-world engineering.",
+    color: "#fb923c", dimColor: "rgba(251,146,60,0.12)", icon: GitBranch,
+    weeks: "Week 10", lessons: 8, skills: ["Git", "Merging", "Branching", "Collaborative Flow"],
+    lessonsList: ["Version Control", "Branch Management", "Conflicts", "Code Reviews"]
   },
-
   // STAGE 3: LARAVEL FRAMEWORK
   {
-    href: "/courses/backend/lessons/laravel?chapter=intro",
-    num: "04", label: "Laravel Architecture", tag: "Stage 3",
-    description: "The Framework: Routing, Controllers, Blade engine, and the Artisan CLI ecosystem.",
-    color: "#f43f5e", dimColor: "rgba(244,63,94,0.12)", icon: Layers,
-    weeks: "Weeks 8-10", lessons: 10, skills: ["MVC", "Artisan", "Blade", "Routes"],
-    lessonsList: ["Routing", "Controllers", "Layouts"]
-  },
-  {
-    href: "/courses/backend/lessons/laravel?chapter=database",
-    num: "05", label: "Eloquent & Auth Power", tag: "Stage 3",
-    description: "The Power: Deep dive into Eloquent ORM, Relationships, Migrations, and Middleware security.",
-    color: "#06b6d4", dimColor: "rgba(6,182,212,0.12)", icon: Lock,
-    weeks: "Weeks 11-13", lessons: 12, skills: ["ORM", "Auth", "Middleware", "Seeding"],
-    lessonsList: ["Migrations", "Eloquent", "Breeze"]
-  },
-  {
-    href: "/courses/backend/lessons/laravel?chapter=api",
-    num: "06", label: "Advanced Scalability", tag: "Stage 3",
-    description: "The Scale: RESTful APIs, background queues, Redis optimization, and global deployment via Forge.",
-    color: "#a855f7", dimColor: "rgba(168,85,247,0.12)", icon: Rocket,
-    weeks: "Weeks 14-16", lessons: 12, skills: ["APIs", "Queues", "Redis", "CI/CD"],
-    lessonsList: ["Sanctum", "Queues", "Horizon", "Deploy"]
+    href: "/courses/backend/lessons/laravel",
+    num: "03", label: "Laravel Ecosystem", tag: "Enterprise Framework",
+    description: "Building high-performance, enterprise-ready web applications and REST APIs using the world's most elegant framework.",
+    color: "#f43f5e", dimColor: "rgba(244,63,94,0.12)", icon: Rocket,
+    weeks: "Weeks 11-21", lessons: 13, skills: ["MVC Architecture", "Eloquent ORM", "Auth & API", "Enterprise Scaling"],
+    lessonsList: ["Framework Architecture", "Database & ORM", "Auth & Security", "Advanced Deployment"]
   }
 ];
 
@@ -105,12 +79,12 @@ function ModuleCard({ mod, isLeft }: { mod: Module; isLeft: boolean }) {
           className="relative rounded-3xl border overflow-hidden"
           style={{
             background: hovered
-              ? `linear-gradient(135deg, rgba(255,255,255,0.04) 0%, ${mod.dimColor} 100%)`
-              : 'rgba(255,255,255,0.02)',
-            borderColor: hovered ? `${mod.color}55` : 'rgba(255,255,255,0.07)',
-            boxShadow: hovered ? `0 0 40px ${mod.color}15, 0 0 0 1px ${mod.color}25` : 'none',
-            transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-            transition: 'all 0.35s cubic-bezier(0.32, 0.72, 0, 1)',
+              ? `linear-gradient(135deg, rgba(255,255,255,0.06) 0%, ${mod.dimColor} 100%)`
+              : 'rgba(255,255,255,0.025)',
+            borderColor: hovered ? `${mod.color}77` : 'rgba(255,255,255,0.08)',
+            boxShadow: hovered ? `0 0 60px ${mod.color}18, 0 0 0 1px ${mod.color}35` : 'none',
+            transform: hovered ? 'translateY(-6px) scale(1.01)' : 'translateY(0) scale(1)',
+            transition: 'all 0.45s cubic-bezier(0.32, 0.72, 0, 1)',
           }}
         >
           {/* Top accent bar */}
@@ -173,13 +147,13 @@ function ModuleCard({ mod, isLeft }: { mod: Module; isLeft: boolean }) {
               <div className="flex items-center gap-2 text-[10px] text-white/20 font-mono">
                 <span>{mod.weeks}</span>
                 <span className="w-1 h-1 rounded-full bg-white/10" />
-                <span>{mod.lessons} lessons</span>
+                <span>{mod.lessons} slides</span>
               </div>
               <div
                 className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest"
                 style={{ color: mod.color, gap: hovered ? '10px' : '6px', transition: 'gap 0.3s' }}
               >
-                Start Module <ChevronRight className="w-3.5 h-3.5" />
+                Start Learning <ChevronRight className="w-3.5 h-3.5" />
               </div>
             </div>
           </div>
@@ -237,6 +211,7 @@ function Connector({ from, to, toRight }: { from: string; to: string; toRight: b
               fill="none"
             />
             <circle cx="280" cy="40" r="3" fill={to} opacity="0.7" />
+            <path d="M 275 36 L 280 40 L 285 36" stroke={to} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
           </>
         ) : (
           <>
@@ -249,6 +224,7 @@ function Connector({ from, to, toRight }: { from: string; to: string; toRight: b
               fill="none"
             />
             <circle cx="40" cy="40" r="3" fill={to} opacity="0.7" />
+            <path d="M 35 36 L 40 40 L 45 36" stroke={to} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
           </>
         )}
       </svg>
@@ -256,13 +232,127 @@ function Connector({ from, to, toRight }: { from: string; to: string; toRight: b
   );
 }
 
+/* ─── ROADMAP SECTION ────────────────────────────────────────────── */
+function RoadmapSection() {
+  return (
+    <div className="relative max-w-4xl mx-auto">
+      <div
+        className="absolute left-1/2 top-8 bottom-8 w-px -translate-x-1/2 hidden md:block pointer-events-none"
+        style={{
+          background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05) 8%, rgba(255,255,255,0.05) 92%, transparent)',
+        }}
+      />
+
+      <div className="space-y-0">
+        {modules.map((mod, i) => {
+          const isLeft = i % 2 === 0;
+          const nextMod = modules[i + 1];
+
+          return (
+            <div key={mod.href}>
+              <div className="grid md:grid-cols-[1fr_auto_1fr] gap-x-6 items-center">
+                <div>
+                  {isLeft
+                    ? <ModuleCard mod={mod} isLeft={true} />
+                    : <div className="hidden md:flex justify-end pr-4 text-[9px] font-black uppercase tracking-widest opacity-40" style={{ color: mod.color }}>{mod.weeks}</div>
+                  }
+                </div>
+                <div className="hidden md:flex justify-center"><SpineNode mod={mod} /></div>
+                <div>
+                  {!isLeft
+                    ? <ModuleCard mod={mod} isLeft={false} />
+                    : <div className="hidden md:flex justify-start pl-4 text-[9px] font-black uppercase tracking-widest opacity-40" style={{ color: mod.color }}>{mod.weeks}</div>
+                  }
+                </div>
+                <div className="md:hidden col-span-3">
+                  <ModuleCard mod={mod} isLeft={true} />
+                </div>
+              </div>
+
+              {nextMod && (
+                <div className="hidden md:block">
+                  <Connector from={mod.color} to={nextMod.color} toRight={isLeft} />
+                </div>
+              )}
+
+              {nextMod && (
+                <div className="md:hidden flex flex-col items-center py-3">
+                  <div className="w-px h-8" style={{ background: `linear-gradient(to bottom, ${mod.color}55, ${nextMod.color}55)` }} />
+                  <div className="w-2 h-2 rounded-full mt-1" style={{ background: nextMod.color, opacity: 0.6 }} />
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* ── FINISH NODE ── */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3, type: 'spring', stiffness: 180 }}
+          className="flex justify-center mt-8 pt-4"
+        >
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="w-20 h-20 rounded-full border-2 flex items-center justify-center"
+              style={{
+                borderColor: 'rgba(16,185,129,0.45)',
+                background: 'rgba(16,185,129,0.08)',
+                boxShadow: '0 0 50px rgba(16,185,129,0.12)',
+              }}
+            >
+              <Trophy className="w-8 h-8" style={{ color: '#10b981' }} />
+            </div>
+            <div className="text-center">
+              <p className="text-xs font-black uppercase tracking-[0.25em] text-emerald-400/60">Employment Ready</p>
+              <p className="text-[10px] text-white/20 mt-1 font-mono">{totalLessons}+ interactive modules · 21 weeks</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── MODULE STRIP ───────────────────────────────────────────────── */
+function ModuleStrip() {
+  return (
+    <div className="flex items-stretch rounded-2xl overflow-hidden border border-white/6 mt-8">
+      {modules.map((mod, i) => (
+        <Link
+          key={mod.href}
+          href={mod.href}
+          className="flex-1 group relative flex flex-col items-center gap-1.5 py-3.5 px-2 hover:bg-white/4 transition-colors"
+          style={{ borderRight: i < modules.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}
+        >
+          <mod.icon className="w-4 h-4" style={{ color: mod.color, opacity: 0.7 }} />
+          <span className="text-[8px] font-black text-white/20 uppercase tracking-widest text-center leading-tight hidden sm:block">
+            {mod.num}
+          </span>
+          <div
+            className="absolute bottom-0 left-0 right-0 h-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{ background: mod.color }}
+          />
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+/* ─── PAGE ───────────────────────────────────────────────────────── */
 export default function BackendRoadmap() {
   return (
-    <div className="min-h-screen bg-[#080c14] text-white selection:bg-emerald-500/25 overflow-x-hidden">
+    <div className="min-h-screen bg-[#080c14] text-white selection:bg-emerald-500/25 overflow-x-hidden font-sans">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+      `}</style>
+
       {/* Fixed background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-20%] left-[-15%] w-[55%] h-[55%] bg-emerald-700/5 rounded-full blur-[180px]" />
         <div className="absolute bottom-[-15%] right-[-10%] w-[45%] h-[45%] bg-blue-700/5 rounded-full blur-[160px]" />
+        <div className="absolute top-[45%] left-[35%] w-[30%] h-[30%] bg-purple-700/4 rounded-full blur-[130px]" />
         <div
           className="absolute inset-0 opacity-100"
           style={{
@@ -277,9 +367,9 @@ export default function BackendRoadmap() {
 
       <main className="max-w-5xl mx-auto px-6 py-20 md:py-28 relative z-10">
         
-        <Link href="/" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-white transition-colors mb-12">
+        {/* <Link href="/" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/20 hover:text-white transition-colors mb-12">
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Specialties
-        </Link>
+        </Link> */}
 
         {/* ── HERO ── */}
         <motion.div
@@ -290,26 +380,26 @@ export default function BackendRoadmap() {
         >
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-emerald-500/20 bg-emerald-500/6 text-emerald-400 text-[10px] font-black uppercase tracking-[0.22em]">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Backend Engineer Roadmap · 1h/Day · Mon-Fri
+            Backend Engineer Roadmap · 21 Weeks · 1h/Day
           </div>
 
           <div className="max-w-3xl space-y-3">
-            <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.86] italic">
-              Core Backend Roadmap
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.82] italic" style={{ fontFamily: "'DM Mono', monospace" }}>
+              Core Backend
               <br />
-              <span style={{ WebkitTextStroke: '2px rgba(255,255,255,0.12)', color: 'transparent' }}>PHP · Git · Laravel</span>
+              <span className="text-white/80">Engineering</span>
             </h1>
-            <p className="text-base text-white/28 leading-relaxed max-w-xl font-light">
-              An elite, precision-engineered <span className="text-white/55 font-semibold">16-week journey</span> — mastering the core tech stack used by elite engineering teams.
+            <p className="text-lg text-white/35 leading-relaxed max-w-xl font-light">
+              Master the <span className="text-white/70 font-semibold italic underline decoration-emerald-500/40 underline-offset-4">Gold Standard</span> of backend development with our precision-engineered core curriculum.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2.5">
             {[
-              { label: '6 Major Phases',          Icon: Grid,     color: '#10b981' },
-              { label: '16 Weeks',                Icon: Clock,    color: '#3b82f6' },
-              { label: '1h / Day',                Icon: Zap,      color: '#fb923c' },
-              { label: 'Mon - Fri',               Icon: Terminal, color: '#a855f7' },
+              { label: 'PHP & OOP',               Icon: Terminal, color: '#8b5cf6' },
+              { label: 'Git Workflow',            Icon: GitBranch,color: '#f59e0b' },
+              { label: 'Laravel 11',              Icon: Layers,   color: '#f43f5e' },
+              { label: 'MySQL & SQL',             Icon: Database, color: '#06b6d4' },
             ].map(s => (
               <div
                 key={s.label}
@@ -325,47 +415,42 @@ export default function BackendRoadmap() {
               </div>
             ))}
           </div>
+
+          <ModuleStrip />
+        </motion.div>
+
+        {/* ── SECTION DIVIDER ── */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="flex items-center gap-4 mb-14"
+        >
+          <div className="h-px flex-1 bg-white/5" />
+          <div className="flex items-center gap-2 text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
+            <ArrowRight className="w-3 h-3" />
+            Path to Mastery
+          </div>
+          <div className="h-px flex-1 bg-white/5" />
         </motion.div>
 
         {/* ── ZIGZAG ROADMAP ── */}
-        <div className="relative max-w-4xl mx-auto mt-20">
-          <div className="absolute left-1/2 top-8 bottom-8 w-px -translate-x-1/2 hidden md:block pointer-events-none"
-            style={{ background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05) 8%, rgba(255,255,255,0.05) 92%, transparent)' }} />
-
-          <div className="space-y-0">
-            {modules.map((mod, i) => {
-              const isLeft = i % 2 === 0;
-              const nextMod = modules[i + 1];
-
-              return (
-                <div key={mod.num}>
-                  <div className="grid md:grid-cols-[1fr_auto_1fr] gap-x-6 items-center">
-                    <div>{isLeft ? <ModuleCard mod={mod} isLeft={true} /> : null}</div>
-                    <div className="hidden md:flex justify-center"><SpineNode mod={mod} /></div>
-                    <div>{!isLeft ? <ModuleCard mod={mod} isLeft={false} /> : null}</div>
-                    <div className="md:hidden col-span-3"><ModuleCard mod={mod} isLeft={true} /></div>
-                  </div>
-                  {nextMod && (
-                    <div className="hidden md:block">
-                      <Connector from={mod.color} to={nextMod.color} toRight={isLeft} />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <RoadmapSection />
 
         {/* ── FOOTER ── */}
         <footer className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-8">
             <div className="flex flex-col gap-0.5">
+              <span className="text-[9px] font-black text-white/18 uppercase tracking-[0.2em]">Pace</span>
+              <span className="text-sm font-bold text-white/38">1h/Day · Mon-Fri</span>
+            </div>
+            <div className="flex flex-col gap-0.5">
               <span className="text-[9px] font-black text-white/18 uppercase tracking-[0.2em]">Format</span>
               <span className="text-sm font-bold text-white/38">Interactive Masterclass</span>
             </div>
             <div className="flex flex-col gap-0.5">
-              <span className="text-[9px] font-black text-white/18 uppercase tracking-[0.2em]">Pace</span>
-              <span className="text-sm font-bold text-white/38">1h/Day · 5h/Week</span>
+              <span className="text-[9px] font-black text-white/18 uppercase tracking-[0.2em]">Level</span>
+              <span className="text-sm font-bold text-white/38">Junior → Senior</span>
             </div>
           </div>
           <div className="text-[10px] font-black uppercase tracking-widest text-emerald-400/60 flex items-center gap-2">
