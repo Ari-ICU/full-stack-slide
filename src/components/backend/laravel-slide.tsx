@@ -48,8 +48,6 @@ interface ModuleData {
 const GLOBAL_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Noto+Sans+Khmer:wght@400;600;800;900&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --bg: #0a0a08;
   --surface: #111110;
@@ -77,6 +75,8 @@ const GLOBAL_CSS = `
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   background: var(--bg);
@@ -120,6 +120,29 @@ button { cursor: pointer; font-family: var(--sans); }
 .step-item:hover { border-color: var(--step-color, var(--border)) !important; }
 
 .copy-btn:hover { opacity: 1 !important; }
+
+/* Responsive Utility Classes */
+.hide-mobile { display: block; }
+.mobile-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.mobile-wrap { display: flex; flex-wrap: wrap; }
+.mobile-padding { padding: 48px 24px 80px; }
+
+@media (max-width: 1024px) {
+  .mobile-stack { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+  .mobile-padding { padding: 24px 16px 60px !important; }
+  
+  .hero-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .hero-title { font-size: 48px !important; }
+  
+  .module-nav { height: auto !important; flex-direction: column; align-items: stretch !important; }
+  .module-nav-top { display: flex; align-items: center; border-bottom: 1px solid var(--border); height: 50px; }
+  .module-tabs { overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+  .module-tabs::-webkit-scrollbar { display: none; }
+}
 `;
 
 // ─── DATA ──────────────────────────────────────────────────────
@@ -5442,7 +5465,7 @@ function Overview({ onSelect }: { onSelect: (index: number) => void }) {
   const totalHours = MODULES.reduce((sum, m) => sum + parseFloat(m.hours), 0);
 
   return (
-    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "48px 24px 80px" }}>
+    <div className="mobile-padding" style={{ maxWidth: 1120, margin: "0 auto" }}>
       {/* Hero */}
       <div className="anim-up" style={{ marginBottom: 56 }}>
         <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 20 }}>
@@ -5450,9 +5473,9 @@ function Overview({ onSelect }: { onSelect: (index: number) => void }) {
           <span style={{ fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, color: "var(--red)", letterSpacing: "0.14em" }}>UNIVERSITY CURRICULUM · BACKEND DEVELOPMENT</span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 48, alignItems: "start", flexWrap: "wrap" }}>
+        <div className="hero-grid" style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 48, alignItems: "start" }}>
           <div>
-            <h1 style={{ fontFamily: "var(--serif)", fontSize: "clamp(40px,6vw,72px)", fontWeight: 900, lineHeight: 0.95, marginBottom: 20, letterSpacing: "-0.02em" }}>
+            <h1 className="hero-title" style={{ fontFamily: "var(--serif)", fontSize: "clamp(40px,6vw,72px)", fontWeight: 900, lineHeight: 0.95, marginBottom: 20, letterSpacing: "-0.02em" }}>
               Backend Dev<br />
               <span style={{ fontStyle: "italic", color: "var(--red)", fontWeight: 300 }}>with Laravel</span>
             </h1>
@@ -5478,7 +5501,7 @@ function Overview({ onSelect }: { onSelect: (index: number) => void }) {
           </div>
 
           {/* Grading breakdown */}
-          <div style={{ width: 260, border: "1px solid var(--border-strong)", padding: 24, background: "var(--surface)", borderRadius: 4, flexShrink: 0 }}>
+          <div style={{ width: "min(320px, 100%)", border: "1px solid var(--border-strong)", padding: 24, background: "var(--surface)", borderRadius: 4, flexShrink: 0 }}>
             <div style={{ fontFamily: "var(--mono)", fontSize: 9, fontWeight: 700, color: "var(--ink-faint)", letterSpacing: "0.12em", marginBottom: 18, borderBottom: "1px solid var(--border)", paddingBottom: 10 }}>GRADING BREAKDOWN</div>
             {[
               { label: "Final Capstone Project", pct: 40, color: "var(--purple)" },
@@ -5549,33 +5572,37 @@ function ModulePage({ mod: m, onBack, onPrev, onNext, canPrev, canNext, currentI
     <div className="anim-in">
       {/* Module nav bar */}
       <div style={{ position: "sticky", top: 52, zIndex: 9, background: "var(--bg)", borderBottom: "1px solid var(--border)" }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, height: 50 }}>
-          <button onClick={onBack} style={{ padding: "0 16px", height: "100%", border: "none", borderRight: "1px solid var(--border)", background: "transparent", color: "var(--ink-dim)", fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", cursor: "pointer" }}>
-            ← ALL
-          </button>
+        <div className="module-nav" style={{ maxWidth: 1120, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", gap: 0, height: 50 }}>
+          <div className="module-nav-top" style={{ flex: 1, display: "flex", alignItems: "center" }}>
+            <button onClick={onBack} style={{ padding: "0 16px", height: "100%", border: "none", borderRight: "1px solid var(--border)", background: "transparent", color: "var(--ink-dim)", fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", cursor: "pointer" }}>
+              ← ALL
+            </button>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", flex: 1 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: m.color, flexShrink: 0 }} />
-            <div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: m.color, letterSpacing: "0.1em" }}>MODULE {m.num} · {m.section} · {m.hours}</div>
-              <div style={{ fontFamily: "var(--serif)", fontSize: 14, fontWeight: 700, color: "var(--ink)", lineHeight: 1.2 }}>{m.title}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "0 20px", flex: 1, minWidth: 0 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: m.color, flexShrink: 0 }} />
+              <div style={{ overflow: "hidden" }}>
+                <div className="hide-mobile" style={{ fontFamily: "var(--mono)", fontSize: 9, color: m.color, letterSpacing: "0.1em" }}>MODULE {m.num} · {m.section} · {m.hours}</div>
+                <div style={{ fontFamily: "var(--serif)", fontSize: 14, fontWeight: 700, color: "var(--ink)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.title}</div>
+              </div>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div style={{ display: "flex", height: "100%", borderLeft: "1px solid var(--border)" }}>
-            {tabs.map(t => (
-              <button key={t.id} className="tab-item" onClick={() => setTab(t.id)}
-                style={{ padding: "0 16px", height: "100%", border: "none", borderLeft: "1px solid var(--border)", background: tab === t.id ? "var(--surface)" : "transparent", color: tab === t.id ? m.color : "var(--ink-dim)", fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", cursor: "pointer", borderBottom: tab === t.id ? `2px solid ${m.color}` : "2px solid transparent", transition: "all 0.15s" }}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-          {/* Prev/Next */}
-          <div style={{ display: "flex", borderLeft: "1px solid var(--border)", height: "100%" }}>
-            <button onClick={onPrev} disabled={!canPrev} style={{ padding: "0 14px", height: "100%", border: "none", background: "transparent", color: canPrev ? "var(--ink-dim)" : "var(--border)", fontFamily: "var(--mono)", fontSize: 12, cursor: canPrev ? "pointer" : "not-allowed" }}>‹</button>
-            <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink-faint)", display: "flex", alignItems: "center", padding: "0 4px" }}>{currentIndex + 1}/{MODULES.length}</span>
-            <button onClick={onNext} disabled={!canNext} style={{ padding: "0 14px", height: "100%", border: "none", background: "transparent", color: canNext ? "var(--ink-dim)" : "var(--border)", fontFamily: "var(--mono)", fontSize: 12, cursor: canNext ? "pointer" : "not-allowed" }}>›</button>
+          <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
+            {/* Tabs */}
+            <div className="module-tabs" style={{ display: "flex", height: "100%", borderLeft: "1px solid var(--border)" }}>
+              {tabs.map(t => (
+                <button key={t.id} className="tab-item" onClick={() => setTab(t.id)}
+                  style={{ padding: "0 16px", height: "100%", border: "none", borderLeft: "1px solid var(--border)", background: tab === t.id ? "var(--surface)" : "transparent", color: tab === t.id ? m.color : "var(--ink-dim)", fontFamily: "var(--mono)", fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", cursor: "pointer", borderBottom: tab === t.id ? `2px solid ${m.color}` : "2px solid transparent", transition: "all 0.15s" }}>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            {/* Prev/Next */}
+            <div style={{ display: "flex", borderLeft: "1px solid var(--border)", height: "100%" }}>
+              <button onClick={onPrev} disabled={!canPrev} style={{ padding: "0 14px", height: "100%", border: "none", background: "transparent", color: canPrev ? "var(--ink-dim)" : "var(--border)", fontFamily: "var(--mono)", fontSize: 12, cursor: canPrev ? "pointer" : "not-allowed" }}>‹</button>
+              <span className="hide-mobile" style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink-faint)", display: "flex", alignItems: "center", padding: "0 4px" }}>{currentIndex + 1}/{MODULES.length}</span>
+              <button onClick={onNext} disabled={!canNext} style={{ padding: "0 14px", height: "100%", border: "none", background: "transparent", color: canNext ? "var(--ink-dim)" : "var(--border)", fontFamily: "var(--mono)", fontSize: 12, cursor: canNext ? "pointer" : "not-allowed" }}>›</button>
+            </div>
           </div>
         </div>
         {/* Progress */}
@@ -5585,7 +5612,7 @@ function ModulePage({ mod: m, onBack, onPrev, onNext, canPrev, canNext, currentI
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: 1120, margin: "0 auto", padding: "40px 24px 80px" }}>
+      <div className="mobile-padding" style={{ maxWidth: 1120, margin: "0 auto" }}>
 
         {/* ── OVERVIEW ── */}
         {tab === "overview" && (
@@ -5597,7 +5624,7 @@ function ModulePage({ mod: m, onBack, onPrev, onNext, canPrev, canNext, currentI
               <div style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--ink-dim)", lineHeight: 1.6 }}>{m.goalKh}</div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            <div className="mobile-stack">
               {/* Topics */}
               <div>
                 <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-faint)", letterSpacing: "0.1em", marginBottom: 14 }}>TOPICS COVERED ({m.topics.length})</div>
@@ -5660,7 +5687,7 @@ function ModulePage({ mod: m, onBack, onPrev, onNext, canPrev, canNext, currentI
               <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--ink-faint)" }}>Study these before starting the lab exercise</p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 28 }}>
+            <div className="mobile-stack" style={{ gap: 12, marginBottom: 28 }}>
               {m.concepts.map((c, i) => (
                 <div key={i} style={{ padding: 20, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 2, position: "relative", overflow: "hidden" }}>
                   <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${m.color}, transparent)` }} />
@@ -5712,7 +5739,7 @@ function ModulePage({ mod: m, onBack, onPrev, onNext, canPrev, canNext, currentI
               {/* Concepts recap */}
               <div style={{ borderTop: "1px solid var(--border)", paddingTop: 32 }}>
                 <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-faint)", letterSpacing: "0.1em", marginBottom: 16 }}>KEY CONCEPTS TO APPLY</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div className="mobile-stack" style={{ gap: 12 }}>
                   {m.concepts.map((c, i) => (
                     <div key={i} style={{ padding: "16px 18px", background: "var(--surface2)", border: "1px solid var(--border)", borderRadius: 4 }}>
                       <div style={{ fontFamily: "var(--mono)", fontSize: 12, fontWeight: 700, color: m.color, marginBottom: 6 }}>{c.term}</div>
@@ -5789,25 +5816,30 @@ export default function LaravelCourse() {
           {/* Brand */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }} onClick={back}>
             <div style={{ width: 28, height: 28, background: "var(--red)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--mono)", fontSize: 13, fontWeight: 900, color: "#fff", borderRadius: 4, letterSpacing: "-0.04em" }}>L</div>
-            <div>
+            <div className="hide-mobile">
               <span style={{ fontFamily: "var(--serif)", fontSize: 15, fontWeight: 700, color: "var(--ink)", fontStyle: "italic" }}>Laravel</span>
               <span style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-faint)", marginLeft: 8 }}>University Edition</span>
+            </div>
+            <div className="hide-desktop" style={{ display: "none" }}>
+              {/* This style will be overridden by global css classes if I added them, but I'll use inline media query logic or just simple hiding */}
+              <span style={{ fontFamily: "var(--serif)", fontSize: 15, fontWeight: 700, color: "var(--ink)", fontStyle: "italic" }}>Laravel</span>
             </div>
           </div>
 
           {/* Center info */}
-          <div style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink-faint)", textAlign: "center" }}>
+          <div className="hide-mobile" style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--ink-faint)", textAlign: "center" }}>
             {m ? (
               <span><span style={{ color: m.color }}>{m.badge}</span> · Module {m.num} of {MODULES.length}</span>
             ) : (
-              <span>23 Sections · 34 Hours · Laravel 12 · PHP 8.2+ (8.4 recommended)</span>
+              <span>23 Sections · 34 Hours · Laravel 12 · PHP 8.2+</span>
             )}
           </div>
 
           {/* Keyboard hint */}
           <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--ink-faint)", display: "flex", gap: 6, alignItems: "center" }}>
-            {m && <span>← → navigate · ESC back</span>}
-            {!m && <span>Click any module to begin</span>}
+            {m && <span className="hide-mobile">← → navigate · ESC back</span>}
+            {!m && <span className="hide-mobile">Click any module to begin</span>}
+            {m && <button onClick={back} className="hide-desktop" style={{ display: "none", background: "var(--surface)", border: "1px solid var(--border)", padding: "2px 8px", borderRadius: 2, color: "var(--ink)" }}>CLOSE</button>}
           </div>
         </div>
       </div>

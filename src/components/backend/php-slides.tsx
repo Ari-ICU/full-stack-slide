@@ -176,16 +176,16 @@ const SLIDES: SlideData[] = [
     subtitle: "Server-side Processing · Hypertext Preprocessor · Backend Logic",
     body: `**PHP** is the engine of the web. មិនដូច JavaScript ដែលដើរលើ Browser, PHP ដំណើរការនៅលើ **Server** ។ វាទទួលយក Request, គណនា Logic, និងបង្កើតជា **HTML** ដើម្បីផ្ញើទៅកាន់ Browser វិញ។ នេះជាមូលដ្ឋានគ្រឹះនៃ Dynamic Website ។`,
     bullets: [
-      { icon: "🛡️", label: "Server-side", desc: "Code processes on your hardware/cloud, not the user's laptop." },
-      { icon: "📦", label: "Runtime", desc: "PHP transforms raw scripts into valid HTML strings for visitors." },
-      { icon: "⚙️", label: "Backend Power", desc: "Handles Databases, Files, Sessions, and API integrations." },
-      { icon: "📈", label: "Industry standard", desc: "Powers 77%+ of the internet including WordPress & Laravel." },
+      { icon: "🛡️", label: "Server-side", desc: "កូដដំណើរការនៅលើ hardware/cloud របស់អ្នក, មិនមែនលើកុំព្យូទ័ររបស់អ្នកប្រើ។" },
+      { icon: "📦", label: "Runtime", desc: "PHP បម្លែង script ដុំទិន្នន័យទៅជា HTML សម្រាប់អ្នកទស្សនា។" },
+      { icon: "⚙️", label: "Backend Power", desc: "គ្រប់គ្រង Database, Files, Sessions, និង API integrations។" },
+      { icon: "📈", label: "Industry Standard", desc: "គ្រប់គ្រងលើ 77%+ នៃអ៊ីនធឺណិត រួមទាំង WordPress និង Laravel។" },
     ],
     explanation: [
-      { title: "Browser Request", desc: "User វាយ URL (ឧទាហរណ៍: facebook.com) ។ Browser ផ្ញើ Request ទៅកាន់ Server តាមរយៈ HTTP ។" },
-      { title: "Server Action", desc: "Server (Nginx/Apache) ទទួលយក Request រួចហៅ PHP Engine ឲ្យដំណើរការ Code ក្នុង File .php នោះ។" },
-      { title: "HTML Generation", desc: "PHP គណនា Logic រួចបង្កើតជា HTML Output ។ Server បញ្ជូន HTML ត្រឡប់ទៅ User វិញ។" },
-      { title: "User View", desc: "Browser ទទួលយកតែ HTML/CSS ប៉ុណ្ណោះ ─ User មិនអាចមើលឃើញកូដ PHP ដើមឡើយ។" }
+      { title: "Browser Request", desc: "អ្នកប្រើវាយ URL (ឧ. facebook.com) → Browser ផ្ញើ HTTP Request ទៅ Server។" },
+      { title: "Server Action", desc: "Server (Nginx/Apache) ទទួល Request ហើយហៅ PHP Engine ដើម្បីដំណើរការ File .php។" },
+      { title: "HTML Generation", desc: "PHP គណនា Logic និងបង្កើត HTML Output → Server ផ្ញើ HTML ត្រឡប់ទៅ User។" },
+      { title: "User View", desc: "Browser ទទួល HTML/CSS តែប៉ុណ្ណោះ ─ អ្នកប្រើមិនអាចមើល PHP ដើមបានទេ។" }
     ],
     code: `<?php
 /**
@@ -231,16 +231,13 @@ Generated at: 13:50:42 UTC
     subtitle: "Directives · Semicolons · Tags · Code Blocks",
     body: `កូដ PHP ត្រូវតែស្ថិតនៅក្នុង **<?php ... ?>** tags ។ Statement នីមួយៗត្រូវតែបញ្ចប់ដោយ **semicolon ( ; )** ជានិច្ច ។ ប្រសិនបើអ្នកភ្លេចបិទ semicolon, PHP នឹងឈប់ដំណើរការភ្លាមៗ (Fatal Error) ។`,
     bullets: [
-      { icon: "🏷️", label: "Open Tags", desc: "PHP mode starts with <?php and optionally ends with ?>" },
-      { icon: "📢", label: "Output Directives", desc: "echo for data strings, print for single expressions." },
-      { icon: "🔚", label: "Semicolon", desc: "Required sentence terminator for every PHP command line." },
-      { icon: "📄", label: "Commentary", desc: "// Single line, # shell style, and /* Multi line */ blocks." },
+      { icon: "🏷️", label: "Open Tags", desc: "PHP ចាប់ផ្ដើមជាមួយ <?php** និងអាចបញ្ចប់ជាជម្រើសជាមួយ **?>" },
+      { icon: "📢", label: "Output Directives", desc: "ប្រើ echo សម្រាប់ strings, print សម្រាប់ expressions តែមួយ។" },
+      { icon: "🔚", label: "Semicolon", desc: "តម្រូវឱ្យមាន semicolon (;) ជា terminator សម្រាប់រាល់ command line PHP។" },
+      { icon: "📄", label: "Commentary", desc: "// មួយបន្ទាត់, # shell style, និង /* Multi-line */ blocks។" },
     ],
     explanation: [
-      { title: "The Entry Point", desc: "PHP Engine ស្វែងរក <?php tag ដើម្បីចាប់ផ្ដើមបកស្រាយកូដនៅក្នុង File ។" },
-      { title: "Processing Commands", desc: "Engine អានកូដពីលើចុះក្រោម បន្ទាត់នីមួយៗត្រូវបញ្ចប់ដោយ semicolon (;) ។" },
-      { title: "HTML Hybrid", desc: "អ្នកអាចសរសេរ PHP លាយជាមួយ HTML បាន ─ Engine នឹងប្តូរ Mode ទៅតាម Tag កូដ។" },
-      { title: "The Exit Signal", desc: "Tag ?> ប្រាប់បញ្ឈប់ PHP Mode ─ ចាប់ពីទីនេះទៅគឺ HTML សុទ្ធសាធ។" }
+      { title: "The Entry Point", desc: "PHP Engine ស្វែងរក <?php** ដើម្បីចាប់ផ្ដើមបកស្រាយកូដនៅក្នុង File។" }, { title: "Processing Commands", desc: "Engine អានកូដពីលើចុះក្រោម, រាល់បន្ទាត់ត្រូវបញ្ចប់ដោយ **semicolon (;)**។" }, { title: "HTML Hybrid", desc: "អ្នកអាចសរសេរ PHP លាយជាមួយ HTML ─ Engine នឹងផ្លាស់ប្តូរ Mode ទៅតាម Tag។" }, { title: "The Exit Signal", desc: "Tag **?> ប្រាប់បញ្ឈប់ PHP Mode ─ ចាប់ពីទីនេះទៅ HTML សុទ្ធសាធ។" }
     ],
     code: `<?php
 // Traditional echo
@@ -290,16 +287,16 @@ This works because it has a semicolon`,
     subtitle: "Memory Containers · Case Sensitivity · Naming Conventions",
     body: `**Variable** គឺជាឈ្មោះដែលយើងដាក់ឲ្យ Memory សម្រាប់រក្សាទុកទិន្នន័យ ។ ក្នុង PHP, វាត្រូវតែចាប់ផ្ដើមដោយ **$** ជានិច្ច ។ PHP គឺជា **Dynamically Typed**, មានន័យថាយើងមិនបាច់ប្រាប់ប្រភេទ data (int/string) មុនឡើយ ។`,
     bullets: [
-      { icon: "$", label: "The Prefix", desc: "Every variable requires a dollar sign prefix (e.g. $user)." },
-      { icon: "🔠", label: "Case-Sensitive", desc: "$user and $USER are different memory locations." },
-      { icon: "📝", label: "Valid Names", desc: "Must start with a letter or underscore, never a number." },
-      { icon: "🧳", label: "Dynamic Typing", desc: "One variable can store a string, then later an integer." },
+      { icon: "$", label: "The Prefix", desc: "រាល់ variable ត្រូវការសញ្ញា $ នៅមុខ (ឧ. $user)।" },
+      { icon: "🔠", label: "Case-Sensitive", desc: "$user និង $USER ជា memory location ផ្សេងគ្នា។" },
+      { icon: "📝", label: "Valid Names", desc: "ត្រូវចាប់ផ្តើមជាមួយអក្សរ ឬ underscore, មិនអាចចាប់ជាមួយលេខ។" },
+      { icon: "🧳", label: "Dynamic Typing", desc: "Variable មួយអាចផ្ទុក string ហើយបន្ទាប់មក integer។" },
     ],
     explanation: [
-      { title: "Allocation", desc: "នៅពេលអ្នកសរសេរ $x = 10, PHP រៀបចំកន្លែងក្នុង Memory រក្សាទុកតម្លៃ 10 ។" },
-      { title: "Variable Access", desc: "គ្រប់ពេលដែលអ្នកហៅ $x, Engine ទៅទាញយកតម្លៃ 10 ចេញពី Memory មកប្រើ។" },
-      { title: "Dynamic Nature", desc: "អ្នកអាចប្ដូរ $x = 'PHP' បានភ្លាមៗ ─ PHP នឹងប្តូរប្រភេទ Data ដោយស្វ័យប្រវត្តិ។" },
-      { title: "Debugging State", desc: "ប្រើ var_dump($x) ដើម្បីមើលព័ត៌មានលម្អិតទាំង Value និង Data Type ។" }
+      { title: "Allocation", desc: "នៅពេលអ្នកសរសេរ $x = 10, PHP រៀបចំកន្លែងក្នុង Memory ដើម្បីរក្សាទុកតម្លៃ 10។" },
+      { title: "Variable Access", desc: "គ្រប់ពេលហៅ $x, Engine ទាញតម្លៃ 10 ពី Memory ដើម្បីប្រើ។" },
+      { title: "Dynamic Nature", desc: "អ្នកអាចប្ដូរ $x = 'PHP' ភ្លាមៗ ─ PHP នឹងប្តូរប្រភេទ Data ដោយស្វ័យប្រវត្តិ។" },
+      { title: "Debugging State", desc: "ប្រើ var_dump($x) ដើម្បីមើល Value និង Data Type។" }
     ],
     code: `<?php
 // Initialization
@@ -311,16 +308,12 @@ $isActive = true;        // Boolean
 $total_price = 105.50; 
 $isAdmin     = false;
 
-// Variable expansion in double quotes
+// Variable expansion in double quotes (Interpolation)
 echo "Profile: $username (Age: $age)";
 
-// Strict Debugging
-var_dump($total_price); // float(105.5)
-var_dump($isAdmin);     // bool(false)
-
-// Re-assignment (Dynamic)
+// Re-assignment (Dynamic Nature)
 $score = 10;
-$score = "Ten"; // Valid in PHP
+$score = "Ten"; // Valid in PHP - Type changes to String
 ?>`,
     syntax: `// ── Variable Rules ──────────────────────────
 //
@@ -331,10 +324,7 @@ $score = "Ten"; // Valid in PHP
 //  gettype($v)   : Get data type name
 //
 // ──────────────────────────────────────────`,
-    output: `Profile: ratha_dev (Age: 22)
-float(105.5)
-bool(false)
-(score changed from int to string)`,
+    output: `Profile: ratha_dev (Age: 22)`,
     tip: "ចូរប្រើ var_dump() ជាឧបករណ៍ចម្បងក្នុងពេល Debug ព្រោះវាប្រាប់យើងគ្រប់យ៉ាង ទាំងផ្ទាំងទិន្នន័យ និងប្រភេទរបស់វា!",
     workflow: `// ── State Management Flow ──────────────────
 //
@@ -351,18 +341,18 @@ bool(false)
     tag: "Data Types", tagColor: PINK, icon: "📝",
     title: "Data Type ",
     subtitle: "Scalar · Compound · Special · Type Casting",
-    body: `PHP គឺជា **Weakly Typed** language ប៉ុន្តែវាមាន Data Type ច្បាស់លាស់ ។ យើងបែងចែកវាជា ៣ ក្រុមធំៗ: **Scalar** (តម្លៃទោល), **Compound** (សំណុំតម្លៃ), និង **Special** (តម្លៃពិសេសដូចជា NULL) ។`,
+    body: `ទោះបីជា PHP ជាភាសាដែលមានភាពបត់បែនខ្ពស់ ក៏ដោយ វានៅតែមានប្រភេទទិន្នន័យច្បាស់លាស់សម្រាប់គ្រប់គ្រងព័ត៌មាន។ ជាទូទៅ យើងអាចបែងចែកប្រភេទទិន្នន័យជា ៣ ក្រុមធំៗ៖ **Scalar** (សម្រាប់តម្លៃតែមួយ ដូចជា លេខ ឬ អក្សរ), **Compound** (សម្រាប់សំណុំទិន្នន័យ ដូចជា Array), និង **Special** (សម្រាប់តម្លៃពិសេស ដូចជា NULL)`,
     bullets: [
-      { icon: "🔢", label: "Integers & Floats", desc: "Whole numbers (42) and decimals (3.14) for math." },
-      { icon: "📝", label: "Strings", desc: "Sequence of characters 'Hello' - used for text data." },
-      { icon: "✅", label: "Booleans", desc: "Logic states: true or false - used in conditions." },
-      { icon: "📦", label: "Compound", desc: "Arrays and Objects - for complex data structures." },
+      { icon: "🔢", label: "Integers & Floats", desc: "លេខគោល (42) និងទសភាគ (3.14) សម្រាប់គណិតវិទ្យា។" },
+      { icon: "📝", label: "Strings", desc: "សន្ទស្សន៍តួអក្សរ 'Hello' - ប្រើសម្រាប់ទិន្នន័យអត្ថបទ។" },
+      { icon: "✅", label: "Booleans", desc: "ស្ថានភាព logic: true ឬ false - ប្រើក្នុងលក្ខខណ្ឌ។" },
+      { icon: "🔎", label: "Deep Inspection", desc: "ប្រើ var_dump() ដើម្បីមើលប្រភេទ និងតម្លៃ - ល្អសម្រាប់ debugging 🛠️" },
     ],
     explanation: [
-      { title: "Type Detection", desc: "PHP សម្គាល់ប្រភេទ Data ដោយស្វ័យប្រវត្តិតាមរយៈតម្លៃដែលអ្នកដាក់ឲ្យវា ($x = 5 ─ integer)។" },
-      { title: "Type Juggling", desc: "PHP អាចបំប្លែង Type ភ្លាមៗ (ឧទាហរណ៍: យក String '5' ទៅបូកលេខ ─ វានឹងក្លាយជាលេខបូកលេខ)។" },
-      { title: "Explicit Casting", desc: "អ្នកអាចបង្ខំ Type ដោយប្រើ (int), (string), ឬ (bool) នៅពីមុខ Variable ។" },
-      { title: "Inspection", desc: "ប្រើ gettype() ដើម្បីដឹងពីប្រភេទបច្ចេកទេស ឬ var_dump() ដើម្បីមើលយ៉ាងស៊ីជម្រៅ។" }
+      { title: "Type Detection", desc: "PHP សម្គាល់ប្រភេទ Data ដោយស្វ័យប្រវត្តិ តាមតម្លៃដែលអ្នកផ្ដល់ ($x = 5 → integer)។" },
+      { title: "Type Juggling", desc: "PHP អាចបម្លែងប្រភេទ Data ដោយស្វ័យប្រវត្តិ ដើម្បីសម្របតាម context. ឧទាហរណ៍: '5' + 5 → 10។" },
+      { title: "Explicit Casting", desc: "អ្នកអាចបង្ខំប្រភេទដោយប្រើ (int), (string) ឬ (bool) មុខ Variable ដើម្បីការពារកំហុស logic។" },
+      { title: "var_dump() Usage", desc: "ប្រើសម្រាប់ debugging ─ បង្ហាញ Type, ប្រវែង និង Value ដើម្បីដោះស្រាយបញ្ហាកូដ។" }
     ],
     code: `<?php
 // Scalar Types
@@ -371,13 +361,17 @@ $points = 95;       // integer
 $price  = 12.99;    // double (float)
 $isPaid = true;     // boolean
 
-// Compound & Special
-$items = ["A", "B"]; // array
-$none  = null;       // NULL
+// --- Type Juggling (Auto) ---
+# String '100' turns into integer before addition
+$total = "100" + 50; 
+var_dump($total); // int(150)
 
-
+// --- Explicit Casting (Manual) ---
+$raw = "14.5";
+var_dump((int)$raw); // int(14)
 ?>`,
-    output: ` `,
+    output: `int(150)
+int(14)`,
     syntax: `// ── Type Casting Syntax ───────────────────
 //
 //  (int)$v    : To Integer
@@ -405,21 +399,21 @@ $none  = null;       // NULL
     subtitle: "Hands-on Scripting · Variables · Output",
     body: `ក្នុងលំហាត់នេះ យើងនឹងអនុវត្តការសរសេរ Script PHP ដំបូងបង្អស់របស់អ្នក។ អ្នកនឹងរៀនពីរបៀបបង្ហាញព័ត៌មាន Profile និងប្រើប្រាស់ Variable ឱ្យបានត្រឹមត្រូវបំផុតតាមលក្ខណៈបច្ចេកទេស។`,
     bullets: [
-      { icon: "📄", label: "File Structure", desc: "Start with <?php tag and end with correct semicolon." },
-      { icon: "🛠️", label: "Variable Declaration", desc: "Define name, age, and skill variables with proper types." },
-      { icon: "📡", label: "Output Formatting", desc: "Use double quotes for variable expansion in echo." },
-      { icon: "🔍", label: "Validation", desc: "Use gettype() to verify your data storage." },
+      { icon: "📄", label: "File Structure", desc: "ចាប់ផ្ដើមជាមួយ <?php និងបញ្ចប់ដោយ semicolon ត្រឹមត្រូវ។" },
+      { icon: "🛠️", label: "Variable Declaration", desc: "ប្រកាស variables ដូចជា name, age, និង skill ជាមួយប្រភេទត្រឹមត្រូវ។" },
+      { icon: "📡", label: "Output Formatting", desc: "ប្រើ double quotes ដើម្បីបង្ហាញតម្លៃ variables ក្នុង echo។" },
+      { icon: "🔍", label: "Validation", desc: "ប្រើ gettype() ដើម្បីពិនិត្យប្រភេទទិន្នន័យដែលបានផ្ទុក។" },
     ],
     lab: {
       title: "Creating a Personal Profile Script",
       titleKh: "ការបង្កើត Script បង្ហាញព័ត៌មានផ្ទាល់ខ្លួន",
       duration: "20 min",
-      objective: "Set up a script that stores and displays user data using variables.",
+      objective: "បង្កើត script ដើម្បីផ្ទុក និងបង្ហាញទិន្នន័យអ្នកប្រើដោយប្រើ variables។",
       steps: [
-        "Create variables: $name (string), $age (int), $isStudent (bool).",
-        "Echo a greeting using the name variable.",
-        "Print a sentence about your age.",
-        "Toggle $isStudent and var_dump it to see the change."
+        "បង្កើត variables: $name (string), $age (int), $isStudent (bool)。",
+        "ប្រើ echo ដើម្បីបង្ហាញសារស្វាគមន៍ជាមួយ $name។",
+        "បោះពុម្ពប្រយោគអំពីអាយុរបស់អ្នក។",
+        "ប្ដូរ $isStudent ហើយប្រើ var_dump() ដើម្បីមើលការផ្លាស់ប្ដូរ។"
       ],
       code: `<?php
 // Define my profile variables
@@ -448,45 +442,50 @@ echo "Ready to start the lab!";
     tag: "Operators", tagColor: ORANGE, icon: "➕",
     title: "Logic & Math",
     subtitle: "Arithmetic · Comparison · Strict Equality · Coalescing",
-    body: `**Operators** ប្រើសម្រាប់អនុវត្តការងារលើ Variable ។ ចំណុចសំខាន់បំផុតគឺ **=== (Strict Equality)** ─ វាឆែកទាំង **Value** និង **Type** ដើម្បីការពារកំហុស Logic (Type Juggling) ដែលតែងតែកើតមានក្នុង PHP ។`,
+    body: `**Operators** ត្រូវបានប្រើសម្រាប់អនុវត្តប្រតិបត្តិការលើ Variable ដូចជា ការគណនា ការប្រៀបធៀប និងការបញ្ជា Logic។ ចំណុចសំខាន់មួយគឺ === (Strict Equality) ដែលធ្វើការត្រួតពិនិត្យទាំង តម្លៃ (Value) និង ប្រភេទទិន្នន័យ (Type) ក្នុងពេលតែមួយ ដើម្បីជៀសវាងកំហុស Logic ដែលអាចកើតឡើងពីការប្រែប្រួលប្រភេទទិន្នន័យ។`,
     bullets: [
-      { icon: "➕", label: "Arithmetic", desc: "+, -, *, /, % (modulo), ** (power)." },
-      { icon: "⚖️", label: "Strict Compare", desc: "=== and !== are safer than == and != in PHP." },
-      { icon: "🔗", label: "Logical", desc: "&& (AND), || (OR), ! (NOT) for complex conditions." },
-      { icon: "⚡", label: "Coalescing ??", desc: "Returns first value if exists/not-null, else the fallback." },
+      { icon: "➕", label: "Arithmetic", desc: "+, -, *, /, % (modulo), ** (power) សម្រាប់គណនា។" },
+      { icon: "⚖️", label: "Strict Compare", desc: "=== និង !== មានសុវត្ថិភាពជាង == និង != ក្នុង PHP។" },
+      { icon: "🔗", label: "Logical", desc: "&& (AND), || (OR), ! (NOT) សម្រាប់លក្ខខណ្ឌស្មុគស្មាញ។" },
+      { icon: "⚡", label: "Coalescing ??", desc: "ដើម្បីទាញតម្លៃដំបូងប្រសិនបើមាន/មិន null, បើមិនមានទទួល fallback។" },
     ],
     explanation: [
-      { title: "Math Power", desc: "PHP គាំទ្រការគណនាគ្រប់ប្រភេទ រួមទាំង Modulo (%) និងស្វ័យគុណ (**) ។" },
-      { title: "The '===' Rule", desc: "ប្រើ === ជានិច្ច! ព្រោះ 0 == 'false' អាចនឹង true ក្នុង PHP ចាស់ៗ ─ វគ្រោះថ្នាក់ណាស់។" },
-      { title: "Null Safety", desc: "Operator ?? ជួយឲ្យកូដខ្លី និងសុវត្ថិភាពនៅពេលទាញទិន្នន័យពី User Input ។" },
-      { title: "Short-circuit", desc: "ក្នុង &&, បើលក្ខខណ្ឌទី១ ខុស វានឹងមិនទៅឆែកលក្ខខណ្ឌទី២ ទៀតទេ ─ ចំណេញ Performance ។" }
+      { title: "Arithmetic Power", desc: "PHP គាំទ្រការគណនាគ្រប់ប្រភេទ រួមទាំង Modulo (%) និង Power ()**។" },
+      { title: "Strict (===)", desc: "ពិនិត្យទាំងតម្លៃ និងប្រភេទ (Type). ឧទាហរណ៍: 10 === '10' គឺ false ព្រោះ integer ខុសពី string។" },
+      { title: "Loose (==)", desc: "ពិនិត្យតម្លៃតែប៉ុណ្ណោះ ដោយបម្លែង Type ឱ្យដូចគ្នា ─ អាចបង្កកំហុស។ ឧទាហរណ៍: 0 == false គឺ true។" },
+      { title: "Null Safety", desc: "Operator ?? ជួយឲ្យកូដខ្លី និងសុវត្ថិភាពពេលទាញទិន្នន័យពី User Input។" }
     ],
     code: `<?php
 $a = 10; $b = 3;
 
 // Math
-$result = ($a * $b) + 5; // 35
+$result = ($a * $b) + 5; 
+var_dump($result); // int(35)
 
-// Strict vs Loose
-var_dump(10 == "10");  // true (Values match)
-var_dump(10 === "10"); // false (Types differ!)
+// --- Comparison Standards ---
+var_dump(10 == "10");  // bool(true)
+var_dump(10 === "10"); // bool(false)
 
 // Null Coalescing (Elegant Fallback)
 $userInput = null;
 $name = $userInput ?? "Guest User"; 
+var_dump($name); // string(10) "Guest User"
 
 // Logical Chains
 $isAdult = true;
 $hasId   = false;
 var_dump($isAdult && $hasId); // false
 ?>`,
-    output: `true
-false
-Guest User
-false`,
+    output: `int(35)
+bool(true)
+bool(false)
+string(10) "Guest User"
+bool(false)`,
     syntax: `// ── Essential Operators ────────────────────
 //
-//  ===   : Strict Identity
+//  ==    : Loose Equality (Value only, with type juggling)
+//  ===   : Strict Identity (Value AND Type)
+//  !=    : Loose Inequality
 //  !==   : Strict Inequality
 //  .     : Concatenation (Join strings)
 //  ??    : Null Coalescing
@@ -511,18 +510,18 @@ false`,
     tag: "Logic", tagColor: BLUE, icon: "🚦",
     title: "Control Flow: If/Else",
     subtitle: "Branching · Multi-conditions · Nested Logic",
-    body: `**Conditionals** អនុញ្ញាតឲ្យកម្មវិធីសរសេរផ្លូវដើរផ្សេងៗគ្នា ។ **if** ដំណើរការកូដលុះត្រាតែលក្ខខណ្ឌជា **true** ។ យើងប្រើ **elseif** សម្រាប់ឆែកលក្ខខណ្ឌបន្ទាប់ និង **else** ជាករណីចុងក្រោយគេបង្អស់។`,
+    body: `**Conditionals** អនុញ្ញាតឲ្យកម្មវិធីអាចជ្រើសរើសផ្លូវដំណើរការផ្សេងៗគ្នាតាមលក្ខខណ្ឌ។ **if** នឹងដំណើរការកូដតែប៉ុណ្ណោះ នៅពេលលក្ខខណ្ឌមានតម្លៃជា **true**។ ប្រសិនបើលក្ខខណ្ឌដំបូងមិនបានបំពេញ អ្នកអាចប្រើ **elseif** ដើម្បីពិនិត្យលក្ខខណ្ឌបន្ទាប់ៗ និងប្រើ **else** សម្រាប់ករណីចុងក្រោយ នៅពេលគ្មានលក្ខខណ្ឌណាមួយត្រូវបានបំពេញ។`,
     bullets: [
-      { icon: "❓", label: "if block", desc: "The primary entry point for conditional execution." },
-      { icon: "🛤️", label: "elseif", desc: "Additional checks if the previous one failed." },
-      { icon: "🏁", label: "else", desc: "The 'catch-all' block if no conditions match." },
-      { icon: "📐", label: "Nesting", desc: "Placing if-statements inside other if-statements." },
+      { icon: "❓", label: "if block", desc: "ចំណុចចូលសម្រាប់អនុវត្តលក្ខខណ្ឌ។" },
+      { icon: "🛤️", label: "elseif", desc: "ពិនិត្យលក្ខខណ្ឌបន្ថែម ប្រសិនបើលក្ខខណ្ឌមុនមិនត្រូវ។" },
+      { icon: "🏁", label: "else", desc: "Block 'catch-all' ប្រសិនបើគ្មានលក្ខខណ្ឌណាត្រូវ។" },
+      { icon: "📐", label: "Nesting", desc: "ដាក់ if-statements ខាងក្នុង if-statements ផ្សេងទៀត។" },
     ],
     explanation: [
-      { title: "Evaluation", desc: "PHP ពិនិត្យលក្ខខណ្ឌក្នុងវង់ក្រចក ( ) ។ ប្រសិនបើ True, វាដើរកូដក្នុង { } ។" },
-      { title: "Exclusivity", desc: "ក្នុងសំណុំ If/Elseif/Else, មានតែ Block មួយគត់ដែលនឹងត្រូវដើរ ទោះមានលក្ខខណ្ឌត្រូវច្រើនក៏ដោយ។" },
-      { title: "Falsy values", desc: "ក្នុង PHP, 0, '', null, និង [] ត្រូវបានចាត់ទុកជា false ក្នុង if condition ។" },
-      { title: "Return context", desc: "ក្នុង Web App, យើងប្រើ If/Else ដើម្បីឆែក Login Status ឬឆែក Error Form ជាដើម។" }
+      { title: "Evaluation", desc: "PHP ពិនិត្យលក្ខខណ្ឌក្នុងវង់ក្រចក ( ). ប្រសិនបើ True, វាអនុវត្តកូដក្នុង { }។" },
+      { title: "Exclusivity", desc: "ក្នុង If/Elseif/Else, មានតែ Block មួយគត់ដែលនឹងអនុវត្ត ទោះមានលក្ខខណ្ឌត្រូវច្រើនក៏ដោយ។" },
+      { title: "Falsy values", desc: "ក្នុង PHP, 0, '', null, និង [] ត្រូវបានចាត់ទុកជា false ក្នុង if condition។" },
+      { title: "Return context", desc: "ក្នុង Web App, ប្រើ If/Else ដើម្បីពិនិត្យ Login Status ឬ Error Form។" }
     ],
     code: `<?php
 $score = 85;
@@ -570,18 +569,18 @@ Status: Passed`,
     tag: "Selection", tagColor: PURPLE, icon: "🔀",
     title: "Match & Switch",
     subtitle: "Value Matching · Modern Match Expression · Fallthroughs",
-    body: `សម្រាប់កិច្ចការដែលឆែកតម្លៃតែមួយ (Single Value) ច្រើនលទ្ធផល, PHP 8 ផ្ដល់នូវ **match** expression ដែលខ្លី និងមានសុវត្ថិភាពជាង **switch** ។ **match** ប្រើការប្រៀបធៀបបែប **Strict (===)** និងអាស្រ័យលើ 'Value Mapping'។`,
+    body: `សម្រាប់កិច្ចការដែលត្រូវការពិនិត្យតម្លៃតែមួយ **(Single Value)** ចំពោះលទ្ធផលច្រើន, **PHP 8** ផ្ដល់នូវ **match expression** ដែលខ្លី និងមានសុវត្ថិភាពជាង **switch**។ **match** ធ្វើការប្រៀបធៀបដោយរឹងប៉ឹង **(Strict ===)** និងផ្អែកលើ **Value Mapping** ដើម្បីបញ្ជាក់លទ្ធផលឲ្យច្បាស់លាស់`,
     bullets: [
-      { icon: "🏎️", label: "match expression", desc: "PHP 8 feature - shorter, returns a value, uses strict check." },
-      { icon: "🎛️", label: "switch statement", desc: "Traditional method - requires 'break' to prevent fallthrough." },
-      { icon: "🛡️", label: "Strict Check", desc: "Match uses === which prevents common loose-typing bugs." },
-      { icon: "🎭", label: "Default case", desc: "Always handle unknown values with 'default' or 'UnhandledMatchError'." },
+      { icon: "🏎️", label: "match expression", desc: "PHP 8 feature - ខ្លី, បង្ហាញតម្លៃត្រឡប់, ប្រើ strict check." },
+      { icon: "🎛️", label: "switch statement", desc: "វិធីចាស់ - ត្រូវការប្រើ 'break' ដើម្បីទប់ស្កាត់ fallthrough។" },
+      { icon: "🛡️", label: "Strict Check", desc: "match ប្រើ === ដែលទប់ស្កាត់កំហុស loose-typing សាមញ្ញ។" },
+      { icon: "🎭", label: "Default case", desc: "តែងតែគ្រប់គ្រងតម្លៃមិនស្គាល់ ដោយប្រើ 'default' ឬ 'UnhandledMatchError'។" },
     ],
     explanation: [
-      { title: "Switch logic", desc: "Switch អានតម្លៃម្ដងមួយ block រហូតដល់ឃើញពាក្យ break ទើបវាឈប់។" },
-      { title: "The Match Power", desc: "Match គឺជា Expression (វា return តម្លៃ) ─ វាមានន័យថាអ្នកអាចដាក់ $x = match(...) បានភ្លាមៗ។" },
-      { title: "Strict Equality", desc: "Match មិនបត់បែនដូច Switch ទេ ─ ប្រសិនបើ Type ខុសគ្នា គឺវាមិនយកតែម្ដង (Safe behavior)។" },
-      { title: "Return context", desc: "ស័ក្តិសមបំផុតសម្រាប់បកប្រែ Status Code (200, 404) ទៅជាអត្ថបទ។" }
+      { title: "Switch logic", desc: "Switch អានតម្លៃមួយ block នៅពេលតែមួយ រហូតដល់ឃើញពាក្យ break វ才ឈប់។" },
+      { title: "The Match Power", desc: "Match គឺជា Expression (បង្ហាញតម្លៃត្រឡប់) ─ អ្នកអាចធ្វើ $x = match(...) ដោយផ្ទាល់។" },
+      { title: "Strict Equality", desc: "Match មិនបត់បែនដូច Switch ─ ប្រសិនបើ Type ខុស វាមិនត្រូវបានជ្រើសទេ (Safe behavior)।" },
+      { title: "Return context", desc: "ស័ក្តិសមសម្រាប់បម្លែង Status Code (200, 404) ទៅជាអត្ថបទដោយផ្ទាល់។" }
     ],
     code: `<?php
 $status = 200;
@@ -630,18 +629,18 @@ OK`,
     tag: "Iteration", tagColor: GREEN, icon: "🔄",
     title: "Loops",
     subtitle: "For · While · Do-While · Breaking Control",
-    body: `**Loop** ប្រើសម្រាប់អនុវត្តកូដដដែលៗ ។ ក្នុង PHP, **for** ស័ក្តិសមសម្រាប់ចំនួនជុំដែលដឹងមុន, ចំណែក **while** ស័ក្តិសមសម្រាប់លក្ខខណ្ឌដែលមិនច្បាស់លាស់ ។ យើងប្រើ **break** ដើម្បីឈប់ និង **continue** ដើម្បីរំលងជុំបច្ចុប្បន្ន។`,
+    body: `**Loop** ត្រូវបានប្រើសម្រាប់អនុវត្តកូដជាដងៗ។ ក្នុង PHP, **for** សមស្របសម្រាប់ចំនួនជុំដែលបានកំណត់ជាមុន, ខណៈ **while** សមស្របសម្រាប់លក្ខខណ្ឌដែលមិនច្បាស់លាស់។ អ្នកអាចប្រើ **break** ដើម្បីបញ្ឈប់ loop និង **continue** ដើម្បីរំលងជុំបច្ចុប្បន្ន និងបន្តជុំបន្ទាប់។`,
     bullets: [
-      { icon: "🔢", label: "for loop", desc: "Classic counter-based loop: for ($i=0; $i<10; $i++)." },
-      { icon: "🔄", label: "while loop", desc: "Runs as long as the condition remains true." },
-      { icon: "🛑", label: "break", desc: "Immediately terminates the loop and moves to next script." },
-      { icon: "⏭️", label: "continue", desc: "Skips the rest of code in the current round and starts next round." },
+      { icon: "🔢", label: "for loop", desc: "Loop មួយដែលគិតជាជំហានជាក់លាក់: for ($i=0; $i<10; $i++)." },
+      { icon: "🔄", label: "while loop", desc: "ដំណើរការដល់ពេលដែលលក្ខខណ្ឌនៅតែ true។" },
+      { icon: "🛑", label: "break", desc: "បញ្ឈប់ loop ភ្លាមៗ និងបន្ត script បន្ទាប់។" },
+      { icon: "⏭️", label: "continue", desc: "រំលងកូដនៅជុំបច្ចុប្បន្ន និងចាប់ផ្តើមជុំបន្ទាប់។" },
     ],
     explanation: [
-      { title: "Initializer", desc: "For loop ចាប់ផ្ដើមដោយកំណត់តម្លៃដំបូង (ឧទាហរណ៍: $i = 0) ។" },
-      { title: "Condition Check", desc: "មុននឹងដើរជុំនីមួយៗ PHP ឆែកលក្ខខណ្ឌ (Is $i < 10?) ។ បើ False វានឹងឈប់ភ្លាម។" },
-      { title: "Iteration", desc: "បន្ទាប់ពីចប់កូដក្នុង Block, វានឹងអនុវត្តការបង្កើនតម្លៃ ($i++) រួចទៅចាប់ផ្ដើមឆែកលក្ខខណ្ឌឡើងវិញ។" },
-      { title: "Infinite Danger", desc: "ប្រយ័ត្ន! បើលក្ខខណ្ឌ While True ជានិច្ច វានឹងគាំង Browser/Server (Infinite Loop) ។" }
+      { title: "Initializer", desc: "for loop ចាប់ផ្តើមដោយកំណត់តម្លៃដំបូង (ឧទាហរណ៍: $i = 0)។" },
+      { title: "Condition Check", desc: "មុនដំណើរការជុំ, PHP ពិនិត្យលក្ខខណ្ឌ (Is $i < 10?)។ បើ false វានឹងឈប់ភ្លាម។" },
+      { title: "Iteration", desc: "បន្ទាប់ពីបញ្ចប់កូដក្នុង block, វាអនុវត្ត increment ($i++) រួចពិនិត្យលក្ខខណ្ឌឡើងវិញ។" },
+      { title: "Infinite Danger", desc: "ប្រយ័ត្ន! ប្រសិនបើលក្ខខណ្ឌ while true នឹងបង្កើត infinite loop ដែលអាចគាំង Browser/Server។" }
     ],
     code: `<?php
 // 1. For Loop (Standard)
@@ -695,23 +694,23 @@ Number: 3 `,
     tag: "Practice", tagColor: GREEN, icon: "🎮",
     title: "Lab: Flow Control Game",
     subtitle: "Logic Practice · If/Else · Loops · Modulo",
-    body: `លំហាត់នេះនឹងធ្វើឱ្យអ្នកជំនាញលើ **Logic** ។ យើងនឹងសរសេរកម្មវិធីសម្រាប់ឆែក **Even/Odd Number** និងបង្កើតជា **Number Sequence** តាមរយៈការប្រើ loops និង conditions រួមគ្នា។`,
+    body: `លំហាត់នេះនឹងជួយឲ្យអ្នកជំនាញក្នុងការគ្រប់គ្រង **Logic**។ យើងនឹងសរសេរកម្មវិធីសម្រាប់ពិនិត្យ **Even/Odd Numbers** និងបង្កើត **Number Sequence** ដោយប្រើ **loops** និង **conditions** រួមគ្នា។`,
     bullets: [
-      { icon: "🛤️", label: "Logic Branching", desc: "Use if-statements to solve mathematical problems." },
-      { icon: "🔄", label: "Loop Practice", desc: "Generate sequences based on dynamic conditions." },
-      { icon: "⚖️", label: "Modulo Operator", desc: "Use % operator to determine divisibility." },
-      { icon: "🏎️", label: "Speed Hack", desc: "Optimize your conditions for maximum readability." },
+      { icon: "🛤️", label: "Logic Branching", desc: "ប្រើ if-statements ដើម្បីដោះស្រាយបញ្ហាគណិតវិទ្យា។" },
+      { icon: "🔄", label: "Loop Practice", desc: "បង្កើត sequences ដោយផ្អែកលើលក្ខខណ្ឌតម្លៃឌីណាមិច។" },
+      { icon: "⚖️", label: "Modulo Operator", desc: "ប្រើ % operator ដើម្បីកំណត់ការបំបែកគ្នា (divisibility)។" },
+      { icon: "🏎️", label: "Speed Hack", desc: "បង្កើតលក្ខខណ្ឌឲ្យមានប្រសិទ្ធភាព និងងាយស្រួលអាន។" },
     ],
     lab: {
       title: "Even/Odd Number Generator",
       titleKh: "កម្មវិធីស្វែងរកលេខគូ និងលេខសេស",
       duration: "30 min",
-      objective: "Combine loops and if-statements to process a sequence of numbers.",
+      objective: "បញ្ចូល loops និង if-statements ដើម្បីដំណើរការតម្លៃលេខក្នុងលំដាប់។",
       steps: [
-        "Create a for loop that runs from 1 to 10.",
-        "Inside the loop, use an if-statement and modulo (%) to check if the number is even.",
-        "Echo 'Even' or 'Odd' next to each number.",
-        "Break the loop if the number reaches 7."
+        "បង្កើត for loop ដែលដំណើរការពី 1 ទៅ 10។",
+        "នៅក្នុង loop, ប្រើ if-statement និង modulo (%) ដើម្បីពិនិត្យថាលេខគូឬសេស។",
+        "បង្ហាញ 'Even' ឬ 'Odd' នៅជាប់លេខនីមួយៗ។",
+        "បញ្ឈប់ loop ប្រសិនបើលេខឈានដល់ 7។"
       ],
       code: `<?php
 echo "Number Sequence Analysis:\n";
@@ -753,12 +752,12 @@ echo ($n % 2 === 0) ? "Even" : "Odd";
     tag: "Reusability", tagColor: PINK, icon: "📦",
     title: "Functions: Logic Blocks",
     subtitle: "Declarations · Parameters · Return Types · Type Hinting",
-    body: `**Function** គឺជាសំណុំកូដដែលយើងអាចហៅមកប្រើឡើងវិញបានច្រើនដង ។ ក្នុង PHP 8, យើងគួរតែប្រើ **Type Hinting** (កំណត់ប្រភេទ Data ឲ្យ Parameter និង Return) ដើម្បីឲ្យ Code របស់យើងរឹងមាំ និងងាយស្រួល Debug ។`,
+    body: `**Function** គឺជាសំណុំកូដដែលអាចហៅមកប្រើឡើងវិញបានច្រើនដង។ ក្នុង PHP 8, គួរតែប្រើ **Type Hinting** ដើម្បីកំណត់ប្រភេទទិន្នន័យសម្រាប់ **Parameters** និង **Return Value**, ដែលធ្វើឲ្យកូដរឹងមាំ កំណត់តម្លៃបានច្បាស់ និងងាយស្រួលក្នុងការប្រតិបត្តិ **Debug**។`,
     bullets: [
-      { icon: "🛠️", label: "Declaration", desc: "function name($arg) { ... } - define your logic unit." },
-      { icon: "↩️", label: "Return", desc: "Sends a value back to the caller using the 'return' keyword." },
-      { icon: "🏷️", label: "Type Hinting", desc: "Declare types in PHP 8: function(int $a): string." },
-      { icon: "🎯", label: "Default Args", desc: "Declare optional parameters: function($user = 'Guest')." },
+      { icon: "🛠️", label: "Declaration", desc: "ប្រកាស function ដោយប្រើ: function name($arg) { ... } ─ កំណត់សំណុំ logic របស់អ្នក។" },
+      { icon: "↩️", label: "Return", desc: "បញ្ជូនតម្លៃត្រឡប់ទៅអ្នកហៅ function ដោយប្រើពាក្យគន្លឹះ return។" },
+      { icon: "🏷️", label: "Type Hinting", desc: "កំណត់ប្រភេទទិន្នន័យក្នុង PHP 8: function(int $a): string ─ ជួយធ្វើឲ្យកូដរឹងមាំ។" },
+      { icon: "🎯", label: "Default Args", desc: "កំណត់ Parameters ជាចំណាំ (optional): function($user = 'Guest')." },
     ],
     explanation: [
       { title: "Definiton", desc: "យើងបង្កើតកិច្ចការមួយទុកក្នុង Function (ឧទាហរណ៍: ការគណនាពន្ធ) ។" },
@@ -814,46 +813,51 @@ Arrow result: 15`,
     tag: "Data Structures", tagColor: ORANGE, icon: "📋",
     title: "The Heart of PHP: Arrays",
     subtitle: "Indexed · Associative · Multi-dimensional · Modern Ops",
-    body: `**Array** គឺជាបេះដូងរបស់ PHP ។ វាអាចដើរតួជា List សាមញ្ញ (Indexed) ឬជា Map ស្មុគស្មាញ (Associative) ។ រាល់ទិន្នន័យដែលចេញពី Database (PDO) គឺតែងតែស្ថិតនៅក្នុងទម្រង់ជា Array ជានិច្ច ។`,
+    body: `**Array** គឺជាផ្នែកសំខាន់មួយនៃ PHP។ វាអាចដើរតួជា List សាមញ្ញ (Indexed) ឬ Map ស្មុគស្មាញ (Associative)។ ទិន្នន័យដែលទាញពី Database (PDO) ជាច្រើន តែងតែត្រូវបានផ្ទុកក្នុងទម្រង់ Array ដើម្បីងាយស្រួលក្នុងការគ្រប់គ្រង និងប្រើប្រាស់។`,
     bullets: [
-      { icon: "📋", label: "Indexed Array", desc: "Access values by position: $list[0]. Great for simple queues." },
-      { icon: "🗂️", label: "Associative Array", desc: "Access by naming keys: $user['id']. Acts like a JSON object." },
-      { icon: "🛠️", label: "Built-in Helpers", desc: "count(), sort(), array_merge(), in_array() for manipulation." },
-      { icon: "⚡", label: "Modern Ops", desc: "array_map, array_filter, and arrow functions for clean logic." },
+      { icon: "📋", label: "Indexed Array", desc: "អាចចូលប្រើតម្លៃតាមទីតាំង: $list[0]. សាកសមសម្រាប់សន្ទស្សន៍សាមញ្ញ។" },
+      { icon: "🗂️", label: "Associative Array", desc: "ចូលប្រើតាមកូនសោ: $user['id']. ដូចជា Object JSON។" },
+      { icon: "🛠️", label: "Built-in Helpers", desc: "មុខងារ count(), sort(), array_merge(), in_array() សម្រាប់កែប្រែ និងគ្រប់គ្រង Array។" },
+      { icon: "⚡", label: "Modern Ops", desc: "ប្រើ array_map, array_filter និង arrow functions សម្រាប់ logic ស្អាត និងច្បាស់។" },
     ],
     explanation: [
-      { title: "Storage", desc: "Array អាចផ្ទុក Data ច្រើនក្នុងឈ្មោះតែមួយ ($students) ─ វារក្សាទុកតម្លៃជាលំដាប់លំដោយ។" },
-      { title: "Key-Value Pair", desc: "ក្នុង Associative Array, អ្នកអាចកំណត់ឈ្មោះ (Key) ឱ្យតម្លៃនីមួយៗបាន ─ ងាយស្រួលយល់ជាងលេខ index ។" },
-      { title: "Multi-dim", desc: "Array ក្នុង Array ─ គឺជាទម្រង់ដែលយើងប្រើសម្រាប់តំណាងឱ្យតារាង Database (Rows & Columns)។" },
-      { title: "Foreach Power", desc: "យើងប្រើ Foreach ដើម្បីដើរកាត់រាល់ទិន្នន័យក្នុង Array ដោយមិនបាច់បារម្ភពីរឿងចំនួនជុំឡើយ។" }
+      { title: "Storage", desc: "Array អាចផ្ទុកទិន្នន័យច្រើនក្នុងឈ្មោះតែមួយ ($students) ─ វារក្សាទុកតម្លៃក្នុងលំដាប់លំដោយ។" },
+      { title: "Key-Value Pair", desc: "ក្នុង Associative Array, អ្នកអាចកំណត់ឈ្មោះ (Key) ជាមួយតម្លៃនីមួយៗ ─ ងាយស្រួលសម្រាប់ចូលប្រើជាងលេខ index។" },
+      { title: "Multi-dim", desc: "Array ក្នុង Array ─ ជាទម្រង់ដែលយើងប្រើសម្រាប់តំណាងឱ្យតារាង Database (Rows & Columns)។" },
+      { title: "Foreach Power", desc: "ប្រើ foreach ដើម្បីដើរកាត់រាល់ទិន្នន័យក្នុង Array ដោយមិនបាច់បារម្ភពីចំនួនជុំឡើយ។" }
     ],
     code: `<?php
 /**
  * Advanced Array Patterns
  */
 
-// 1. Associative (The Dictionary)
+// 1. Indexed (The List)
+$fruits = ["Apple", "Banana", "Cherry"];
+
+// 2. Associative (The Dictionary)
 $profile = [
     "id"   => 101,
     "name" => "Ratha Dev",
     "role" => "Admin"
 ];
 
-// 2. Multi-dimensional (Database Mockup)
+// 3. Multi-dimensional (Database Mockup)
 $database = [
     ["id" => 1, "user" => "Dara"],
     ["id" => 2, "user" => "Bona"]
 ];
 
-// 3. Functional Mapping
+// 4. Functional Mapping
 $nums    = [1, 2, 3];
 $squared = array_map(fn($n) => $n ** 2, $nums); 
 
+echo "Fruit 0: " . $fruits[0] . " ";
 echo "User: " . $profile['name'] . " ";
 echo "DB Row 0: " . $database[0]['user'] . " ";
 var_dump($squared);
 ?>`,
-    output: `User: Ratha Dev
+    output: `Fruit 0: Apple
+User: Ratha Dev
 DB Row 0: Dara
 array(3) { [0]=> int(1), [1]=> int(4), [2]=> int(9) }`,
     syntax: `// ── Array Operations Cheat Sheet ────────────
@@ -883,22 +887,22 @@ array(3) { [0]=> int(1), [1]=> int(4), [2]=> int(9) }`,
     subtitle: "Hands-on Data Processing · Associative Arrays · Loops",
     body: `ក្នុងលំហាត់នេះ យើងនឹងយកចំណេះដឹងពី **Arrays** និង **Foreach Loop** មកសរសេរជាកម្មវិធីគ្រប់គ្រងបញ្ជីឈ្មោះសិស្សសាមញ្ញមួយ។ គោលដៅគឺចេះបង្កើត, បន្ថែមទិន្នន័យ, និងបង្ហាញវាត្រឡប់មកវិញ។`,
     bullets: [
-      { icon: "📝", label: "Initialization", desc: "Create an associative array with sample student records." },
-      { icon: "➕", label: "Mutation", desc: "Dynamically add new elements using array_push or [] syntax." },
-      { icon: "🔄", label: "Traversal", desc: "Use foreach to iterate and generate formatted output." },
-      { icon: "🛡️", label: "Verification", desc: "Use var_dump to inspect the final structure." },
+      { icon: "📝", label: "Initialization", desc: "បង្កើត associative array ដែលមានតារាងសិស្សឧទាហរណ៍។" },
+      { icon: "➕", label: "Mutation", desc: "បន្ថែមធាតុថ្មីឲ្យ Array ដោយប្រើ array_push ឬ សញ្ញា []។" },
+      { icon: "🔄", label: "Traversal", desc: "ប្រើ foreach ដើម្បីដើរកាត់ Array និងបង្កើត Output មានទ្រង់ទ្រាយ។" },
+      { icon: "🛡️", label: "Verification", desc: "ប្រើ var_dump ដើម្បីពិនិត្យរចនាសម្ព័ន្ធចុងក្រោយ។" },
     ],
     lab: {
       title: "Building a Dynamic Student List",
       titleKh: "ការបង្កើតបញ្ជីឈ្មោះសិស្សតាមបែប Dynamic",
       duration: "45 min",
-      objective: "Master array manipulation and looping in a real-world context.",
+      objective: "ជំនាញក្នុងការគ្រប់គ្រង Array និង Loop ក្នុងបរិបទជាក់ស្តែង។",
       steps: [
-        "Initialize an array $students with at least 2 students (id, name, major).",
-        "Add a 3rd student to the array manually.",
-        "Loop through all students and echo their names in an <li> tag.",
-        "Count the total number of students using count().",
-        "Bonus: Use array_filter to find students in a specific major."
+        "បង្កើត Array $students មានសិស្សយ៉ាងហោចណាស់ 2 នាក់ (id, name, major)។",
+        "បន្ថែមសិស្សទី 3 ទៅក្នុង Array ដោយដៃ។",
+        "ដើរកាត់រាល់សិស្ស និងបង្ហាញឈ្មោះក្នុង <li> tag។",
+        "រាប់ចំនួនសិស្សសរុបដោយប្រើ count()។",
+        "Bonus: ប្រើ array_filter ដើម្បីស្វែងរកសិស្សក្នុង major ផ្សេងៗ។"
       ],
       code: `<?php
 // 1. Setup multi-dimensional array
@@ -1007,7 +1011,7 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
   const consts: Record<string, any> = {
     'PHP_VERSION': '8.3.4'
   };
-  
+
   // Helper to resolve PHP-style expressions to JS equivalents
   const evalExpr = (expr: string): any => {
     try {
@@ -1064,8 +1068,8 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
 
   const formatValue = (val: any) => {
     if (val === null || val === undefined) return "";
-    if (val === false) return ""; 
-    if (val === true) return "1";  
+    if (val === false) return "";
+    if (val === true) return "1";
     return String(val);
   };
 
@@ -1104,7 +1108,7 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
       if (t.startsWith('if')) {
         const m = t.match(/if\s*\((.*)\)/);
         if (m && !evalExpr(m[1])) {
-           if (t.includes('{')) skip = true;
+          if (t.includes('{')) skip = true;
         }
         continue;
       }
@@ -1114,7 +1118,7 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
       for (let s of statements) {
         let stmt = s.trim();
         if (!stmt) continue;
-        
+
         // Foreach start
         const feMatch = stmt.match(/foreach\s*\(\s*\$([a-zA-Z_]\w*)\s*as\s*\$([a-zA-Z_]\w*)\s*\)\s*:/);
         if (feMatch) return { type: 'loop_start', array: feMatch[1], item: feMatch[2] };
@@ -1144,8 +1148,8 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
           continue;
         }
         if (stmt.match(/^var_dump\((.*)\)$/)) {
-           buffer += formatVarDump(evalExpr(stmt.match(/^var_dump\((.*)\)$/)![1])) + "\n";
-           continue;
+          buffer += formatVarDump(evalExpr(stmt.match(/^var_dump\((.*)\)$/)![1])) + "\n";
+          continue;
         }
         evalExpr(stmt);
       }
@@ -1187,9 +1191,9 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
       buffer += token;
     }
   }
-  
+
   if (stripHtml) {
-     return buffer.replace(/<[^>]*>/g, '').trim() || "(no output)";
+    return buffer.replace(/<[^>]*>/g, '').trim() || "(no output)";
   }
   return buffer || "(no output)";
 }
@@ -1197,7 +1201,7 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
 // ── LAB VIEW ──────────────────────────────────────────────────
 function LabView({ lab, accent, theme }: { lab: Lab, accent: string, theme: 'dark' | 'light' }) {
   const [done, setDone] = useState<Record<number, boolean>>({});
-  
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
@@ -1207,14 +1211,14 @@ function LabView({ lab, accent, theme }: { lab: Lab, accent: string, theme: 'dar
       </div>
 
       <div style={{ padding: '16px', background: 'var(--bg)', borderRadius: 10, border: '1px solid var(--border)' }}>
-         <div style={{ fontSize: 10, fontWeight: 700, color: accent, marginBottom: 8, fontFamily: 'Space Mono,monospace', letterSpacing: '0.05em' }}>OBJECTIVE</div>
-         <div style={{ fontSize: 12, color: 'var(--ink)', lineHeight: 1.6, fontFamily: "'Noto Sans Khmer', sans-serif" }}>{lab.objective}</div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: accent, marginBottom: 8, fontFamily: 'Space Mono,monospace', letterSpacing: '0.05em' }}>OBJECTIVE</div>
+        <div style={{ fontSize: 12, color: 'var(--ink)', lineHeight: 1.6, fontFamily: "'Noto Sans Khmer', sans-serif" }}>{lab.objective}</div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <div style={{ fontSize: 9, fontWeight: 700, color: 'var(--ink)', marginBottom: 4, fontFamily: 'Space Mono,monospace' }}>STEPS TO COMPLETE:</div>
         {lab.steps.map((step, i) => (
-          <div key={i} onClick={() => setDone(d => ({...d, [i]: !d[i]}))}
+          <div key={i} onClick={() => setDone(d => ({ ...d, [i]: !d[i] }))}
             style={{ display: 'flex', gap: 12, padding: '12px', background: done[i] ? accent + '10' : 'transparent', border: `1px solid ${done[i] ? accent + '40' : 'var(--border)'}`, borderRadius: 8, cursor: 'pointer', transition: 'all 0.2s' }}>
             <div style={{ width: 22, height: 22, borderRadius: 5, background: done[i] ? accent : 'var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: done[i] ? '#000' : 'var(--ink)', fontSize: 10, fontWeight: 800, flexShrink: 0 }}>
               {done[i] ? '✓' : i + 1}
@@ -1230,16 +1234,16 @@ function LabView({ lab, accent, theme }: { lab: Lab, accent: string, theme: 'dar
 }
 
 // ── CODE PANEL ────────────────────────────────────────────────
-function CodePanel({ code: initialCode, output, syntax, workflow, explanation, lab, showPreview, accent, theme }: { 
-  code: string, 
-  output: string | null, 
-  syntax?: string | null, 
-  workflow?: string | null, 
+function CodePanel({ code: initialCode, output, syntax, workflow, explanation, lab, showPreview, accent, theme }: {
+  code: string,
+  output: string | null,
+  syntax?: string | null,
+  workflow?: string | null,
   explanation?: ExplanationStep[] | null,
   lab?: Lab | null,
   showPreview?: boolean,
-  accent: string, 
-  theme: 'dark' | 'light' 
+  accent: string,
+  theme: 'dark' | 'light'
 }) {
   const [tab, setTab] = useState(lab ? 'lab' : 'code');
   const [code, setCode] = useState(initialCode);
@@ -1250,10 +1254,10 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
   const [expStep, setExpStep] = useState(0);
 
   // Sync state when slide changes
-  useEffect(() => { 
-    setCode(initialCode); 
-    setIsEditing(false); 
-    setMockPost(false); 
+  useEffect(() => {
+    setCode(initialCode);
+    setIsEditing(false);
+    setMockPost(false);
     setExpStep(0);
     if (lab) setTab('lab');
     else setTab('code');
@@ -1264,13 +1268,13 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
       const timer = setTimeout(() => {
         const preview = document.querySelector('.browser-preview');
         if (preview) {
-           const btn = preview.querySelector('button');
-           if (btn) {
-              btn.onclick = (e) => {
-                e.preventDefault();
-                setMockPost(true);
-              };
-           }
+          const btn = preview.querySelector('button');
+          if (btn) {
+            btn.onclick = (e) => {
+              e.preventDefault();
+              setMockPost(true);
+            };
+          }
         }
       }, 100);
       return () => clearTimeout(timer);
@@ -1278,10 +1282,10 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
   }, [tab, code, mockPost]);
 
   const copy = () => {
-    const textToCopy = tab === 'code' ? code : 
-                        tab === 'lab' ? (lab?.code || '') :
-                        tab === 'syntax' ? (syntax || '') : 
-                        tab === 'workflow' ? (workflow || '') : (output || '');
+    const textToCopy = tab === 'code' ? code :
+      tab === 'lab' ? (lab?.code || '') :
+        tab === 'syntax' ? (syntax || '') :
+          tab === 'workflow' ? (workflow || '') : (output || '');
     navigator.clipboard.writeText(textToCopy);
     setCopied(true); setTimeout(() => setCopied(false), 1800);
   };
@@ -1319,20 +1323,20 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
 
         <div style={{ display: 'flex', background: '#000', borderRadius: 8, padding: 2, gap: 1, border: '1px solid var(--border)', overflowX: 'auto' }}>
           {[
-            ['code', 'PHP'], 
+            ['code', 'PHP'],
             ['lab', 'LAB'],
-            ['explain', 'EXPLAIN'], 
-            ['syntax', 'SYNTAX'], 
-            ['workflow', 'WORKFLOW'], 
-            ['preview', 'PREVIEW'], 
+            ['explain', 'EXPLAIN'],
+            ['syntax', 'SYNTAX'],
+            ['workflow', 'WORKFLOW'],
+            ['preview', 'PREVIEW'],
             ['output', 'OUTPUT']
           ].map(([v, lbl]) => (
-            ((v === 'code' || v === 'output') || 
-             (v === 'syntax' && syntax) || 
-             (v === 'workflow' && workflow) || 
-             (v === 'explain' && explanation) ||
-             (v === 'lab' && lab) ||
-             (v === 'preview' && showPreview)) && (
+            ((v === 'code' || v === 'output') ||
+              (v === 'syntax' && syntax) ||
+              (v === 'workflow' && workflow) ||
+              (v === 'explain' && explanation) ||
+              (v === 'lab' && lab) ||
+              (v === 'preview' && showPreview)) && (
               <button
                 key={v}
                 onClick={() => setTab(v)}
@@ -1403,8 +1407,8 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
             )
             : tab === 'lab' && lab
               ? <LabView lab={lab} accent={accent} theme={theme} />
-            : tab === 'explain' && explanation
-              ? <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              : tab === 'explain' && explanation
+                ? <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -1418,27 +1422,27 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
                         <div style={{ fontSize: 10, color: accent, fontFamily: 'Space Mono,monospace', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: 12 }}>Stage {expStep + 1} of {explanation.length}</div>
                         <h2 style={{ fontFamily: 'DM Serif Display,serif', fontSize: 28, color: 'var(--ink)', marginBottom: 16 }}>{explanation[expStep].title}</h2>
                         <p style={{ fontSize: 14, lineHeight: 1.8, color: 'var(--ink)', maxWidth: 450, fontFamily: "'Noto Sans Khmer', sans-serif" }}>{explanation[expStep].desc}</p>
-                        
+
                         {/* Visual Animation Placeholder */}
                         <div style={{ marginTop: 30, width: '100%', display: 'flex', justifyContent: 'center' }}>
-                           <div style={{ width: 60, height: 60, borderRadius: '50%', background: accent + '20', border: `2px solid ${accent}`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse 2s infinite' }}>
-                             <span style={{ fontSize: 24 }}>{expStep === explanation.length - 1 ? '✅' : '⚙️'}</span>
-                           </div>
+                          <div style={{ width: 60, height: 60, borderRadius: '50%', background: accent + '20', border: `2px solid ${accent}`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse 2s infinite' }}>
+                            <span style={{ fontSize: 24 }}>{expStep === explanation.length - 1 ? '✅' : '⚙️'}</span>
+                          </div>
                         </div>
                       </motion.div>
                     </AnimatePresence>
                   </div>
-                  
+
                   {/* Controls */}
                   <div style={{ padding: '20px 0', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'center', gap: 15 }}>
-                    <button 
+                    <button
                       onClick={() => setExpStep(Math.max(0, expStep - 1))}
                       disabled={expStep === 0}
                       style={{ padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'none', color: expStep === 0 ? '#333' : 'var(--ink)', fontSize: 10, fontFamily: 'Space Mono,monospace', fontWeight: 700 }}
                     >
                       ← PREV
                     </button>
-                    <button 
+                    <button
                       onClick={() => setExpStep(Math.min(explanation.length - 1, expStep + 1))}
                       disabled={expStep === explanation.length - 1}
                       style={{ padding: '8px 16px', borderRadius: 8, border: 'none', background: expStep === explanation.length - 1 ? 'var(--border)' : accent, color: '#000', fontSize: 10, fontFamily: 'Space Mono,monospace', fontWeight: 700 }}
@@ -1447,49 +1451,49 @@ function CodePanel({ code: initialCode, output, syntax, workflow, explanation, l
                     </button>
                   </div>
                 </div>
-            : tab === 'syntax'
-              ? <pre style={{ margin: 0, fontFamily: 'Space Mono,monospace', fontSize: 12.5, lineHeight: 1.75, color: accent, whiteSpace: 'pre-wrap' }}>{syntax}</pre>
-            : tab === 'workflow'
-              ? <pre style={{ margin: 0, fontFamily: 'Space Mono,monospace', fontSize: 12.5, lineHeight: 1.75, color: '#f0f0f0', whiteSpace: 'pre-wrap' }}>{workflow}</pre>
-            : tab === 'preview'
-              ? <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ fontFamily: 'Space Mono,monospace', fontSize: 10, color: accent, opacity: 0.6, marginBottom: 15, borderBottom: '1px solid #222', paddingBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
-                    <span>PREVIEW — BROWSER ENGINE</span>
-                    <span>127.0.0.1:8000</span>
-                  </div>
-                  <div 
-                    className="browser-preview"
-                    style={{ 
-                      flex: 1,
-                      padding: '24px', 
-                      background: '#fff', 
-                      color: '#333', 
-                      borderRadius: 12, 
-                      overflowY: 'auto',
-                      fontFamily: 'system-ui, -apple-system, sans-serif'
-                    }}
-                    dangerouslySetInnerHTML={{ __html: currentOutput }}
-                  />
-                </div>
-              : <div>
-                <div style={{ fontFamily: 'Space Mono,monospace', fontSize: 10, color: accent, opacity: 0.6, marginBottom: 15, borderBottom: '1px solid #222', paddingBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
-                  <span>{code === initialCode ? 'TERMINAL — PHP 8.3.4' : 'SIMULATION — MOCK PHP RUNNER'}</span>
-                  <span>{new Date().toLocaleTimeString()}</span>
-                </div>
-                <pre style={{ margin: 0, fontFamily: 'Space Mono,monospace', fontSize: 12.5, lineHeight: 1.75, color: GREEN, whiteSpace: 'pre-wrap' }}>
-                  <span style={{ color: accent, marginRight: 10 }}>$ php runtime.php</span>
-                  {'\n'}{currentOutput}
-                  {'\n\n'}<span style={{ color: accent, animation: 'blink 1s infinite' }}>_</span>
-                </pre>
-                {code !== initialCode && (
-                  <button
-                    onClick={() => setCode(initialCode)}
-                    style={{ marginTop: 20, background: 'none', border: `1px solid #333`, color: 'var(--ink)', fontSize: 9, padding: '4px 10px', borderRadius: 4, fontFamily: 'Space Mono,monospace' }}
-                  >
-                    RESET CODE TO ORIGINAL
-                  </button>
-                )}
-              </div>
+                : tab === 'syntax'
+                  ? <pre style={{ margin: 0, fontFamily: 'Space Mono,monospace', fontSize: 12.5, lineHeight: 1.75, color: accent, whiteSpace: 'pre-wrap' }}>{syntax}</pre>
+                  : tab === 'workflow'
+                    ? <pre style={{ margin: 0, fontFamily: 'Space Mono,monospace', fontSize: 12.5, lineHeight: 1.75, color: '#f0f0f0', whiteSpace: 'pre-wrap' }}>{workflow}</pre>
+                    : tab === 'preview'
+                      ? <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ fontFamily: 'Space Mono,monospace', fontSize: 10, color: accent, opacity: 0.6, marginBottom: 15, borderBottom: '1px solid #222', paddingBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
+                          <span>PREVIEW — BROWSER ENGINE</span>
+                          <span>127.0.0.1:8000</span>
+                        </div>
+                        <div
+                          className="browser-preview"
+                          style={{
+                            flex: 1,
+                            padding: '24px',
+                            background: '#fff',
+                            color: '#333',
+                            borderRadius: 12,
+                            overflowY: 'auto',
+                            fontFamily: 'system-ui, -apple-system, sans-serif'
+                          }}
+                          dangerouslySetInnerHTML={{ __html: currentOutput }}
+                        />
+                      </div>
+                      : <div>
+                        <div style={{ fontFamily: 'Space Mono,monospace', fontSize: 10, color: accent, opacity: 0.6, marginBottom: 15, borderBottom: '1px solid #222', paddingBottom: 8, display: 'flex', justifyContent: 'space-between' }}>
+                          <span>{code === initialCode ? 'TERMINAL — PHP 8.3.4' : 'SIMULATION — MOCK PHP RUNNER'}</span>
+                          <span>{new Date().toLocaleTimeString()}</span>
+                        </div>
+                        <pre style={{ margin: 0, fontFamily: 'Space Mono,monospace', fontSize: 12.5, lineHeight: 1.75, color: GREEN, whiteSpace: 'pre-wrap' }}>
+                          <span style={{ color: accent, marginRight: 10 }}>$ php runtime.php</span>
+                          {'\n'}{currentOutput}
+                          {'\n\n'}<span style={{ color: accent, animation: 'blink 1s infinite' }}>_</span>
+                        </pre>
+                        {code !== initialCode && (
+                          <button
+                            onClick={() => setCode(initialCode)}
+                            style={{ marginTop: 20, background: 'none', border: `1px solid #333`, color: 'var(--ink)', fontSize: 9, padding: '4px 10px', borderRadius: 4, fontFamily: 'Space Mono,monospace' }}
+                          >
+                            RESET CODE TO ORIGINAL
+                          </button>
+                        )}
+                      </div>
           }
         </div>
       </div>
@@ -1584,18 +1588,18 @@ function Slide({ slide, current, total, onNext, onPrev, theme, toggleTheme }: {
 
         {/* RIGHT */}
         <div className="slide-right-panel">
-        {slide.code
-            ? <CodePanel 
-                code={slide.code} 
-                output={slide.output} 
-                syntax={slide.syntax} 
-                workflow={slide.workflow} 
-                explanation={slide.explanation}
-                lab={slide.lab}
-                showPreview={slide.title === "Your First PHP Code" || slide.chapter === "Web & Database" || slide.num === "15"}
-                accent={accent} 
-                theme={theme} 
-              />
+          {slide.code
+            ? <CodePanel
+              code={slide.code}
+              output={slide.output}
+              syntax={slide.syntax}
+              workflow={slide.workflow}
+              explanation={slide.explanation}
+              lab={slide.lab}
+              showPreview={slide.title === "Your First PHP Code" || slide.chapter === "Web & Database" || slide.num === "15"}
+              accent={accent}
+              theme={theme}
+            />
             : slide.concept
               ? <div style={{ flex: 1, background: 'var(--header-bg)', border: '1px solid var(--border)', borderRadius: 14, padding: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <pre style={{ fontFamily: 'Space Mono,monospace', fontSize: 13, lineHeight: 2.2, color: 'var(--ink)', textAlign: 'left', whiteSpace: 'pre', margin: 0 }}>{slide.concept}</pre>
