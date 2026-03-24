@@ -1333,6 +1333,61 @@ $products = $pdo->query("SELECT * FROM products")->fetchAll();
     tip: "ចូរប្រើ SQL Prepared Statements ជានិច្ច ដើម្បីការពារការវាយប្រហារបែប SQL Injection!",
   },
   {
+    num: "17C", chapter: "Project Research", chapterColor: PINK,
+    tag: "UI / View", tagColor: BLUE, icon: "🎨",
+    title: "Product Forms & Table",
+    subtitle: "Dynamic Forms · List Presentation · Action Buttons",
+    body: `ដើម្បីឱ្យអ្នកប្រើប្រាស់ងាយស្រួលគ្រប់គ្រង យើងត្រូវរៀបចំ **Interface** ឱ្យបានស្អាត។ ជាទូទៅ យើងប្រើ **Table** សម្រាប់បង្ហាញបញ្ជីទំនិញ និងប្រើ **Form** តែមួយដែលវៃឆ្លាត (Dynamic Form) សម្រាប់ទាំងការបន្ថែមថ្មី និងការកែប្រែទិន្នន័យ។`,
+    bullets: [
+      { icon: "📋", label: "Product Table", desc: "បង្ហាញព័ត៌មានទំនិញជាជួរៗ ដើម្បីងាយស្រួលមើល និងគ្រប់គ្រង។" },
+      { icon: "🔄", label: "Dynamic Form", desc: "Form តែមួយ តែអាចប្តូរ Mode ជា 'បន្ថែម' ឬ 'កែប្រែ' តាមកាលៈទេសៈ។" },
+      { icon: "⚡", label: "Action Buttons", desc: "ប៊ូតុង Edit និង Delete សម្រាប់រាល់ទំនិញនីមួយៗក្នុងតារាង។" },
+      { icon: "🎨", label: "Clean UI", desc: "ប្រើ CSS តិចតួចដើម្បីឱ្យតារាង និង Form មើលទៅមានរបៀបរៀបរយ។" },
+    ],
+    explanation: [
+      { title: "Dynamic Logic", desc: "បើមាន ID ក្នុង URL ?edit_id=1 ─ បង្ហាញពាក្យ 'Update', បើមិនមាន ─ បង្ហាញពាក្យ 'Add'។" },
+      { title: "Hidden Input", desc: "ប្រើ <input type='hidden'> ដើម្បីបញ្ជូន ID ទៅកាន់ Server នៅពេល Update។" },
+      { title: "Action Links", desc: "ប៊ូតុង Edit ចុចទៅ ?edit_id=... (GET), ប៊ូតុង Delete ចុចទៅ ?del_id=... (GET)។" },
+      { title: "Grid Content", desc: "បង្ហាញទិន្នន័យជាជួរៗ (Rows) ក្នុងតារាង HTML ដើម្បីឱ្យ User មើលឃើញទំនិញទាំងអស់។" }
+    ],
+    code: `<!-- 1. DYNAMIC FORM (Multiple Fields) -->
+<?php 
+  $mode  = isset($_GET['edit_id']) ? 'Update' : 'Add New';
+  $p_name  = isset($_GET['edit_id']) ? 'iPhone 15 Pro' : ''; 
+  $p_price = isset($_GET['edit_id']) ? '999' : '';
+  $p_stock = isset($_GET['edit_id']) ? '25' : '';
+?>
+<form method="POST">
+    <h3><?= $mode ?> Product</h3>
+    <input type="text" name="name" value="<?= $p_name ?>" placeholder="Product Name">
+    <input type="number" name="price" value="<?= $p_price ?>" placeholder="Price ($)">
+    <input type="number" name="stock" value="<?= $p_stock ?>" placeholder="Stock Qty">
+    <button type="submit"><?= $mode ?></button>
+</form>
+
+<hr>
+
+<!-- 2. PRODUCT TABLE (Detailed Grid) -->
+<table border="1" width="100%" style="border-collapse: collapse; margin-top: 20px;">
+    <tr style="background: #eee;">
+        <th>ID</th> <th>Product</th> <th>Price</th> <th>Stock</th> <th>Actions</th>
+    </tr>
+    <tr>
+        <td>1</td> <td>iPhone 15 Pro</td> <td>$999</td> <td>25</td>
+        <td>
+           <a href="?edit_id=1">📝 Edit</a> | 
+           <a href="?del_id=1" style="color:red">🗑️ Delete</a>
+        </td>
+    </tr>
+</table>`,
+    output: `[Header: Add New Product]
+Product: [iPhone 15 Pro] Price: [999] Stock: [25] [Add New]
+---------------------------------------------------------
+ID | Product       | Price | Stock | Actions
+1  | iPhone 15 Pro | $999  | 25    | Edit | Delete`,
+    tip: "សម្រាប់ការរក្សាទុកតម្លៃលេខ (Price/Stock) ក្នុង Database គួរប្រើប្រភេទ Type 'DECIMAL' និង 'INT'!",
+  },
+  {
     num: "18", chapter: "Ecosystem", chapterColor: BLUE,
     tag: "Tooling", tagColor: GREEN, icon: "🎼",
     title: "Installing Composer",
@@ -1471,7 +1526,7 @@ const CHAPTERS: ChapterData[] = [
   {
     name: "Project Research",
     color: PINK,
-    nums: ["17", "17B"],
+    nums: ["17", "17B", "17C"],
     icon: "🔬"
   },
   { name: "Ecosystem & Tools", color: TEAL, nums: ["18", "18B", "18C", "18D"], icon: "🌐" },
@@ -1517,10 +1572,15 @@ function simulatePHP(code: string, isPost: boolean = false, stripHtml: boolean =
     students: [
       { id: 1, name: "Dara", major: "Computer Science" },
       { id: 2, name: "Ratha", major: "Information Technology" }
+    ],
+    products: [
+      { id: 1, name: "iPhone 15 Pro", price: 999 },
+      { id: 2, name: "MacBook M3", price: 1599 }
     ]
   };
   if (isPost) {
     vars.students.push({ id: 3, name: "New Student", major: "Marketing" });
+    vars.products.push({ id: 3, name: "New Gadget 🚀", price: 699 });
   }
   const consts: Record<string, any> = {
     'PHP_VERSION': '8.3.4'
@@ -2110,7 +2170,7 @@ function Slide({ slide, current, total, onNext, onPrev, theme, toggleTheme }: {
               workflow={slide.workflow}
               explanation={slide.explanation}
               lab={slide.lab}
-              showPreview={slide.title === "Your First PHP Code" || slide.chapter === "Web & Database" || slide.num === "15"}
+              showPreview={slide.title === "Your First PHP Code" || slide.chapter === "Web & Database" || slide.chapter === "Project Research"}
               accent={accent}
               theme={theme}
             />
