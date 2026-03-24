@@ -940,11 +940,11 @@ array(3) { [0]=> int(1), [1]=> int(4), [2]=> int(9) }`,
     tag: "Practice", tagColor: GREEN, icon: "🧪",
     title: "Lab: Array",
     subtitle: "Hands-on Data Processing · Associative Arrays · Loops",
-    body: `ក្នុងលំហាត់នេះ យើងនឹងយកចំណេះដឹងពី **Arrays** និង **Foreach Loop** មកសរសេរជាកម្មវិធីគ្រប់គ្រងបញ្ជីឈ្មោះសិស្សសាមញ្ញមួយ។ គោលដៅគឺចេះបង្កើត, បន្ថែមទិន្នន័យ, និងបង្ហាញវាត្រឡប់មកវិញ។`,
+    body: `ក្នុងលំហាត់នេះ យើងនឹងយកចំណេះដឹងពី **Arrays** និង **Loop** មកសរសេរជាកម្មវិធីគ្រប់គ្រងបញ្ជីឈ្មោះសិស្សសាមញ្ញមួយ។ គោលដៅគឺចេះបង្កើត, បន្ថែមទិន្នន័យ, និងបង្ហាញវាត្រឡប់មកវិញ។`,
     bullets: [
       { icon: "📝", label: "Initialization", desc: "បង្កើត associative array ដែលមានតារាងសិស្សឧទាហរណ៍។" },
       { icon: "➕", label: "Mutation", desc: "បន្ថែមធាតុថ្មីឲ្យ Array ដោយប្រើ array_push ឬ សញ្ញា []។" },
-      { icon: "🔄", label: "Traversal", desc: "ប្រើ foreach ដើម្បីដើរកាត់ Array និងបង្កើត Output មានទ្រង់ទ្រាយ។" },
+      { icon: "🔄", label: "Traversal", desc: "ប្រើ Loop ដើម្បីដើរកាត់ Array និងបង្កើត Output មានទ្រង់ទ្រាយ។" },
       { icon: "🛡️", label: "Verification", desc: "ប្រើ var_dump ដើម្បីពិនិត្យរចនាសម្ព័ន្ធចុងក្រោយ។" },
     ],
     lab: {
