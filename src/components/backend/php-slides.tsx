@@ -789,61 +789,70 @@ echo ($n % 2 === 0) ? "Even" : "Odd";
     title: "Functions: Logic Blocks",
     subtitle: "Declarations · Parameters · Return Types · Type Hinting",
     body: `**Function** គឺជាសំណុំកូដដែលអាចហៅមកប្រើឡើងវិញបានច្រើនដង។ ក្នុង PHP 8, គួរតែប្រើ **Type Hinting** ដើម្បីកំណត់ប្រភេទទិន្នន័យសម្រាប់ **Parameters** និង **Return Value**, ដែលធ្វើឲ្យកូដរឹងមាំ កំណត់តម្លៃបានច្បាស់ និងងាយស្រួលក្នុងការប្រតិបត្តិ **Debug**។`,
+    
     bullets: [
-      { icon: "🛠️", label: "Declaration", desc: "ប្រកាស function ដោយប្រើ: function name($arg) { ... } ─ កំណត់សំណុំ logic របស់អ្នក។" },
-      { icon: "↩️", label: "Return", desc: "បញ្ជូនតម្លៃត្រឡប់ទៅអ្នកហៅ function ដោយប្រើពាក្យគន្លឹះ return។" },
-      { icon: "🏷️", label: "Type Hinting", desc: "កំណត់ប្រភេទទិន្នន័យក្នុង PHP 8: function(int $a): string ─ ជួយធ្វើឲ្យកូដរឹងមាំ។" },
-      { icon: "🎯", label: "Default Args", desc: "កំណត់ Parameters ជាចំណាំ (optional): function($user = 'Guest')." },
+      { icon: "🛠️", label: "Declaration", desc: "ប្រកាស function ដោយប្រើ: function name(type $arg): type { ... }" },
+      { icon: "📥", label: "Parameters", desc: "ទទួល input ជា parameter (int, float, string...)" },
+      { icon: "↩️", label: "Return Type", desc: "កំណត់ប្រភេទតម្លៃត្រឡប់ (៖ float, int, string...)" },
+      { icon: "🏷️", label: "Type Hinting", desc: "បញ្ជាក់ datatype ឲ្យច្បាស់ ដើម្បីជៀសវាង error" },
     ],
+
     explanation: [
-      { title: "Definiton", desc: "យើងបង្កើតកិច្ចការមួយទុកក្នុង Function (ឧទាហរណ៍: ការគណនាពន្ធ) ។" },
-      { title: "Input Flow", desc: "នៅពេលហៅប្រើ យើងបញ្ជូនទិន្នន័យ (Arguments) ទៅកាន់ Parameter របស់ Function ។" },
-      { title: "Logic Execution", desc: "កូដក្នុង { } ដើរដោយប្រើតម្លៃដែលបញ្ជូនមក ─ វាមាន Scope ផ្ទាល់ខ្លួនរបស់វា។" },
-      { title: "The Handover", desc: "ពាក្យ return បញ្ឈប់ Function រួចបញ្ជូនលទ្ធផលចេញក្រៅឱ្យទៅអ្នកហៅ (Caller) ។" }
+      { title: "Declaration", desc: "កំណត់ឈ្មោះ function និង structure របស់វា។" },
+      { title: "Parameters", desc: "ទទួលតម្លៃពីខាងក្រៅ និងកំណត់ type (int, float...)។" },
+      { title: "Execution", desc: "Function ដំណើរការតាម logic នៅក្នុង { }។" },
+      { title: "Return Type", desc: "បញ្ជូនលទ្ធផលត្រឡប់ទៅ caller ជាមួយ type ដែលបានកំណត់។" }
     ],
+
     code: `<?php
-/**
- * A proper PHP 8 Function
- */
-function calculateTotal(int $price, float $tax = 0.1): float {
-    $total = $price + ($price * $tax);
-    return $total;
+// ── Simple Function with Parameters & Return Type ──
+function addNumbers(int $a, int $b): int {
+    return $a + $b;
 }
 
-// Using the function
-$payable = calculateTotal(100); // Uses default tax
-echo "Total: $" . $payable . " ";
+// ── Function with Default Parameter ──
+function sayHello(string $name = "Guest"): string {
+    return "Hello, " . $name;
+}
 
-$custom = calculateTotal(200, 0.05); // Custom tax
-echo "Custom Total: $" . $custom;
+// ── Using the functions ──
+$result = addNumbers(5, 3);
+echo "Sum: " . $result . " ";
 
-// Anonymous / Arrow function (PHP 7.4+)
-$add = fn($n) => $n + 10;
-echo "Arrow result: " . $add(5);
+echo sayHello("Ratha") . " ";
+echo sayHello(); // default value
+
+// ── Arrow Function (Short Syntax) ──
+$multiply = fn(int $a, int $b): int => $a * $b;
+echo "Multiply: " . $multiply(4, 2);
 ?>`,
-    output: `Total: $110
-Custom Total: $210
-Arrow result: 15`,
+
+    output: `Sum: 8
+Hello, Ratha
+Hello, Guest
+Multiply: 8`,
+
     syntax: `// ── Modern Function Standards ───────────────
 //
-//  function n(type $p): type { } : Typed decl
-//  return v                      : Send result back
-//  $p = val                      : Default value
-//  void                          : No return value
-//  fn() => res                   : Arrow Function
+// function name(type $param): returnType { }
+// return value;
+// $param = default;
+// fn(type $x): type => expression;
 //
 // ──────────────────────────────────────────`,
-    tip: "ចងចាំថា កូដនៅក្នុង Function មាន Scope ផ្ទាល់ខ្លួន ─ វាមានន័យថា Variable ខាងក្រៅមិនអាចស្គាល់ក្នុង Function ទេ បើមិនបញ្ជូនមក!",
-    workflow: `// ── Execution Pipe ─────────────────────────
+
+    tip: "Function មាន Scope ផ្ទាល់ខ្លួន ─ Variable ខាងក្រៅមិនអាចប្រើបាន លុះត្រាតែបញ្ជូនជា parameter!",
+
+    workflow: `// ── Execution Flow ───────────────────────
 //
-// 1. Call: Invocation starts (ហៅទៅប្រើ)
-// 2. Map: Args match parameters (ភ្ជាប់ទិន្នន័យ)
-// 3. Eval: Internal logic runs (ដំណើរការ logic)
-// 4. Return: Value sent back (ផ្ញើលទ្ធផលចេញ)
-// 5. Clear: Local memory freed (សម្អាត memory)
+// 1. Call → ហៅ function
+// 2. Pass → ផ្ញើ arguments
+// 3. Execute → ដំណើរការ logic
+// 4. Return → ផ្ញើលទ្ធផលត្រឡប់
+// 5. End → បញ្ចប់ & clear memory
 //
 // ──────────────────────────────────────────`,
-  },
+},
   {
     num: "10", chapter: "Functions & Arrays", chapterColor: PINK,
     tag: "Data Structures", tagColor: ORANGE, icon: "📋",
@@ -884,8 +893,18 @@ $database = [
 ];
 
 // 4. Functional Mapping
-$nums    = [1, 2, 3];
-$squared = array_map(fn($n) => $n ** 2, $nums); 
+$nums    = [1, 2, 3]; //→ Original array of numbers.
+$squared = array_map(fn($n) => {
+    return $n ** 2;
+}, $nums);
+
+print_r($squared); // Output: [1, 4, 9]
+
+// fn($n) => $n ** 2 
+//    → Arrow function: takes each element $n and returns $n squared.
+// array_map(callback, array) 
+//    → Applies the callback function to each element of the array.
+//    → Returns a new array with the results.
 
 echo "Fruit 0: " . $fruits[0] . " ";
 echo "User: " . $profile['name'] . " ";
@@ -998,7 +1017,7 @@ echo "Welcome to " . $data['app'];
     bullets: [
       { icon: "🏛️", label: "The Class", desc: "ប្លង់មេសម្រាប់បង្កើត Object (ឧ. Class 'Car')។" },
       { icon: "🚗", label: "The Object", desc: "Instance ជាក់ស្តែងដែលកើតចេញពី Class (ឧ. '$myCar')។" },
-      { icon: "✨", label: "Instantiation", desc: "ប្រើ keyword **new** ដើម្បីបង្កើត object ចេញពី class។" },
+      { icon: "✨", label: "Instantiation", desc: "ប្រើ keyword **new** ដើម្បីបង្កើត object (ឧ. $s1 = new Student())។" },
       { icon: "🧩", label: "Modularity", desc: "បំបែកកូដជាផ្នែកៗដែលងាយស្រួលគ្រប់គ្រង និងជួសជុល។" },
     ],
     explanation: [
@@ -1015,8 +1034,8 @@ class Student {
     public string $name;
 }
 
-// Instantiate (បង្កើត Object)
-$s1 = new Student();
+// Instantiate (បង្កើត Object $s1 ពី Student)
+$s1 = new Student(); // បង្កើត object ថ្មីមួយពី class Student
 $s1->name = "Dara";
 
 $s2 = new Student();
@@ -1029,10 +1048,11 @@ echo "Student 2: " . $s2->name;
 Student 2: Sok`,
     syntax: `// ── OOP Foundation Syntax ──────────────────
 //
-//  class Name { } : Define a template
-//  new Name()     : Create instance
-//  ->             : Object operator (Access member)
-//  $obj->prop     : Access property
+//  class Name { } : បង្កើតប្លង់មេ (Define Template)
+//  new Name()     : បង្កើត Object ចេញពី Class (Instance)
+//  $s1 = new Student(): បង្កើត Object $s1 ពី Student
+//  ->             : គឺ Object operator (សម្រាប់ហៅ Member)
+//  $obj->prop     : ការហៅប្រើ Property របស់ Object
 //
 // ──────────────────────────────────────────`,
     tip: "ចងចាំថា Class គ្រាន់តែជា 'គំរូ' ─ អ្នកមិនអាចប្រើវាដោយផ្ទាល់បានទេ ទាល់តែបង្កើតជា Object ជាមុនសិន!",
